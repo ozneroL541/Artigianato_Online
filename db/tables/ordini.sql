@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS ordini(
     data_ordine TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     quantita INTEGER CHECK (quantita > 0),
     data_consegna TIMESTAMP,
-    PRIMARY KEY (username_artigiano, username_cliente, nome_prodotto, data_ordine)
+    PRIMARY KEY (username_artigiano, username_cliente, nome_prodotto, data_ordine),
 );
