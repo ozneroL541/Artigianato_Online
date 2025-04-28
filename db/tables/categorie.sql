@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS categorie (
+    categoria VARCHAR(127) PRIMARY KEY
+);
