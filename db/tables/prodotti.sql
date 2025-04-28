@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS prodotti (
     categoria VARCHAR(127),
     prezzo REAL,
     disponibilita INTEGER CHECK (disponibilita >= 0),
-    PRIMARY KEY (username_artigiano, nome_prodotto),
-)
+    PRIMARY KEY (username_artigiano, nome_prodotto)
+);
