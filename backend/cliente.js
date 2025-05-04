@@ -14,9 +14,7 @@ Client.connect();
 function query_test(){}
 
 
-async function loginAmm(){
-     
- }
+async function loginAmm(){}
 
 async function logoutAmm(){
 
