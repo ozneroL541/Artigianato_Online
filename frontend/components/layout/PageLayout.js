@@ -1,0 +1,124 @@
+/**
+ * This component is used to create the page layout with a navbar, a footer and a dynamic title.
+ * @author Leonardo Basso
+ */
+class PageLayout extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: "open" });
+    }
+
+    connectedCallback() {
+        const title = this.getAttribute("page-title") || "Artigiani Online";
+        document.title = `${title} - Artigiani Online`;
+
+        this.shadowRoot.innerHTML = `
+            <header class="navbar" id="navbar">
+                <div class="logo-menu">
+                    <h2 class="logo">Artigiani Online</h2>
+                    <span class="burger" aria-label="Navigation menu" aria-expanded="false"></span>
+                </div>
+                <nav class="navbar__links" id="navbar_links">
+                    <a class="link" href="index.html">Home</a>
+                    <a class="link" href="about.html">About</a>
+                </nav>
+            </header>
+            <main>
+                <slot></slot>
+            </main>
+            <footer>
+                <p>Artigiani Online, 2025</p>
+            </footer>
+            
+            <style> ${css} </style>
+        `;
+
+        const burger = this.shadowRoot.querySelector('.burger');
+        const links = this.shadowRoot.querySelector('.navbar__links');
+
+        burger.addEventListener('click', () => {
+            links.classList.toggle('links_show');
+            // Accessibility
+            const isExpanded = burger.getAttribute('aria-expanded') === 'true';
+            burger.setAttribute('aria-expanded', !isExpanded);
+        });
+    }
+}
+const css = `
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, serif;
+}
+header, main, footer {
+    padding: .6rem 1rem;
+}
+.navbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.logo-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar__links {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: max-height 0.8s ease-in-out;
+    width: 100%;
+    overflow: hidden;
+    max-height: 0;
+    margin-top: 1rem;
+    gap: 1rem;
+}
+.burger {
+    border-radius: 1rem;
+    display: block;
+    background-color: black;
+    width: 30px;
+    height: 4px;
+    position: relative;
+    cursor: pointer;
+}
+.burger:before, .burger:after {
+    content: '';
+    display: block;
+    border-radius: 1rem;
+    background: black;
+    width: 30px;
+    height: 4px;
+    position: absolute;
+    left: 0;
+}
+.burger:before {
+    top: -8px;
+}
+.burger:after {
+    bottom: -8px;
+}
+@media screen and (min-width: 600px) {
+    .navbar {
+        flex-direction: row;
+    }
+    .navbar__links {
+        display: flex;
+        flex-direction: row;
+        max-height: none;
+        margin-top: 0;
+    }
+    .burger {
+        display: none;
+    }
+}
+.links_show {
+    max-height: 200px !important;
+    overflow: hidden;
+}
+`
+customElements.define("page-layout", PageLayout);
