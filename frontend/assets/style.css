@@ -1,15 +1,29 @@
+:root{
+    --background-color: #0c0e14;
+    --lite-color: #eee;
+}
 *{
     margin:0;
     padding: 0;
     box-sizing: border-box;
     font-family: system-ui, serif;
 }
-h1{
-    color: red
+body { background-color: var(--background-color); }
+h1, h2, h3, h4, h5, h6, p, a, span, li, input, textarea, select, button{
+    color: var(--lite-color);
 }
-li {
-    list-style: none;
+li { list-style: none; }
+a { text-decoration: none; }
+
+input, button {
+    border: 1px solid rgba(238, 238, 238, 0.02);
+    padding: .5rem 1rem;
+    background-color: rgba(238, 238, 238, 0.04);
+    border-radius: .5rem;
 }
-a {
-    text-decoration: none;
-}
+button {cursor:pointer}
+
+/*General styles*/
+
+.text-center{text-align: center;}
+.flex-center{display: flex; justify-content: center; align-items: center;}

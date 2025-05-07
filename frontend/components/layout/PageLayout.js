@@ -1,6 +1,7 @@
 /**
  * This component is used to create the page layout with a navbar, a footer and a dynamic title.
  * @author Leonardo Basso
+ * @slot - The main content of the page
  */
 class PageLayout extends HTMLElement {
     constructor() {
@@ -44,6 +45,7 @@ class PageLayout extends HTMLElement {
         });
     }
 }
+
 const css = `
 * {
     margin: 0;
@@ -52,7 +54,7 @@ const css = `
     font-family: system-ui, serif;
 }
 header, main, footer {
-    padding: .6rem 1rem;
+    padding: .6rem 2rem;
 }
 .navbar {
     display: flex;
@@ -64,6 +66,7 @@ header, main, footer {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    color: #fff
 }
 
 .navbar__links {
@@ -77,6 +80,10 @@ header, main, footer {
     margin-top: 1rem;
     gap: 1rem;
 }
+.navbar__links .link, footer p {
+    color: #eee;
+    text-decoration: none;
+}
 .burger {
     border-radius: 1rem;
     display: block;
@@ -85,6 +92,7 @@ header, main, footer {
     height: 4px;
     position: relative;
     cursor: pointer;
+    background-color: #eee;
 }
 .burger:before, .burger:after {
     content: '';
@@ -95,6 +103,7 @@ header, main, footer {
     height: 4px;
     position: absolute;
     left: 0;
+    background-color: #eee;
 }
 .burger:before {
     top: -8px;
@@ -103,6 +112,9 @@ header, main, footer {
     bottom: -8px;
 }
 @media screen and (min-width: 600px) {
+    header, main, footer {
+        padding: .6rem 1rem;
+    }
     .navbar {
         flex-direction: row;
     }

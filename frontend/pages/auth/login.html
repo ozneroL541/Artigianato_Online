@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../assets/style.css">
+    <script defer src="../../components/layout/PageLayout.js"></script>
+    <script defer src="../../components/general/ToggleTabs.js"></script>
+</head>
+<body>
+<page-layout>
+    <toggle-tabs tabs='["Artigiano", "Cliente"]' class="login">
+        <div class="login__content">
+            <div id="Artigiano" data-type="tab">
+                <h2 class="tab__title">Artigiano</h2>
+                <label>
+                    <input type="text" placeholder="Username">
+                    <input type="password" placeholder="Password">
+                    <button onclick="console.log('hello')" >Login!</button>
+                </label>
+            </div>
+            <div id="Cliente" data-type="tab">
+                <h2 class="tab__title">Cliente</h2>
+                <label>
+                    <input type="text" placeholder="Username">
+                    <input type="password" placeholder="Password">
+                    <button onclick="console.log('world')">Login!</button>
+                </label>
+            </div>
+        </div>
+        <p class="text-center">Non hai un account? Allora <a href="/register">registrati</a></p>
+    </toggle-tabs>
+</page-layout>
+</body>
+<style>
+    .login {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+    }
+    .login__content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 600px;
+        height: 220px;
+    }
+    .login__content label >* {
+        width: 100%;
+        margin-bottom: .5rem;
+    }
+    .tab__title {
+        text-align: center;
+        margin: 1rem 0;
+    }
+</style>
+</html>
