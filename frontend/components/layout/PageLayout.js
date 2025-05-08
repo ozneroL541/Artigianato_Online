@@ -115,7 +115,7 @@ header, main, footer {
 }
 @media screen and (min-width: 600px) {
     header, main, footer {
-        padding: .6rem 1rem;
+        padding: .6rem 2rem;
     }
     .navbar {
         flex-direction: row;

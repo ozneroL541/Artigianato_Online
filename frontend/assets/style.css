@@ -25,12 +25,32 @@ option {
     background-color: #232529;
 }
 button {cursor:pointer}
-
+dialog {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 200px 2000px rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    padding: 1rem 2rem;
+}
 /*General styles*/
 
 .text-center{text-align: center;}
 .flex-center{display: flex; justify-content: center; align-items: center;}
+.btn-close {
+    background-color: #ff3b30;
+    display: block;
+    height: .8rem;
+    width: .8rem;
+    border-radius: 100vh;
+    cursor: pointer;
+    margin-right: -1.5rem;
+    margin-top: -2rem;
 
+}
+.btn-close:hover {
+    background-color: #e6352b;
+}
 /*Styling webkit*/
 
 ::-webkit-scrollbar {

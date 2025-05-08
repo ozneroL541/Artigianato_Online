@@ -12,7 +12,7 @@
     <dialog class="dashboard__add" id="addProduct">
         <header class="dashboard__add__top">
             <h2>Inserisci il prodotto</h2>
-            <span class="dashboard__add__close" onclick="toggleDialog()"></span>
+            <span class="btn-close" onclick="toggleDialog()"></span>
         </header>
         <label class="dashboard__add__inputs">
             <input type="text" placeholder="Nome">
@@ -27,13 +27,7 @@
 </body>
 <style>
     .dashboard__add {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
         text-align: center;
-        border: none;
-        border-radius: 10px;
-        padding: 1rem 2rem;
         min-width: 30vw;
 
     }
@@ -44,20 +38,7 @@
         margin-bottom: 1rem;
         gap: .5rem;
     }
-    .dashboard__add__close {
-        background-color: #ff3b30;
-        display: block;
-        height: .8rem;
-        width: .8rem;
-        border-radius: 100vh;
-        cursor: pointer;
-        margin-right: -1.5rem;
-        margin-top: -2rem;
 
-    }
-    .dashboard__add__close:hover {
-        background-color: #e6352b;
-    }
     .dashboard__add__inputs {
         display: flex;
         flex-direction: column;
@@ -77,6 +58,11 @@
 </style>
 </html>
 <script>
+    /**
+     * This function toggles the visibiility of the modal element.
+     *
+     * @author Leonardo Basso
+     * */
     function toggleDialog() {
         const dialog = document.getElementById("addProduct");
         if (dialog.open) {
