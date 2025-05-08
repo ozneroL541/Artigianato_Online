@@ -5,3 +5,4 @@
 \i './examples/ex_clienti.sql';
 \i './examples/ex_prodotti.sql';
 \i './examples/ex_ordini.sql';
+\i './examples/ex_segnalazioni.sql'
