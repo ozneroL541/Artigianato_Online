@@ -2,7 +2,7 @@
  * This component is used to create a tab interface with dynamic tabs.
  * In order for an html element to be considered a tab it needs to have data-type="tab", other elements
  * will be shown in all tabs.
- *
+ * @slot - The tabs
  * @author Leonardo Basso
  */
 class ToggleTabs extends HTMLElement {
@@ -37,9 +37,9 @@ class ToggleTabs extends HTMLElement {
                     display: block;
                 }
                 .tab__buttons {
-                    background-color: rgba(238, 238, 238, 0.04);
+                    background-color: rgba(238, 238, 238, 0.05);
                     color: #eeeeee;
-                    border: 1px solid rgba(238, 238, 238, 0.04);
+                    border: 1px solid rgba(238, 238, 238, 0.03);
                     padding: .5rem 1rem;
                     cursor: pointer;
                     margin-right: .2rem;

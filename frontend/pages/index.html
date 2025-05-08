@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <script defer src="../components/layout/PageLayout.js"></script>
+    <script defer src="../components/general/UserMessage.js"></script>
     <link rel="stylesheet" href="../assets/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -12,7 +13,61 @@
 <page-layout page-title="Home Page">
     <h1>Homepage</h1>
     <p>This is the home page content.</p>
+    <user-message
+            msg-title="Il tavolo non è bello"
+            msg-desc = "lorem ipsum dolor sit amen altro testo di prova aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            msg-prod="Tavolo"
+            msg-date="23/08/2024"
+    ></user-message>
 
+    <h2>Categoria</h2>
+    <section class="products">
+        <div class="product">
+            <h3 class="name">Nome</h3>
+            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
+        </div>
+        <div class="product">
+            <h3 class="name">Nome</h3>
+            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
+        </div>        <div class="product">
+        <h3 class="name">Nome</h3>
+        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
+    </div>        <div class="product">
+        <h3 class="name">Nome</h3>
+        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
+
+    </div>
+    </section>
 </page-layout>
 </body>
+<style>
+
+    .products {
+        display: flex;
+    }
+
+    .product {
+        display: inline-block;
+        border: 1px solid rgba(238, 238, 238, 0.03);
+        background-color: rgba(238, 238, 238, 0.05);
+        border-radius: .5rem;
+        padding: 10px;
+        margin-right: 10px;
+        width: 200px;
+    }
+
+    .product .name {
+        margin-top: 0;
+        font-size: 1.2em;
+    }
+
+    .product .description {
+        font-size: 0.9em;
+        color: #eee;
+        opacity: .5;
+        white-space: normal;
+    }
+
+
+</style>
 </html>

@@ -15,11 +15,14 @@ h1, h2, h3, h4, h5, h6, p, a, span, li, input, textarea, select, button{
 li { list-style: none; }
 a { text-decoration: none; }
 
-input, button {
-    border: 1px solid rgba(238, 238, 238, 0.02);
+input, button, dialog, select, option {
+    border: 1px solid rgba(238, 238, 238, 0.03);
     padding: .5rem 1rem;
-    background-color: rgba(238, 238, 238, 0.04);
+    background-color: rgba(238, 238, 238, 0.05);
     border-radius: .5rem;
+}
+option {
+    background-color: #232529;
 }
 button {cursor:pointer}
 
@@ -27,3 +30,29 @@ button {cursor:pointer}
 
 .text-center{text-align: center;}
 .flex-center{display: flex; justify-content: center; align-items: center;}
+
+/*Styling webkit*/
+
+::-webkit-scrollbar {
+    height: 4px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(238, 238, 238, 0.05);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: none;
+    background: rgba(238, 238, 238, 0.05);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    height: 8px;
+    background: #555;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

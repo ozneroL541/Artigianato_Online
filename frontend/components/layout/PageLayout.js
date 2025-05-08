@@ -14,22 +14,24 @@ class PageLayout extends HTMLElement {
         document.title = `${title} - Artigiani Online`;
 
         this.shadowRoot.innerHTML = `
-            <header class="navbar" id="navbar">
-                <div class="logo-menu">
-                    <h2 class="logo">Artigiani Online</h2>
+            <section class="page__layout">
+                <header class="navbar" id="navbar">
+                    <div class="logo-menu">
+                        <h2 class="logo">Artigiani Online</h2>
                     <span class="burger" aria-label="Navigation menu" aria-expanded="false"></span>
-                </div>
-                <nav class="navbar__links" id="navbar_links">
-                    <a class="link" href="index.html">Home</a>
-                    <a class="link" href="about.html">About</a>
-                </nav>
-            </header>
-            <main>
-                <slot></slot>
-            </main>
-            <footer>
-                <p>Artigiani Online, 2025</p>
-            </footer>
+                    </div>
+                    <nav class="navbar__links" id="navbar_links">
+                        <a class="link" href="index.html">Home</a>
+                        <a class="link" href="about.html">About</a>
+                    </nav>
+                </header>
+                <main>
+                    <slot></slot>
+                </main>
+                <footer>
+                    <p>Artigiani Online, 2025</p>
+                </footer>
+        </section>
             
             <style> ${css} </style>
         `;
