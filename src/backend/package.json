@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/ozneroL541/Artigianato_Online/issues"
   },
-  "homepage": "https://github.com/ozneroL541/Artigianato_Online#readme"
+  "homepage": "https://github.com/ozneroL541/Artigianato_Online#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
 }
