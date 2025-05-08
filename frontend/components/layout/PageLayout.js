@@ -56,7 +56,7 @@ const css = `
     font-family: system-ui, serif;
 }
 header, main, footer {
-    padding: .6rem 2rem;
+    padding: .6rem 1rem;
 }
 .navbar {
     display: flex;
