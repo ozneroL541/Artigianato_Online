@@ -21,8 +21,8 @@ class PageLayout extends HTMLElement {
                     <span class="burger" aria-label="Navigation menu" aria-expanded="false"></span>
                     </div>
                     <nav class="navbar__links" id="navbar_links">
-                        <a class="link" href="index.html">Home</a>
-                        <a class="link" href="about.html">About</a>
+                        <a class="link" href="/">Home</a>
+                        <a class="link" href="/auth/login">Login</a>
                     </nav>
                 </header>
                 <main>
