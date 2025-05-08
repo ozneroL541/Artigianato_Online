@@ -136,3 +136,5 @@ dist
 .pnp.*
 db/examples/gen_tables.py
 db/examples/prodotti.csv
+db/do_all_queries.py
+db/all_queries.sql
