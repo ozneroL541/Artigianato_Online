@@ -8,19 +8,33 @@ app.use(express.static(frontendPath));
 
 // Routes
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'pages/index.html'));
-});
-app.get('/artigiano/dashboard', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'pages/artigiano/dashboard.html'));
-});
-app.get('/auth/login', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'pages/auth/login.html'));
-});app.get('/auth/register', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'pages/auth/register.html'));
-});
-
+route('/', 'index')
+route('artigiano/dashboard')
+route('auth/login')
+route('auth/register')
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
 });
+
+/**
+ * This function automatically creates a route for a given path.
+ *
+ * It can accept one argument which is both the path for the file and the route or two arguments, the fist is the path for the route
+ * and the second the path for the file
+ * @author Leonardo Basso
+ * */
+function route() {
+    switch (arguments.length) {
+        case 1:
+            app.get(`/${arguments[0]}`, (req, res) => {
+                res.sendFile(path.join(frontendPath, `pages/${arguments[0]}.html`));
+            });
+            break;
+        case 2:
+            app.get(`/${arguments[0]}`, (req, res) => {
+                res.sendFile(path.join(frontendPath, `pages/${arguments[1]}.html`));
+            });
+            break;
+    }
+}
