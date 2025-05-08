@@ -28,9 +28,9 @@ class PageLayout extends HTMLElement {
                 <main>
                     <slot></slot>
                 </main>
-                <footer>
-                    <p>Artigiani Online, 2025</p>
-                </footer>
+<!--                <footer>-->
+<!--                    <p>Artigiani Online, 2025</p>-->
+<!--                </footer>-->
         </section>
             
             <style> ${css} </style>

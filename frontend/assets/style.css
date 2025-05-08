@@ -1,19 +1,32 @@
-:root{
+:root {
     --background-color: #0c0e14;
     --lite-color: #eee;
+    --lite-background: #17191e;
 }
-*{
-    margin:0;
+
+/* Resets and overrides */
+* {
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: system-ui, serif;
 }
-body { background-color: var(--background-color); }
-h1, h2, h3, h4, h5, h6, p, a, span, li, input, textarea, select, button{
+
+body {
+    background-color: var(--background-color);
+}
+
+h1, h2, h3, h4, h5, h6, p, a, span, li, input, textarea, select, button {
     color: var(--lite-color);
 }
-li { list-style: none; }
-a { text-decoration: none; }
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
 
 input, button, dialog, select, option {
     border: 1px solid rgba(238, 238, 238, 0.03);
@@ -21,22 +34,43 @@ input, button, dialog, select, option {
     background-color: rgba(238, 238, 238, 0.05);
     border-radius: .5rem;
 }
+
 option {
     background-color: #232529;
 }
-button {cursor:pointer}
+
+button {
+    cursor: pointer
+}
+
 dialog {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 0 200px 2000px rgba(0, 0, 0, 0.7);
+    background-color: var(--lite-background);
     border-radius: 10px;
     padding: 1rem 2rem;
 }
-/*General styles*/
 
-.text-center{text-align: center;}
-.flex-center{display: flex; justify-content: center; align-items: center;}
+/* General styles and classes */
+
+.standard-box {
+    border: 1px solid rgba(238, 238, 238, 0.03);
+    background-color: rgba(238, 238, 238, 0.05);
+    border-radius: 10px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .btn-close {
     background-color: #ff3b30;
     display: block;
@@ -48,14 +82,32 @@ dialog {
     margin-top: -2rem;
 
 }
+.collapsed-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+.btn-delete {
+    border: 1px solid rgba(255, 59, 48, 0.2);
+    background-color: rgba(255, 59, 48, 0.2);
+}
+
+.btn-edit {
+    border: 1px solid rgba(48, 255, 76, 0.2);
+    background-color: rgba(48, 255, 76, 0.2);
+}
+
 .btn-close:hover {
     background-color: #e6352b;
 }
-/*Styling webkit*/
+
+/* Styling webkit */
 
 ::-webkit-scrollbar {
     height: 4px;
 }
+
 ::-webkit-scrollbar-track {
     background: rgba(238, 238, 238, 0.05);
     border-radius: 5px;
@@ -71,12 +123,14 @@ dialog {
     height: 8px;
     background: #555;
 }
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 /*Styling firefox*/
 input[type=number] {
-    -moz-appearance:textfield;
+    -moz-appearance: textfield;
 }
