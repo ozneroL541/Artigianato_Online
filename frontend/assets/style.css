@@ -86,7 +86,7 @@ dialog {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 100%;
+    max-width: 80%;
 }
 .btn-delete {
     border: 1px solid rgba(255, 59, 48, 0.2);

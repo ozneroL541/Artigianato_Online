@@ -9,31 +9,14 @@
 </head>
 <body>
 <page-layout page-title="Dashboard artigiano">
-
-    <section class="dashboard">
-        <section class="dashboard__articles" id="Articoli" data-type="tab">
-            <div class="dashboard__button__wrapper">
-                <button onclick="toggleDialog('changeInfo')">Modifica Info</button>
-                <dialog class="dashboard__add" id="changeInfo">
-
-                    <header class="dashboard__add__top">
-                        <h3>Le tue informazioni</h3>
-                        <span class="btn-close" onclick="toggleDialog('changeInfo')"></span>
-                    </header>
-                    <label class="dashboard__add__inputs">
-                        <input type="text" placeholder="Nome impresa">
-                        <input type="text" placeholder="IBAN">
-                        <button>Modifica</button>
-                    </label>
-                </dialog>
-            </div>
+    <toggle-tabs tabs='["Articoli", "Profilo"]' class="dashboard">
+        <section id="Articoli" data-type="tab">
             <dialog class="dashboard__add" id="addProduct">
-
-                <header class="dashboard__add__top">
+                <header class="dashboard__profile__top">
                     <h3>Inserisci il prodotto</h3>
                     <span class="btn-close" onclick="toggleDialog('addProduct')"></span>
                 </header>
-                <label class="dashboard__add__inputs">
+                <label class="dashboard__profile__inputs">
                     <input type="text" placeholder="Nome">
                     <input type="text" placeholder="Categoria">
                     <input type="number" placeholder="Prezzo">
@@ -56,8 +39,10 @@
                         </svg>
                     </button>
                     <button onclick="toggleDialog('addProduct')" class="btn-edit dashborad__article__iconbutton">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-plus-lg" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                         </svg>
                     </button>
 
@@ -119,11 +104,11 @@
                 </article>
 
                 <dialog class="dashboard__add" id="modifyProduct">
-                    <header class="dashboard__add__top">
+                    <header class="dashboard__profile__top">
                         <h3>Modifica il prodotto</h3>
                         <span class="btn-close" onclick="toggleDialog('modifyProduct')"></span>
                     </header>
-                    <label class="dashboard__add__inputs">
+                    <label class="dashboard__profile__inputs">
                         <input type="text" placeholder="Nome">
                         <input type="text" placeholder="Categoria">
                         <input type="number" placeholder="Prezzo">
@@ -133,8 +118,27 @@
                 </dialog>
             </section>
         </section>
-        <section id="Profilo" data-type="tab"></section>
-    </section>
+        <section id="Profilo" data-type="tab" class="dashboard__profile">
+            <h3>Le tue informazioni</h3>
+            <label class="dashboard__profile__inputs">
+                <input type="text" placeholder="Nome impresa">
+                <input type="text" placeholder="IBAN">
+                <input type="password" placeholder="Password">
+                <button onclick="toggleDialog('confirmPassword')">Modifica</button>
+            </label>
+            <dialog class="dashboard__add" id="confirmPassword">
+                <header class="dashboard__profile__top">
+                    <h3>Conferma</h3>
+                    <span class="btn-close" onclick="toggleDialog('confirmPassword')"></span>
+                </header>
+                <label class="dashboard__profile__inputs">
+                    <input type="password" placeholder="Password">
+                    <button>Pubblica</button>
+                </label>
+            </dialog>
+        </section>
+    </toggle-tabs>
+
 
 </page-layout>
 </body>
@@ -144,14 +148,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-    }
 
-    .dashboard__button__wrapper {
-        width: 100vw;
-        max-width: 1200px;
-        display: flex;
-        justify-content: start;
-        gap: .3rem;
     }
 
     .dashboard__add {
@@ -159,7 +156,18 @@
         min-width: 30vw;
     }
 
-    .dashboard__add__top {
+    .dashboard__profile {
+        width: 90vw;
+        max-width: 600px;
+        display: grid;
+        gap: .5rem;
+    }
+
+    .dashboard__profile > * {
+        margin: 1rem 0
+    }
+
+    .dashboard__profile__top {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -167,7 +175,7 @@
         gap: .5rem;
     }
 
-    .dashboard__add__inputs {
+    .dashboard__profile__inputs {
         display: flex;
         flex-direction: column;
         gap: .5rem;
@@ -175,7 +183,7 @@
     }
 
     .dashboard__articles {
-        width: 100%;
+        width: 90vw;
         max-width: 1200px;
         margin: 1rem 0;
         padding: .8rem;
@@ -193,6 +201,11 @@
         align-items: center;
         margin: .5rem 0;
         padding: .2rem .6rem
+    }
+
+    .dashboard__article__title {
+        font-weight: 400;
+        font-size: 1.1rem
     }
 
     .dashboard__article__buttons {
