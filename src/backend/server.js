@@ -36,5 +36,8 @@ function route() {
                 res.sendFile(path.join(frontendPath, `pages/${arguments[1]}.html`));
             });
             break;
+        default:
+            console.error('Invalid number of arguments for route()');
+            break;
     }
 }
