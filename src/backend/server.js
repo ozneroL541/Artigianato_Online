@@ -6,10 +6,11 @@ const frontendPath = path.join(__dirname, '../frontend/pages');
 const options = {
     extensions: ['html', ''],
     immutable: true,
-    index: "index.html"
+    index: 'index.html'
 };
 
 app.use(express.static(frontendPath, options));
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
