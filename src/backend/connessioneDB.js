@@ -19,3 +19,22 @@ app.get('/users', async (req, res) => {
 
 app.listen(5000, () => console.log("PostgreSQL API running on http://localhost:5000"));
 */
+
+
+
+//const express = require('express');
+
+import pg from 'pg'
+const { Pool, Client } = pg
+ 
+const pool = new Pool({
+    host: "localhost",
+    port: "5432",
+    user: "artigianato_online",
+    password: "password",
+    database: "artigianato_online_db"
+})
+ 
+console.log(await pool.query('SELECT NOW()'))
+ 
+await client.end()
