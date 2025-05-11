@@ -1,4 +1,4 @@
-import argon2 from 'argon2';
+const argon2 = require('argon2');
 
 /**
  * Represents a User registration process.
