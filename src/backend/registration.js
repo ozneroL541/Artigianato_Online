@@ -324,6 +324,10 @@ class ClientRegistration extends Registration {
     }
 }
 
+class AdminRegistration extends Registration {
+    // TODO
+}
+
 /**
  * Represents a registration Error.
  * @class RegistrationError
