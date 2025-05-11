@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.static(frontendPath, options));
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-app.post('/auth/register/artisan', async (req, res) => {
+app.post('/api/auth/register/artisan', async (req, res) => {
     try {
         const { username, password, companyName, iban } = req.body;
         const reg = new registration.ArtisanRegistration(pool, username, password, companyName, iban);
@@ -37,7 +37,7 @@ app.post('/auth/register/artisan', async (req, res) => {
     }
 });
 
-app.post('/auth/register/client', async (req, res) => {
+app.post('/api/auth/register/client', async (req, res) => {
     try {
         const { username, password, email, name, surname } = req.body;
         const reg = new registration.ClientRegistration(pool, username, password, email, name, surname);
