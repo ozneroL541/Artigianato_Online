@@ -37,6 +37,17 @@ app.post('/auth/register/artisan', async (req, res) => {
     }
 });
 
+app.post('/auth/register/client', async (req, res) => {
+    try {
+        const { username, password, email, name, surname } = req.body;
+        const reg = new registration.ClientRegistration(pool, username, password, email, name, surname);
+        await reg.register();
+        res.status(200).json({ message: 'Registration successful' });
+    } catch (error) {
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
 });

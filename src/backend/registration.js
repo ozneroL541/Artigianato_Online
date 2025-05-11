@@ -187,9 +187,7 @@ class ArtisanRegistration extends Registration {
         try {
             await this.db.query(query, values);
         } catch (err) {
-            console.error('RegistrationError saving artisan registration:', this.username);
-            console.error(err);
-            throw err;
+            throw new RegistrationError('Saving registration failed');
         }
     }
 
@@ -226,7 +224,7 @@ class ClientRegistration extends Registration {
      * The attribute name for the username in the database table.
      * @type {string|null}
      */
-    static tableUsername = 'username_cliente';
+    static dbUsername = 'username_cliente';
 
     /**
      * Constructs a new instance of the registration class.
@@ -258,15 +256,9 @@ class ClientRegistration extends Registration {
     async checkEmailUnique() {
         const query = `SELECT * FROM ${this.constructor.dbTableName} WHERE email_cliente = $1`;
         const values = [this.email];
-        try {
-            const res = await this.db.query(query, values);
-            if (res.rows.length > 0) {
-                throw new RegistrationError('Email already exists');
-            }
-        } catch (err) {
-            console.error('RegistrationError checking email:', this.email);
-            console.error(err);
-            throw err;
+        const res = await this.db.query(query, values);
+        if (res.rows.length > 0) {
+            throw new RegistrationError('Email already exists');
         }
     }
 
@@ -307,15 +299,14 @@ class ClientRegistration extends Registration {
      * @throws {RegistrationError} If there is an issue executing the database query.
      */
     async save() {
-        const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.tableUsername}, ${this.constructor.dbPassword}, email_cliente, nome_cliente, cognome_cliente) VALUES ($1, $2, $3, $4, $5)`;
+        const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}, email_cliente, nome_cliente, cognome_cliente) VALUES ($1, $2, $3, $4, $5)`;
         await this.hashPassword();
         const values = [this.username, this.hashedPassword, this.email, this.firstName, this.lastName];
         try {
             await this.db.query(query, values);
         } catch (err) {
-            console.error('RegistrationError saving client registration:', this.username);
             console.error(err);
-            throw err;
+            throw new RegistrationError('Saving registration failed');
         }
     }
     
