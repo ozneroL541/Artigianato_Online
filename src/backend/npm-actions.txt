@@ -1,2 +1,2 @@
 npm init -y
-npm install express argon2 pg
+npm install express argon2 pg cors dotenv

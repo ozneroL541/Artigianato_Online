@@ -53,7 +53,7 @@ const pool = new Pool({ connectionString: process.env.PG_URI });
 app.get('/users', async (req, res) => {
     //const { rows } = await pool.query('SELECT * FROM users');
     //res.json(rows);
-    console.log('culo');
+    console.log('GET request received');
 });
 
 app.listen(5000, () => console.log("PostgreSQL API running on http://localhost:5000"));

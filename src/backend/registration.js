@@ -1,4 +1,4 @@
-const argon2 = require('argon2');
+import argon2 from 'argon2';
 
 /**
  * Represents a User registration process.
@@ -59,28 +59,36 @@ class Registration {
     /**
      * Hashes the user's password using the Argon2 algorithm.
      * Waring: This method will take a long time to execute for security reasons.
-     * @throws {Error} If hashing fails.
+     * @throws {RegistrationError} If hashing fails.
      * @returns {Promise<void>}
      */
-    async hashPassword() {}
+    async hashPassword() {
+        try {
+            this.hashedPassword = await argon2.hash(this.password);
+        } catch (err) {
+            console.error('Error hashing password:', this.username);
+            console.error(err);
+            throw err;
+        }
+    }
 
     /**
      * Checks if the username already exists in the database.
-     * @throws {Error} If the username already exists.
+     * @throws {RegistrationError} If the username already exists.
      * @returns {Promise<void>}
      */
     async checkUsername()  {
-        const query = `SELECT * FROM ${this.constructor.tableName} WHERE ${this.constructor.tableUsername} = $1`;
+        const query = `SELECT * FROM ${this.constructor.dbTableName} WHERE ${this.constructor.dbUsername} = $1`;
         const values = [this.username];
         const res = await this.db.query(query, values);
         if (res.rows.length > 0) {
-            throw new Error('Username already exists');
+            throw new RegistrationError('Username already exists');
         }
     }
     
     /**
      * Performs all necessary checks and saves the user to the database.
-     * @throws {Error} If any checks fail or saving fails.
+     * @throws {RegistrationError} If any checks fail or saving fails.
      * @returns {Promise<void>}
      */
     async register() {
@@ -134,30 +142,30 @@ class ArtisanRegistration extends Registration {
      * 
      * This method queries the database to determine if a company with the same
      * name as the current instance's `companyName` property already exists.
-     * If a match is found, an error is thrown to indicate that the company name
+     * If a match is found, an RegistrationError is thrown to indicate that the company name
      * is already in use.
      * 
-     * @throws {Error} Throws an error if the company name already exists in the database.
+     * @throws {RegistrationError} Throws an RegistrationError if the company name already exists in the database.
      * @returns {Promise<void>} Resolves if the company name does not exist.
      */
     async checkCompanyName() {
-        const query = `SELECT * FROM ${this.constructor.tableName} WHERE nome_impresa = $1`;
+        const query = `SELECT * FROM ${this.constructor.dbTableName} WHERE nome_impresa = $1`;
         const values = [this.companyName];
         const res = await this.db.query(query, values);
         if (res.rows.length > 0) {
-            throw new Error('Company name already exists');
+            throw new RegistrationError('Company name already exists');
         }
     }
 
     /**
      * Validates the IBAN format of the current instance.
      * 
-     * @throws {Error} Throws an error if the IBAN format is invalid.
+     * @throws {RegistrationError} Throws an RegistrationError if the IBAN format is invalid.
      */
     async checkIban() {
         const ibanRegex = /^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/;
         if (!ibanRegex.test(this.iban)) {
-            throw new Error('Invalid IBAN format');
+            throw new RegistrationError('Invalid IBAN format');
         }
     }
 
@@ -166,20 +174,20 @@ class ArtisanRegistration extends Registration {
      * 
      * This method inserts the artisan's username, hashed password, company name, 
      * and IBAN into the corresponding database table. It first hashes the password 
-     * before executing the database query. If an error occurs during the process, 
-     * it logs the error and rethrows it.
+     * before executing the database query. If an RegistrationError occurs during the process, 
+     * it logs the RegistrationError and rethrows it.
      * 
      * @async
-     * @throws {Error} If there is an issue executing the database query.
+     * @throws {RegistrationError} If there is an issue executing the database query.
      */
     async save() {
-        const query = `INSERT INTO ${this.constructor.tableName} (${this.constructor.tableUsername}, ${this.constructor.tablePassword}, nome_impresa, iban) VALUES ($1, $2, $3, $4)`;
+        const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}, nome_impresa, iban) VALUES ($1, $2, $3, $4)`;
         await this.hashPassword();
         const values = [this.username, this.hashedPassword, this.companyName, this.iban];
         try {
             await this.db.query(query, values);
         } catch (err) {
-            console.error('Error saving artisan registration:', this.username);
+            console.error('RegistrationError saving artisan registration:', this.username);
             console.error(err);
             throw err;
         }
@@ -212,7 +220,7 @@ class ClientRegistration extends Registration {
      * The name of the database table for client registration.
      * @type {string}
      */
-    static tableName = 'clienti';
+    static dbTableName = 'clienti';
 
     /**
      * The attribute name for the username in the database table.
@@ -241,22 +249,22 @@ class ClientRegistration extends Registration {
      * Checks if the email associated with the current instance is unique in the database.
      * 
      * Queries the database table associated with the current class to determine if the 
-     * provided email already exists. If the email is found, an error is thrown.
+     * provided email already exists. If the email is found, an RegistrationError is thrown.
      * 
      * @async
-     * @throws {Error} Throws an error if the email already exists in the database.
-     * @throws {Error} Throws an error if there is an issue executing the database query.
+     * @throws {RegistrationError} Throws an RegistrationError if the email already exists in the database.
+     * @throws {RegistrationError} Throws an RegistrationError if there is an issue executing the database query.
      */
     async checkEmailUnique() {
-        const query = `SELECT * FROM ${this.constructor.tableName} WHERE email_cliente = $1`;
+        const query = `SELECT * FROM ${this.constructor.dbTableName} WHERE email_cliente = $1`;
         const values = [this.email];
         try {
             const res = await this.db.query(query, values);
             if (res.rows.length > 0) {
-                throw new Error('Email already exists');
+                throw new RegistrationError('Email already exists');
             }
         } catch (err) {
-            console.error('Error checking email:', this.email);
+            console.error('RegistrationError checking email:', this.email);
             console.error(err);
             throw err;
         }
@@ -264,14 +272,14 @@ class ClientRegistration extends Registration {
 
     /**
      * Validates the format of the email address stored in the `email` property.
-     * Throws an error if the email format is invalid.
+     * Throws an RegistrationError if the email format is invalid.
      * 
-     * @throws {Error} If the email format is invalid.
+     * @throws {RegistrationError} If the email format is invalid.
      */
     checkEmailFormat() {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(this.email)) {
-            throw new Error('Invalid email format');
+            throw new RegistrationError('Invalid email format');
         }
     }
 
@@ -281,7 +289,7 @@ class ClientRegistration extends Registration {
      * 2. Verifies that the email is unique and not already in use.
      * 
      * @async
-     * @throws {Error} Throws an error if the email format is invalid or if the email is not unique.
+     * @throws {RegistrationError} Throws an RegistrationError if the email format is invalid or if the email is not unique.
      */
     async checkEmail() {
         this.checkEmailFormat();
@@ -293,19 +301,19 @@ class ClientRegistration extends Registration {
      * 
      * This method inserts the client's username, hashed password, email, first name, and last name
      * into the corresponding database table. It first hashes the password before executing the database query.
-     * If an error occurs during the process, it logs the error and rethrows it.
+     * If an RegistrationError occurs during the process, it logs the RegistrationError and rethrows it.
      * 
      * @async
-     * @throws {Error} If there is an issue executing the database query.
+     * @throws {RegistrationError} If there is an issue executing the database query.
      */
     async save() {
-        const query = `INSERT INTO ${this.constructor.tableName} (${this.constructor.tableUsername}, ${this.constructor.tablePassword}, email_cliente, nome_cliente, cognome_cliente) VALUES ($1, $2, $3, $4, $5)`;
+        const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.tableUsername}, ${this.constructor.dbPassword}, email_cliente, nome_cliente, cognome_cliente) VALUES ($1, $2, $3, $4, $5)`;
         await this.hashPassword();
         const values = [this.username, this.hashedPassword, this.email, this.firstName, this.lastName];
         try {
             await this.db.query(query, values);
         } catch (err) {
-            console.error('Error saving client registration:', this.username);
+            console.error('RegistrationError saving client registration:', this.username);
             console.error(err);
             throw err;
         }
@@ -324,3 +332,21 @@ class ClientRegistration extends Registration {
         await this.checkEmail();
     }
 }
+
+/**
+ * Represents a registration Error.
+ * @class RegistrationError
+ * @extends Error
+ */
+class RegistrationError extends Error {
+    /**
+     * Constructs a new RegistrationError.
+     * @param {string} message - The RegistrationError message.
+     */
+    constructor(message) {
+        super(message);
+        this.name = 'RegistrationError';
+    }
+}
+
+export { ArtisanRegistration, ClientRegistration, RegistrationError };

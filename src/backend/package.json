@@ -20,6 +20,8 @@
   "homepage": "https://github.com/ozneroL541/Artigianato_Online#readme",
   "dependencies": {
     "argon2": "^0.43.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "pg": "^8.15.6"
   }
