@@ -1,4 +1,4 @@
-import argon2 from 'argon2';
+import { hashPassword } from './hash.js';
 
 /**
  * Represents a User registration process.
@@ -62,9 +62,9 @@ class Registration {
      * @throws {RegistrationError} If hashing fails.
      * @returns {Promise<void>}
      */
-    async hashPassword() {
+    async hashPW() {
         try {
-            this.hashedPassword = await argon2.hash(this.password);
+            this.hashedPassword = await hashPassword(this.password);
         } catch (err) {
             console.error('Error hashing password:', this.username);
             console.error(err);
@@ -182,7 +182,7 @@ class ArtisanRegistration extends Registration {
      */
     async save() {
         const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}, nome_impresa, iban) VALUES ($1, $2, $3, $4)`;
-        await this.hashPassword();
+        await this.hashPW();
         const values = [this.username, this.hashedPassword, this.companyName, this.iban];
         try {
             await this.db.query(query, values);
@@ -300,7 +300,7 @@ class ClientRegistration extends Registration {
      */
     async save() {
         const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}, email_cliente, nome_cliente, cognome_cliente) VALUES ($1, $2, $3, $4, $5)`;
-        await this.hashPassword();
+        await this.hashPW();
         const values = [this.username, this.hashedPassword, this.email, this.firstName, this.lastName];
         try {
             await this.db.query(query, values);
@@ -352,7 +352,7 @@ class AdminRegistration extends Registration {
      */
     async save() {
         const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}) VALUES ($1, $2)`;
-        await this.hashPassword();
+        await this.hashPW();
         const values = [this.username, this.hashedPassword];
         try {
             await this.db.query(query, values);
