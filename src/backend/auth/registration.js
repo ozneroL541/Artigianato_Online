@@ -324,6 +324,13 @@ class ClientRegistration extends Registration {
     }
 }
 
+/**
+ * Represents a admin registration process, extending the base Registration class.
+ * Handles validation and saving of client-specific data such as email, first name, and last name.
+ * 
+ * @class AdminRegistration
+ * @extends Registration
+ */
 class AdminRegistration extends Registration {
     /**
      * The name of the database table for client registration.
