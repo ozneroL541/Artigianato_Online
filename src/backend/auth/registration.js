@@ -1,4 +1,4 @@
-import argon2 from 'argon2';
+import hashPassword from './hash.js';
 
 /**
  * Represents a User registration process.
@@ -64,7 +64,7 @@ class Registration {
      */
     async hashPassword() {
         try {
-            this.hashedPassword = await argon2.hash(this.password);
+            this.hashedPassword = await hashPassword(this.password);
         } catch (err) {
             console.error('Error hashing password:', this.username);
             console.error(err);
