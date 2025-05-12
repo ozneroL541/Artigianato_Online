@@ -1,4 +1,4 @@
-import hashPassword from './hash.js';
+import { hashPassword } from './hash.js';
 
 /**
  * Represents a User registration process.
