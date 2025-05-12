@@ -1,4 +1,5 @@
 import hashPassword from './hash.js';
+import { DBReferences, ArtisanDBReferences, ClientDBReferences, AdminDBReferences } from './dbreferences.js';
 
 /**
  * Represents a User registration process.
@@ -6,24 +7,6 @@ import hashPassword from './hash.js';
  * @class Registration
  */
 class Registration {
-    /**
-     * The name of the database table for registration.
-     * @type {string|null}
-     */
-    static dbTableName = null;
-
-    /**
-     * The attribute name for the username in the database table.
-     * @type {string|null}
-     */
-    static dbUsername = null;
-
-    /**
-     * The attribute name for the password in the database table.
-     * @type {string}
-     */
-    static dbPassword = 'h_password';
-
     /**
      * Creates an instance of Registration.
      * @param {Object} db - The database connection object.
@@ -107,12 +90,12 @@ class ArtisanRegistration extends Registration {
      * The name of the database table for artisan registration.
      * @type {string}
      */
-    static dbTableName = 'artigiani';
+    static dbTableName = ArtisanDBReferences.dbTableName;
     /**
      * The attribute name for the username in the database table.
      * @type {string|null}
      */
-    static dbUsername = 'username_artigiano';
+    static dbUsername = ArtisanDBReferences.dbUsername;
 
     /**
      * Constructs a new instance of the registration class.

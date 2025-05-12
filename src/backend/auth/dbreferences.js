@@ -73,3 +73,5 @@ class AdminDBReferences extends DBReferences {
      */
     static dbUsername = 'username_amministratore';
 }
+
+export { DBReferences, ArtisanDBReferences, ClientDBReferences, AdminDBReferences };
