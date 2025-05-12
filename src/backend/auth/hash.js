@@ -34,3 +34,5 @@ async function verifyPassword(password, hashedPassword) {
         throw new Error('Error during password verification');
     }
 }
+
+export { hashPassword, verifyPassword };

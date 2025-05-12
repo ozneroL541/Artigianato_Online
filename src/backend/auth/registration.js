@@ -1,5 +1,4 @@
 import hashPassword from './hash.js';
-import { DBReferences, ArtisanDBReferences, ClientDBReferences, AdminDBReferences } from './dbreferences.js';
 
 /**
  * Represents a User registration process.
@@ -7,6 +6,24 @@ import { DBReferences, ArtisanDBReferences, ClientDBReferences, AdminDBReference
  * @class Registration
  */
 class Registration {
+    /**
+     * The name of the database table for registration.
+     * @type {string|null}
+     */
+    static dbTableName = null;
+
+    /**
+     * The attribute name for the username in the database table.
+     * @type {string|null}
+     */
+    static dbUsername = null;
+
+    /**
+     * The attribute name for the password in the database table.
+     * @type {string}
+     */
+    static dbPassword = 'h_password';
+
     /**
      * Creates an instance of Registration.
      * @param {Object} db - The database connection object.
@@ -45,7 +62,7 @@ class Registration {
      * @throws {RegistrationError} If hashing fails.
      * @returns {Promise<void>}
      */
-    async hashPassword() {
+    async hashPW() {
         try {
             this.hashedPassword = await hashPassword(this.password);
         } catch (err) {
@@ -90,12 +107,12 @@ class ArtisanRegistration extends Registration {
      * The name of the database table for artisan registration.
      * @type {string}
      */
-    static dbTableName = ArtisanDBReferences.dbTableName;
+    static dbTableName = 'artigiani';
     /**
      * The attribute name for the username in the database table.
      * @type {string|null}
      */
-    static dbUsername = ArtisanDBReferences.dbUsername;
+    static dbUsername = 'username_artigiano';
 
     /**
      * Constructs a new instance of the registration class.
@@ -165,7 +182,7 @@ class ArtisanRegistration extends Registration {
      */
     async save() {
         const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}, nome_impresa, iban) VALUES ($1, $2, $3, $4)`;
-        await this.hashPassword();
+        await this.hashPW();
         const values = [this.username, this.hashedPassword, this.companyName, this.iban];
         try {
             await this.db.query(query, values);
@@ -283,7 +300,7 @@ class ClientRegistration extends Registration {
      */
     async save() {
         const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}, email_cliente, nome_cliente, cognome_cliente) VALUES ($1, $2, $3, $4, $5)`;
-        await this.hashPassword();
+        await this.hashPW();
         const values = [this.username, this.hashedPassword, this.email, this.firstName, this.lastName];
         try {
             await this.db.query(query, values);
@@ -335,7 +352,7 @@ class AdminRegistration extends Registration {
      */
     async save() {
         const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}) VALUES ($1, $2)`;
-        await this.hashPassword();
+        await this.hashPW();
         const values = [this.username, this.hashedPassword];
         try {
             await this.db.query(query, values);
