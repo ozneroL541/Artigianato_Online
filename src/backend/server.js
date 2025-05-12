@@ -11,7 +11,7 @@ const options = {
     index: 'index.html'
 };
 const { Pool } = require('pg');
-const registration = require('./registration.js');
+const registration = require('./auth/registration.js');
 dotenv.config();
 const poolOptions = {
     user: process.env.DB_USER,
