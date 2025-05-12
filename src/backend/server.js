@@ -3,6 +3,13 @@ const cors = require('cors');
 const express = require('express');
 const path = require('path');
 const app = express();
+const { Pool } = require('pg');
+
+
+const registration = require('./auth/registration.js');
+const login = require('./auth/login.js');
+
+const frontendPort = 8000;
 const port = 8080;
 const frontendPath = path.join(__dirname, '../frontend/pages');
 const options = {
@@ -10,22 +17,20 @@ const options = {
     immutable: true,
     index: 'index.html'
 };
-const { Pool } = require('pg');
-const registration = require('./auth/registration.js');
-const login = require('./auth/login.js');
+
 dotenv.config();
-const poolOptions = {
+const pool = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_DATABASE,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT
-};
-const pool = new Pool(poolOptions);
-app.use(cors());
-app.use(express.json());
-app.use(express.static(frontendPath, options));
-app.use(express.static(path.join(__dirname, '../frontend')));
+});
+
+app.use(cors({
+    origin: `http://localhost:${frontendPort}`,
+    methods: ['GET', 'POST'],
+}));
 
 app.post('/api/auth/register/artisan', async (req, res) => {
     try {
