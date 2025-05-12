@@ -325,7 +325,45 @@ class ClientRegistration extends Registration {
 }
 
 class AdminRegistration extends Registration {
-    // TODO
+    /**
+     * The name of the database table for client registration.
+     * @type {string}
+     */
+    static dbTableName = 'amministratori';
+
+    /**
+     * The attribute name for the username in the database table.
+     * @type {string|null}
+     */
+    static dbUsername = 'username_amministratore';
+
+    /**
+     * Saves the admin registration details into the database.
+     * 
+     * @async
+     * @throws {RegistrationError} If there is an issue executing the database query.
+     */
+    async save() {
+        const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}) VALUES ($1, $2)`;
+        await this.hashPassword();
+        const values = [this.username, this.hashedPassword];
+        try {
+            await this.db.query(query, values);
+        } catch (err) {
+            console.error(err);
+            throw new RegistrationError('Saving registration failed');
+        }
+    }
+
+    /**
+     * Performs all necessary validation checks for the registration process.
+     * 
+     * @async
+     * @returns {Promise<void>} Resolves when all checks are completed.
+     */
+    async allChecks() {
+        await this.checkUsername();
+    }
 }
 
 /**
@@ -344,4 +382,4 @@ class RegistrationError extends Error {
     }
 }
 
-export { ArtisanRegistration, ClientRegistration, RegistrationError };
+export { ArtisanRegistration, ClientRegistration, AdminRegistration, RegistrationError };

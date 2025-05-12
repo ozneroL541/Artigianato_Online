@@ -48,6 +48,17 @@ app.post('/api/auth/register/client', async (req, res) => {
     }
 });
 
+app.post('/api/auth/register/admin', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const reg = new registration.AdminRegistration(pool, username, password);
+        await reg.register();
+        res.status(200).json({ message: 'Registration successful' });
+    } catch (error) {
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
 });
