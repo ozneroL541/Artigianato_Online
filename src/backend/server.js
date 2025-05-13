@@ -9,6 +9,8 @@ const { Pool } = require('pg');
 const registration = require('./auth/registration.js');
 const login = require('./auth/login.js');
 
+const dashboard = require('./dashboard/dashboard.js');
+
 const frontendPort = 8000;
 const port = 8080;
 const frontendPath = path.join(__dirname, '../frontend/pages');
@@ -98,6 +100,23 @@ app.post('/api/auth/login/admin', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
+app.get('/api/artigiano/dashboard', async (req, res) => {
+    try {
+        const {artisan_name} = req.body;
+        const d = new dashboard.Dashboard(pool, artisan_name);
+        
+        //TODO 
+        //metodo per prendere tutti i prodotti
+
+        res.json();
+
+    } catch (error){
+        console.error(error);
+        res.status(400).json({message: 'Bad request', error: error.message})
+
     }
 });
 
