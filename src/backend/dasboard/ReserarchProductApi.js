@@ -1,9 +1,38 @@
-dotenv.config();
-const { Pool } = pkg;
+const dotenv = require('dotenv');
+const cors = require('cors');
+const express = require('express');
+const path = require('path');
+const app = express();
+const { Pool } = require('pg');
 
+
+const Research = require('./dasbord/reserchProductClass.js');
+
+
+const frontendPort = 8000;
+const port = 8080;
+const frontendPath = path.join(__dirname, '../frontend/pages');
+const options = {
+    extensions: ['html', ''],
+    immutable: true,
+    index: 'index.html'
+};
+
+dotenv.config();
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_DATABASE,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT
 });
+
+app.use(cors({
+    origin: `http://localhost:${frontendPort}`,
+    methods: ['GET', 'POST'],
+}));
+
+app.use(express.json());
 
 export default pool;
 
@@ -46,3 +75,4 @@ class Research {
 }
 
 export { Research, IncompatiblyId };
+
