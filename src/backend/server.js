@@ -32,6 +32,8 @@ app.use(cors({
     methods: ['GET', 'POST'],
 }));
 
+app.use(express.json());
+
 app.post('/api/auth/register/artisan', async (req, res) => {
     try {
         const { username, password, companyName, iban } = req.body;
