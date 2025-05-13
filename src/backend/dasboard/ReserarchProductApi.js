@@ -34,44 +34,31 @@ app.use(cors({
 
 app.use(express.json());
 
-export default pool;
 
-class IncompatiblyId extends Error {
-    constructor(message) {
-        super(message);
-        this.name = 'IncompatiblyId';
+// All products
+app.get('/api/ricerca/dashboard', async (req, res) => {
+    try {
+        const research = new ProductResearch(pool);
+        const products = await research.getAllProducts();
+        res.status(200).json(products);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
     }
-}
+});
 
-class Research {
-    static dbTableName = 'prodotti'; 
-    static dbId_Products = 'id_prodotto';
-
-    constructor(db, idProduct) {
-        this.db = db;
-        this.IdProduct = idProduct;
+// products by id
+app.get('/api/ricerca/dashboard/:id', async (req, res) => {
+    try {
+        const research = new ProductResearch(pool, req.params.id);
+        const product = await research.getProductById();
+        res.status(200).json(product);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
     }
+});
 
-    async ResearchById() {
-        const query = `SELECT * FROM ${this.constructor.dbTableName} WHERE ${this.constructor.dbId_Products} = $1`;
-        const values = [this.IdProduct];
-        const res = await this.db.query(query, values);
-        if (res.rows.length === 0) {
-            throw new IncompatiblyId("Id of the product is invalid");
-        }
-        return res.rows[0];
-    }
-
-    static async ResearchProduct(db) {
-        const query = `SELECT * FROM ${this.dbTableName}`;
-        try {
-            const res = await db.query(query);
-            return res.rows;
-        } catch (err) {
-            console.error('Failed to retrieve products:', err);
-            throw new Error('Could not fetch products from the database');
-        }
-    }
 }
 
 export { Research, IncompatiblyId };
