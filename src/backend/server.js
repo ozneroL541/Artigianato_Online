@@ -1,24 +1,16 @@
 const dotenv = require('dotenv');
 const cors = require('cors');
 const express = require('express');
-const path = require('path');
 const app = express();
 const { Pool } = require('pg');
 
 
 const registration = require('./auth/registration.js');
 const login = require('./auth/login.js');
-
 const dashboard = require('./dashboard/dashboard.js');
 
 const frontendPort = 8000;
 const port = 8080;
-const frontendPath = path.join(__dirname, '../frontend/pages');
-const options = {
-    extensions: ['html', ''],
-    immutable: true,
-    index: 'index.html'
-};
 
 dotenv.config();
 const pool = new Pool({
