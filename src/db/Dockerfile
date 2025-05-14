@@ -1,5 +1,5 @@
-FROM postgres:16
-LABEL name="ao-database"
+FROM postgres:latest
+LABEL name="db-artigianato_online"
 # Set the environment variables for PostgreSQL
 ENV POSTGRES_USER=artigianato_online
 ENV POSTGRES_HOST=localhost
