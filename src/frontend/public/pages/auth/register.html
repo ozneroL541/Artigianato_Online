@@ -8,28 +8,36 @@
     <script defer src="../../components/general/ToggleTabs.js"></script>
 </head>
 <body>
-<page-layout page-title="Login!">
+<page-layout page-title="Registrati!">
     <toggle-tabs tabs='["Artigiano", "Cliente"]' class="login">
         <div class="login__content">
             <div id="Artigiano" data-type="tab">
                 <h2 class="tab__title">Artigiano</h2>
                 <label>
-                    <input type="text" placeholder="Username">
-                    <input type="password" placeholder="Password">
-                    <button onclick="console.log('hello')" >Login!</button>
+                <input type="text" placeholder="Username">
+                <input type="text" placeholder="Nome Impresa">
+                <input type="email" placeholder="Email">
+                <input type="text" placeholder="IBAN">
+                <input type="password" placeholder="Password">
+                    <button onclick="console.log('hello')" >Registrati!</button>
                 </label>
             </div>
             <div id="Cliente" data-type="tab">
                 <h2 class="tab__title">Cliente</h2>
                 <label>
                     <input type="text" placeholder="Username">
+                    <input type="text" placeholder="Nome">
+                    <input type="text" placeholder="Cognome">
+                    <input type="email" placeholder="Email">
                     <input type="password" placeholder="Password">
-                    <button onclick="console.log('world')">Login!</button>
+                    <button onclick="console.log('world')">Registrati!</button>
                 </label>
+
             </div>
         </div>
-        <p class="text-center">Non hai un account? Allora <a href="/register">registrati</a></p>
+        <p class="text-center">Hai già un account? Allora <a href="/auth/login">vai al login</a></p>
     </toggle-tabs>
+
 </page-layout>
 </body>
 <style>
@@ -45,7 +53,7 @@
         align-items: center;
         justify-content: center;
         max-width: 600px;
-        height: 220px;
+        height: 320px;
     }
     .login__content label >* {
         width: 100%;
