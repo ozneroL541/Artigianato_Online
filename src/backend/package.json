@@ -2,9 +2,8 @@
   "name": "artigianato_online",
   "version": "1.0.0",
   "description": "Il cliente è una startup che vuole vendere online prodotti artigianali realizzati da creativi locali. La piattaforma consente agli artigiani di creare un profilo, caricare i propri prodotti, gestire l’inventario e gli ordini, mentre i clienti possono sfogliare il catalogo, fare acquisti e gestire il proprio profilo.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "repository": {
@@ -19,7 +18,8 @@
   },
   "homepage": "https://github.com/ozneroL541/Artigianato_Online#readme",
   "dependencies": {
-    "argon2": "^0.43.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "pg": "^8.15.6"
   }
