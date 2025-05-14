@@ -1,0 +1,40 @@
+services:
+    db:
+        build: ./db
+        container_name: pgdb-artigianato_online
+        restart: always
+        ports:
+            - "6543:5432"
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: artigianato_online
+            POSTGRES_HOST: localhost
+            POSTGRES_DB: artigianato_online_db
+            POSTGRES_PASSWORD: password
+            POSTGRES_PORT: 5432
+
+    backend:
+        build: ./backend
+        container_name: backend-artigianato_online
+        restart: always
+        ports:
+            - "8080:8080"
+        depends_on:
+            - db
+        environment:
+            POSTGRES_USER: artigianato_online
+            POSTGRES_HOST: db
+            POSTGRES_DB: artigianato_online_db
+            POSTGRES_PASSWORD: password
+            POSTGRES_PORT: 5432
+
+    frontend:
+        build: ./frontend
+        container_name: frontend-artigianato_online
+        restart: always
+        ports:
+            - "8000:8000"
+
+volumes:
+    pgdata:
