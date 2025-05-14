@@ -1,3 +1,4 @@
+// TODO documentation
 class Dashboard{
 
     static dbTableName = 'prodotti';

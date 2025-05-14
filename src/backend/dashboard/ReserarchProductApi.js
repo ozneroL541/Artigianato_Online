@@ -1,3 +1,5 @@
+// TODO: delete and implement API in server.js
+
 const dotenv = require('dotenv');
 const cors = require('cors');
 const express = require('express');
@@ -6,7 +8,7 @@ const app = express();
 const { Pool } = require('pg');
 
 
-const Research = require('./dasbord/reserchProductClass.js');
+const Research = require('./dasbord/researchProductClass.js');
 
 
 const frontendPort = 8000;

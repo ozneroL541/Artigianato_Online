@@ -4,7 +4,7 @@
  * This class must be considered as an abstract class.
  * @class Reaserch
  */
-class Reasearch {
+class Research {
     /**
      * The name of the database table for Reaserch.
      * @type {string|null}
@@ -124,7 +124,7 @@ class Reasearch {
     }
 
     /**
-     * Reasearch All Products.
+     * Research All Products.
      *@returns {Promise<Array>} A promise that resolves to an array of product records.
  *    @throws {Error} If the query fails.
      */
