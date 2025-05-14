@@ -5,8 +5,8 @@ const app = express();
 const { Pool } = require('pg');
 
 
-const registration = require('./auth/registration.js');
-const login = require('./auth/login.js');
+const { ArtisanRegistration, ClientRegistration, AdminRegistration } = require('./auth/registration.js');
+const { ArtisanLogin, ClientLogin, AdminLogin } = require('./auth/login.js');
 const dashboard = require('./dashboard/dashboard.js');
 
 const frontendPort = 8000;
@@ -31,7 +31,7 @@ app.use(express.json());
 app.post('/api/auth/register/artisan', async (req, res) => {
     try {
         const { username, password, companyName, iban } = req.body;
-        const reg = new registration.ArtisanRegistration(pool, username, password, companyName, iban);
+        const reg = new ArtisanRegistration(pool, username, password, companyName, iban);
         await reg.register();
         res.status(200).json({ message: 'Registration successful' });
     } catch (error) {
@@ -42,7 +42,7 @@ app.post('/api/auth/register/artisan', async (req, res) => {
 app.post('/api/auth/register/client', async (req, res) => {
     try {
         const { username, password, email, name, surname } = req.body;
-        const reg = new registration.ClientRegistration(pool, username, password, email, name, surname);
+        const reg = new ClientRegistration(pool, username, password, email, name, surname);
         await reg.register();
         res.status(200).json({ message: 'Registration successful' });
     } catch (error) {
@@ -53,7 +53,7 @@ app.post('/api/auth/register/client', async (req, res) => {
 app.post('/api/auth/register/admin', async (req, res) => {
     try {
         const { username, password } = req.body;
-        const reg = new registration.AdminRegistration(pool, username, password);
+        const reg = new AdminRegistration(pool, username, password);
         await reg.register();
         res.status(200).json({ message: 'Registration successful' });
     } catch (error) {
@@ -64,7 +64,7 @@ app.post('/api/auth/register/admin', async (req, res) => {
 app.post('/api/auth/login/artisan', async (req, res) => {
     try {
         const { username, password } = req.body;
-        const l = new login.ArtisanLogin(pool, username, password);
+        const l = new ArtisanLogin(pool, username, password);
         await l.authenticate();
         res.status(200).json({ message: 'Login successful' });
     } catch (error) {
@@ -75,7 +75,7 @@ app.post('/api/auth/login/artisan', async (req, res) => {
 app.post('/api/auth/login/client', async (req, res) => {
     try {
         const { username, password } = req.body;
-        const l = new login.ClientLogin(pool, username, password);
+        const l = new ClientLogin(pool, username, password);
         await l.authenticate();
         res.status(200).json({ message: 'Login successful' });
     } catch (error) {
@@ -86,7 +86,7 @@ app.post('/api/auth/login/client', async (req, res) => {
 app.post('/api/auth/login/admin', async (req, res) => {
     try {
         const { username, password } = req.body;
-        const l = new login.AdminLogin(pool, username, password);
+        const l = new AdminLogin(pool, username, password);
         await l.authenticate();
         res.status(200).json({ message: 'Login successful' });
     } catch (error) {
