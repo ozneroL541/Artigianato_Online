@@ -28,6 +28,8 @@ services:
             POSTGRES_DB: artigianato_online_db
             POSTGRES_PASSWORD: password
             POSTGRES_PORT: 5432
+            JWT_SECRET: jwtsecret
+            JWT_TTL: '1h'
 
     frontend:
         build: ./frontend
