@@ -1,4 +1,5 @@
 import { verifyPassword } from './hash.js';
+import { genArtisanJWT, genClientJWT, genAdminJWT } from './jwt.js';
 
 /**
  * Represents a User registration process.
@@ -109,7 +110,7 @@ class Login {
      */
     async login() {
         await this.authenticate();
-        return genJWT(this.username, this.constructor.type);        
+        return await this.getJWT();        
     }
 }
 
@@ -134,6 +135,13 @@ class ArtisanLogin extends Login {
      * @type {string|null}
      */
     static type = 'artigiano';
+    /**
+     * Generates a JWT for the artisan user.
+     * @returns {Promise<string>} The generated JWT for the artisan user.
+     */
+    async getJWT() {
+        return genArtisanJWT(this.username);
+    }
 }
 
 /**
@@ -159,6 +167,13 @@ class ClientLogin extends Login {
      * @type {string|null}
      */
     static type = 'cliente';
+    /**
+     * Generates a JWT for the client user.
+     * @returns {Promise<string>} The generated JWT for the client user.
+     */
+    async getJWT() {
+        return genClientJWT(this.username);
+    }
 }
 
 /**
@@ -184,6 +199,13 @@ class AdminLogin extends Login {
      * @type {string|null}
      */
     static type = 'amministratore';
+    /**
+     * Generates a JWT for the admin user.
+     * @returns {Promise<string>} The generated JWT for the admin user.
+     */
+    async getJWT() {
+        return genAdminJWT(this.username);
+    }
 }
 
 /**
@@ -202,4 +224,9 @@ class LoginError extends Error {
     }
 }
 
-export { ArtisanLogin, ClientLogin, AdminLogin, LoginError };
+export { 
+    ArtisanLogin,
+    ClientLogin,
+    AdminLogin,
+    LoginError
+};

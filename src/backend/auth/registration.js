@@ -389,4 +389,9 @@ class RegistrationError extends Error {
     }
 }
 
-export { ArtisanRegistration, ClientRegistration, AdminRegistration, RegistrationError };
+export { 
+    ArtisanRegistration,
+    ClientRegistration, 
+    AdminRegistration, 
+    RegistrationError 
+};

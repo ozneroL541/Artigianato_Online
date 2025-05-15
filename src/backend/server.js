@@ -8,6 +8,7 @@ const { Pool } = require('pg');
 const { ArtisanRegistration, ClientRegistration, AdminRegistration } = require('./auth/registration.js');
 const { ArtisanLogin, ClientLogin, AdminLogin } = require('./auth/login.js');
 const dashboard = require('./dashboard/dashboard.js');
+const { checkAuth } = require('./auth/jwt.js');
 
 const frontendPort = 8000;
 const port = 8080;
