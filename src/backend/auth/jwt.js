@@ -49,6 +49,7 @@ async function checkAuth(req, res, type) {
             if (decoded.type !== type) {
                 res.status(403).json({ message: "Forbidden", detail: "this user is not authorized for this" });
             }
+            req.username = decoded.username;
         } catch (error) {
             res.status(401).json({ message: "Unauthorized", detail: "invalid token" });
         }
@@ -93,7 +94,9 @@ async function genAdminJWT(username) {
  */
 const checkArtisan = async (req, res, next) => {
     await checkAuth(req, res, artisanType);
-    next();
+    if (res.statusCode === 200) {
+        next();
+    }
 };
 
 /**
@@ -106,7 +109,9 @@ const checkArtisan = async (req, res, next) => {
  */
 const checkClient = async (req, res, next) => {
     await checkAuth(req, res, clientType);
-    next();
+    if (res.statusCode === 200) {
+        next();
+    }
 };
 
 /**
@@ -119,7 +124,9 @@ const checkClient = async (req, res, next) => {
  */
 const checkAdmin = async (req, res, next) => {
     await checkAuth(req, res, adminType);
-    next();
+    if (res.statusCode === 200) {
+        next();
+    }
 };
 
 export {

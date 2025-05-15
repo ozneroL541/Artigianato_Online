@@ -7,8 +7,8 @@ const { Pool } = require('pg');
 
 const { ArtisanRegistration, ClientRegistration, AdminRegistration } = require('./auth/registration.js');
 const { ArtisanLogin, ClientLogin, AdminLogin } = require('./auth/login.js');
-const dashboard = require('./dashboard/dashboard.js');
-const { checkAuth } = require('./auth/jwt.js');
+const { Dashboard } = require('./dashboard/dashboard.js');
+const { checkArtisan, checkClient, checkArtisan } = require('./auth/jwt.js');
 
 const frontendPort = 8000;
 const port = 8080;
@@ -96,15 +96,15 @@ app.post('/api/auth/login/admin', async (req, res) => {
     }
 });
 
-app.get('/api/artigiano/dashboard', async (req, res) => {
+app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
     try {
-        const {artisan_name} = req.body;
-        const d = new dashboard.Dashboard(pool, artisan_name);
+        const artisan_name = req.username;
+        const d = new Dashboard(pool, artisan_name);
         
         //TODO 
         //metodo per prendere tutti i prodotti
 
-        res.json();
+        res.status(200).json({ message: 'Dashboard data', data: "TODO" });
 
     } catch (error){
         console.error(error);
