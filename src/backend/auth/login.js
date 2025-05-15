@@ -25,6 +25,12 @@ class Login {
     static dbPassword = 'h_password';
 
     /**
+     * The attribute name fot the type of user who wants to log-in.
+     * @type {string|null}
+     */
+    static type = null;
+
+    /**
      * Creates an instance of Login.
      * @param {Object} db - The database connection object.
      * @param {string} username - The username for registration.
@@ -94,6 +100,17 @@ class Login {
         await this.checkUsername();
         await this.verifyPW();
     }
+
+    /**
+     * Performs the login process by checking the username and password.
+     * If successful, generates a JWT for the user.
+     * @returns {Promise<string>} The generated JWT for the user.
+     * @throws {LoginError} If any checks fail or saving fails.
+     */
+    async login() {
+        await this.authenticate();
+        return genJWT(this.username, this.constructor.type);        
+    }
 }
 
 /**
@@ -112,6 +129,11 @@ class ArtisanLogin extends Login {
      * @type {string|null}
      */
     static dbUsername = 'username_artigiano';
+    /**
+     * The attribute name for the type of user who wants to log-in.
+     * @type {string|null}
+     */
+    static type = 'artigiano';
 }
 
 /**
@@ -127,12 +149,16 @@ class ClientLogin extends Login {
      * @type {string}
      */
     static dbTableName = 'clienti';
-
     /**
      * The attribute name for the username in the database table.
      * @type {string|null}
      */
     static dbUsername = 'username_cliente';
+    /**
+     * The attribute name for the type of user who wants to log-in.
+     * @type {string|null}
+     */
+    static type = 'cliente';
 }
 
 /**
@@ -148,12 +174,16 @@ class AdminLogin extends Login {
      * @type {string}
      */
     static dbTableName = 'amministratori';
-
     /**
      * The attribute name for the username in the database table.
      * @type {string|null}
      */
     static dbUsername = 'username_amministratore';
+    /**
+     * The attribute name for the type of user who wants to log-in.
+     * @type {string|null}
+     */
+    static type = 'amministratore';
 }
 
 /**

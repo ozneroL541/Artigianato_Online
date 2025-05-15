@@ -65,8 +65,8 @@ app.post('/api/auth/login/artisan', async (req, res) => {
     try {
         const { username, password } = req.body;
         const l = new ArtisanLogin(pool, username, password);
-        await l.authenticate();
-        res.status(200).json({ message: 'Login successful' });
+        const jwt = await l.login();
+        res.status(200).json({ message: 'Login successful', token: jwt });
     } catch (error) {
         res.status(400).json({ message: 'Bad request', error: error.message });
     }
@@ -76,8 +76,8 @@ app.post('/api/auth/login/client', async (req, res) => {
     try {
         const { username, password } = req.body;
         const l = new ClientLogin(pool, username, password);
-        await l.authenticate();
-        res.status(200).json({ message: 'Login successful' });
+        const jwt = await l.login();
+        res.status(200).json({ message: 'Login successful', token: jwt });
     } catch (error) {
         res.status(400).json({ message: 'Bad request', error: error.message });
     }
@@ -87,8 +87,8 @@ app.post('/api/auth/login/admin', async (req, res) => {
     try {
         const { username, password } = req.body;
         const l = new AdminLogin(pool, username, password);
-        await l.authenticate();
-        res.status(200).json({ message: 'Login successful' });
+        const jwt = await l.login();
+        res.status(200).json({ message: 'Login successful', token: jwt });
     } catch (error) {
         console.error(error);
         res.status(400).json({ message: 'Bad request', error: error.message });
