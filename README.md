@@ -6,13 +6,16 @@ To run the project build it with the `docker-compose.yml` file.
 ```sh
     sudo docker compose up --build --remove-orphans -d
 ```
-
+Then to run the project use
+```shell
+docker compose up
+```
 ### Stop the project
 To stop the project run:
 ```sh
     sudo docekr compose down
 ```
-
+Client is at port `8000`, server is at port `8080`
 
 ## Authors
 - @Sballerini3    Ballerini Stefano
