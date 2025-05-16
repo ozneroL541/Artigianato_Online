@@ -1,63 +1,69 @@
-import { updateUserInfo } from '../state.js';
+import { updateUserInfo } from '../../script/state.js';
 
-/**
- * This function implements the API for the artisan login
- * @param {string} userid the userId of the user
- * @param {string} password The user password
- * @author Leonardo Basso
- */
-const loginArtisan = async (userid, password) => {
+document.getElementById('artisanLoginButton').addEventListener('click', async () => {
+    const username = document.getElementById('artisanUsername').value;
+    const password = document.getElementById('artisanPassword').value;
+    const errorDiv = document.getElementById('artisanError');
+
     try {
         const response = await fetch('http://localhost:8080/api/auth/login/artisan', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username: userid, password }),
+            body: JSON.stringify({ username, password }),
         });
 
         const data = await response.json();
         if (response.ok) {
-            updateUserInfo({ isLogged: true, jwt_Token: data.token, userType: 'Artigiano' });
-            // Redirect to homepage
+            updateUserInfo({ isLogged: true, jwt_Token: data.token, userType: 'Artigiano', username });
             window.location.href = '/';
         } else {
-            alert(data.message);
+            if (data.message.includes("utente o password non trovati")) {
+                errorDiv.textContent = "Utente o password non trovati. Per favore, riprova.";
+                errorDiv.style.display = 'block';
+            } else {
+                errorDiv.textContent = data.message;
+                errorDiv.style.display = 'block';
+            }
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred during login.');
+        errorDiv.textContent = 'An error occurred during login.';
+        errorDiv.style.display = 'block';
     }
-};
+});
 
-/**
- * This function implements the API for the client login
- * @param {string} userid the userId of the user
- * @param {string} password The user password
- * @author Leonardo Basso
- */
-const loginClient = async (userid, password) => {
+document.getElementById('clientLoginButton').addEventListener('click', async () => {
+    const username = document.getElementById('clientUsername').value;
+    const password = document.getElementById('clientPassword').value;
+    const errorDiv = document.getElementById('clientError');
+
     try {
         const response = await fetch('http://localhost:8080/api/auth/login/client', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username: userid, password }),
+            body: JSON.stringify({ username, password }),
         });
 
         const data = await response.json();
         if (response.ok) {
-            updateUserInfo({ isLogged: true, jwt_Token: data.token, userType: 'Cliente' });
-            // Redirect to homepage
+            updateUserInfo({ isLogged: true, jwt_Token: data.token, userType: 'Cliente', username });
             window.location.href = '/';
         } else {
-            alert(data.message);
+            if (data.message.includes("utente o password non trovati")) {
+                errorDiv.textContent = "Utente o password non trovati. Per favore, riprova.";
+                errorDiv.style.display = 'block';
+            } else {
+                errorDiv.textContent = data.message;
+                errorDiv.style.display = 'block';
+            }
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred during login.');
+        errorDiv.textContent = 'An error occurred during login.';
+        errorDiv.style.display = 'block';
     }
-};
-
-export { loginArtisan, loginClient };
+});
