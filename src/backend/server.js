@@ -8,6 +8,7 @@ const { Pool } = require('pg');
 const { ArtisanRegistration, ClientRegistration, AdminRegistration } = require('./auth/registration.js');
 const { ArtisanLogin, ClientLogin, AdminLogin } = require('./auth/login.js');
 const { Dashboard } = require('./dashboard/dashboard.js');
+const { ProfileClient}= require('./dashboard/ProfileClient.js');
 const { checkArtisan, checkClient, checkAdmin } = require('./auth/jwt.js');
 
 const frontendPort = 8000;
@@ -110,6 +111,57 @@ app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
         console.error(error);
         res.status(400).json({message: 'Bad request', error: error.message})
 
+    }
+});
+
+
+app.get('/api/client/Profile', async (req, res) => {
+    try {
+        const profile = new ProfileClient(pool, req.query.username); // esempio con username passato da query
+        const products = await profile.getBuyProducts();
+        res.status(200).json(products);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
+
+app.put('/api/client/password', async (req, res) => {
+    const { username, newPassword } = req.body;
+    try {
+        const profile = new ProfileClient(pool, username);
+        const result = await profile.resetPassword(newPassword);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
+
+app.put('/api/client/email', async (req, res) => {
+    const { username, newEmail } = req.body;
+    try {
+        const profile = new ProfileClient(pool, username);
+        const result = await profile.ResetMail(newEmail);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
+
+app.post('/api/client/report', async (req, res) => {
+    const { idSignal, orderId, description, resolved } = req.body;
+    try {
+        const profile = new ProfileClient(pool); // non servono parametri per segnalazione
+        const result = await profile.newSignal(idSignal, orderId, description, resolved);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
     }
 });
 
