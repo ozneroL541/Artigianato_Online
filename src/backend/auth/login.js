@@ -1,5 +1,5 @@
-import { verifyPassword } from './hash.js';
-import { genArtisanJWT, genClientJWT, genAdminJWT } from './jwt.js';
+import {verifyPassword} from './hash.js';
+import {genArtisanJWT, genClientJWT, genAdminJWT} from './jwt.js';
 
 /**
  * Represents a User registration process.
@@ -81,8 +81,10 @@ class Login {
      * @throws {LoginError} If the username already exists.
      * @returns {Promise<void>}
      */
-    async checkUsername()  {
-        const query = `SELECT ${this.constructor.dbPassword} FROM ${this.constructor.dbTableName} WHERE ${this.constructor.dbUsername} = $1`;
+    async checkUsername() {
+        const query = `SELECT ${this.constructor.dbPassword}
+                       FROM ${this.constructor.dbTableName}
+                       WHERE ${this.constructor.dbUsername} = $1`;
         const values = [this.username];
         const res = await this.db.query(query, values);
         if (res.rows.length <= 0) {
@@ -91,7 +93,7 @@ class Login {
             this.storedPassword = res.rows[0][this.constructor.dbPassword];
         }
     }
-    
+
     /**
      * Performs all necessary checks and saves the user to the database.
      * @throws {LoginError} If any checks fail or saving fails.
@@ -110,7 +112,7 @@ class Login {
      */
     async login() {
         await this.authenticate();
-        return await this.getJWT();        
+        return await this.getJWT();
     }
 }
 
@@ -135,6 +137,7 @@ class ArtisanLogin extends Login {
      * @type {string|null}
      */
     static type = 'artigiano';
+
     /**
      * Generates a JWT for the artisan user.
      * @returns {Promise<string>} The generated JWT for the artisan user.
@@ -147,7 +150,7 @@ class ArtisanLogin extends Login {
 /**
  * Represents a client registration process, extending the base Login class.
  * Handles validation and saving of client-specific data such as email, first name, and last name.
- * 
+ *
  * @class ClientLogin
  * @extends Login
  */
@@ -167,6 +170,7 @@ class ClientLogin extends Login {
      * @type {string|null}
      */
     static type = 'cliente';
+
     /**
      * Generates a JWT for the client user.
      * @returns {Promise<string>} The generated JWT for the client user.
@@ -179,7 +183,7 @@ class ClientLogin extends Login {
 /**
  * Represents a admin registration process, extending the base Login class.
  * Handles validation and saving of client-specific data such as email, first name, and last name.
- * 
+ *
  * @class AdminLogin
  * @extends Login
  */
@@ -199,6 +203,7 @@ class AdminLogin extends Login {
      * @type {string|null}
      */
     static type = 'amministratore';
+
     /**
      * Generates a JWT for the admin user.
      * @returns {Promise<string>} The generated JWT for the admin user.
@@ -224,7 +229,7 @@ class LoginError extends Error {
     }
 }
 
-export { 
+export {
     ArtisanLogin,
     ClientLogin,
     AdminLogin,

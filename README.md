@@ -6,7 +6,7 @@ To run the project build it with the `docker-compose.yml` file.
 ```sh
     sudo docker compose up --build --remove-orphans -d
 ```
-Then to run the project use
+Once you have built the project you can also run 
 ```shell
 docker compose up
 ```

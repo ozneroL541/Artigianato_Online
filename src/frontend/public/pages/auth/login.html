@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../../assets/style.css">
     <script defer src="../../components/layout/PageLayout.js"></script>
     <script defer src="../../components/general/ToggleTabs.js"></script>
+    <script type="module" src="../../script/state.js"></script>
 </head>
 <body>
 <page-layout page-title="Login!">
@@ -13,25 +14,99 @@
         <div class="login__content">
             <div id="Artigiano" data-type="tab">
                 <h2 class="tab__title">Artigiano</h2>
+                <div id="artisanError" class="error-message" style="display: none; color: red;"></div>
                 <label>
-                    <input type="text" placeholder="Username">
-                    <input type="password" placeholder="Password">
-                    <button onclick="console.log('hello')" >Login!</button>
+                    <input type="text" id="artisanUsername" placeholder="Username">
+                    <input type="password" id="artisanPassword" placeholder="Password">
+                    <button id="artisanLoginButton">Login!</button>
                 </label>
             </div>
             <div id="Cliente" data-type="tab">
                 <h2 class="tab__title">Cliente</h2>
+                <div id="clientError" class="error-message" style="display: none; color: red;"></div>
                 <label>
-                    <input type="text" placeholder="Username">
-                    <input type="password" placeholder="Password">
-                    <button onclick="console.log('world')">Login!</button>
+                    <input type="text" id="clientUsername" placeholder="Username">
+                    <input type="password" id="clientPassword" placeholder="Password">
+                    <button id="clientLoginButton">Login!</button>
                 </label>
             </div>
         </div>
         <p class="text-center">Non hai un account? Allora <a href="/auth/register">registrati</a></p>
     </toggle-tabs>
 </page-layout>
-</body>
+
+<script type="module">
+    import { updateUserInfo } from '../../script/state.js';
+
+    document.getElementById('artisanLoginButton').addEventListener('click', async () => {
+        const username = document.getElementById('artisanUsername').value;
+        const password = document.getElementById('artisanPassword').value;
+        const errorDiv = document.getElementById('artisanError');
+
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/login/artisan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                updateUserInfo({ isLogged: true, jwt_Token: data.token, userType: 'Artigiano', username });
+                window.location.href = '/';
+            } else {
+                if (data.message.includes("utente o password non trovati")) {
+                    errorDiv.textContent = "Utente o password non trovati. Per favore, riprova.";
+                    errorDiv.style.display = 'block';
+                } else {
+                    errorDiv.textContent = data.message;
+                    errorDiv.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            errorDiv.textContent = 'An error occurred during login.';
+            errorDiv.style.display = 'block';
+        }
+    });
+
+    document.getElementById('clientLoginButton').addEventListener('click', async () => {
+        const username = document.getElementById('clientUsername').value;
+        const password = document.getElementById('clientPassword').value;
+        const errorDiv = document.getElementById('clientError');
+
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/login/client', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                updateUserInfo({ isLogged: true, jwt_Token: data.token, userType: 'Cliente', username });
+                window.location.href = '/';
+            } else {
+                if (data.message.includes("utente o password non trovati")) {
+                    errorDiv.textContent = "Utente o password non trovati. Per favore, riprova.";
+                    errorDiv.style.display = 'block';
+                } else {
+                    errorDiv.textContent = data.message;
+                    errorDiv.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            errorDiv.textContent = 'An error occurred during login.';
+            errorDiv.style.display = 'block';
+        }
+    });
+</script>
+
 <style>
     .login {
         display: flex;
@@ -40,6 +115,7 @@
         align-items: center;
         height: 80vh;
     }
+
     .login__content {
         display: flex;
         align-items: center;
@@ -47,13 +123,16 @@
         max-width: 600px;
         height: 220px;
     }
-    .login__content label >* {
+
+    .login__content label > * {
         width: 100%;
         margin-bottom: .5rem;
     }
+
     .tab__title {
         text-align: center;
         margin: 1rem 0;
     }
 </style>
+</body>
 </html>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script defer src="../../components/layout/PageLayout.js"></script>
     <script defer src="../../components/general/ToggleTabs.js"></script>
+    <script type="module" src="../../script/state.js"></script>
 </head>
 <body>
 <page-layout page-title="Dashboard artigiano">
@@ -33,7 +34,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd"
-                                      d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                                      d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 0 1 8 2z"/>
                                 <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
                             </svg>
                         </svg>
@@ -120,6 +121,7 @@
         </section>
         <section id="Profilo" data-type="tab" class="dashboard__profile">
             <h3>Le tue informazioni</h3>
+            <p>Username: <span id="username"></span></p>
             <label class="dashboard__profile__inputs">
                 <input type="text" placeholder="Nome impresa">
                 <input type="text" placeholder="IBAN">
@@ -138,17 +140,40 @@
             </dialog>
         </section>
     </toggle-tabs>
-
-
 </page-layout>
-</body>
+
+<script type="module">
+    import { state } from '../../script/state.js';
+
+    // Funzione per mostrare l'username nella dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+        const usernameSpan = document.getElementById('username');
+        if (state.user.username) {
+            usernameSpan.textContent = state.user.username;
+        }
+    });
+
+    /**
+     * This function toggles the visibility of the modal element.
+     *
+     * @author Leonardo Basso
+     * */
+    function toggleDialog(id) {
+        const dialog = document.getElementById(id);
+        if (dialog.open) {
+            dialog.close();
+        } else {
+            dialog.showModal();
+        }
+    }
+</script>
+
 <style>
     .dashboard {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-
     }
 
     .dashboard__add {
@@ -235,19 +260,5 @@
         }
     }
 </style>
+</body>
 </html>
-<script>
-    /**
-     * This function toggles the visibiility of the modal element.
-     *
-     * @author Leonardo Basso
-     * */
-    function toggleDialog(id) {
-        const dialog = document.getElementById(id);
-        if (dialog.open) {
-            dialog.close();
-        } else {
-            dialog.showModal();
-        }
-    }
-</script>
