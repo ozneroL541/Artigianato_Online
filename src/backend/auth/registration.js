@@ -1,4 +1,5 @@
 import { hashPassword } from './hash.js';
+import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db_references/dbReferences.js';
 
 /**
  * Represents a User registration process.
@@ -7,48 +8,33 @@ import { hashPassword } from './hash.js';
  */
 class Registration {
     /**
-     * The name of the database table for registration.
-     * @type {string|null}
-     */
-    static dbTableName = null;
-
-    /**
-     * The attribute name for the username in the database table.
-     * @type {string|null}
-     */
-    static dbUsername = null;
-
-    /**
-     * The attribute name for the password in the database table.
-     * @type {string}
-     */
-    static dbPassword = 'h_password';
-
-    /**
      * Creates an instance of Registration.
      * @param {Object} db - The database connection object.
+     * @param {dbReferences} dbRef - The database reference object.
      * @param {string} username - The username for registration.
      * @param {string} password - The password for registration.
      */
-    constructor(db, username, password) {
+    constructor(db, dbRef, username, password) {
         /**
          * The database connection object.
          * @type {Object}
          */
         this.db = db;
-
+        /**
+         * The name of the database table for registration.
+         * @type {string}
+         */
+        this.dbRef = dbRef;
         /**
          * The username for registration.
          * @type {string}
          */
         this.username = username;
-
         /**
          * The password for registration.
          * @type {string}
          */
         this.password = password;
-
         /**
          * The hashed version of the password.
          * @type {string|null}
@@ -78,7 +64,7 @@ class Registration {
      * @returns {Promise<void>}
      */
     async checkUsername()  {
-        const query = `SELECT * FROM ${this.constructor.dbTableName} WHERE ${this.constructor.dbUsername} = $1`;
+        const query = `SELECT * FROM ${this.dbRef.dbTableName} WHERE ${this.dbRef.dbUsername} = $1`;
         const values = [this.username];
         const res = await this.db.query(query, values);
         if (res.rows.length > 0) {
@@ -103,16 +89,6 @@ class Registration {
  * @extends Registration
  */
 class ArtisanRegistration extends Registration {
-    /**
-     * The name of the database table for artisan registration.
-     * @type {string}
-     */
-    static dbTableName = 'artigiani';
-    /**
-     * The attribute name for the username in the database table.
-     * @type {string|null}
-     */
-    static dbUsername = 'username_artigiano';
 
     /**
      * Constructs a new instance of the registration class.
@@ -124,7 +100,7 @@ class ArtisanRegistration extends Registration {
      * @param {string} iban - The IBAN associated with the company.
      */
     constructor(db, username, password, companyName, iban) {
-        super(db, username, password);
+        super(db, new dbArtisanReferences(), username, password);
         /**
          * The name of the company.
          * @type {string}
@@ -149,7 +125,7 @@ class ArtisanRegistration extends Registration {
      * @returns {Promise<void>} Resolves if the company name does not exist.
      */
     async checkCompanyName() {
-        const query = `SELECT * FROM ${this.constructor.dbTableName} WHERE nome_impresa = $1`;
+        const query = `SELECT * FROM ${this.dbRef.dbTableName} WHERE nome_impresa = $1`;
         const values = [this.companyName];
         const res = await this.db.query(query, values);
         if (res.rows.length > 0) {
@@ -181,7 +157,7 @@ class ArtisanRegistration extends Registration {
      * @throws {RegistrationError} If there is an issue executing the database query.
      */
     async save() {
-        const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}, nome_impresa, iban) VALUES ($1, $2, $3, $4)`;
+        const query = `INSERT INTO ${this.dbRef.dbTableName} (${this.dbRef.dbUsername}, ${this.dbRef.dbPassword}, nome_impresa, iban) VALUES ($1, $2, $3, $4)`;
         await this.hashPW();
         const values = [this.username, this.hashedPassword, this.companyName, this.iban];
         try {
@@ -215,18 +191,6 @@ class ArtisanRegistration extends Registration {
  */
 class ClientRegistration extends Registration {
     /**
-     * The name of the database table for client registration.
-     * @type {string}
-     */
-    static dbTableName = 'clienti';
-
-    /**
-     * The attribute name for the username in the database table.
-     * @type {string|null}
-     */
-    static dbUsername = 'username_cliente';
-
-    /**
      * Constructs a new instance of the registration class.
      *
      * @param {Object} db - The database connection object.
@@ -237,7 +201,7 @@ class ClientRegistration extends Registration {
      * @param {string} lastName - The last name of the client.
      */
     constructor(db, username, password, email, firstName, lastName) {
-        super(db, username, password);
+        super(db, new dbClientReferences(), username, password);
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -254,7 +218,7 @@ class ClientRegistration extends Registration {
      * @throws {RegistrationError} Throws an RegistrationError if there is an issue executing the database query.
      */
     async checkEmailUnique() {
-        const query = `SELECT * FROM ${this.constructor.dbTableName} WHERE email_cliente = $1`;
+        const query = `SELECT * FROM ${this.dbRef.dbTableName} WHERE email_cliente = $1`;
         const values = [this.email];
         const res = await this.db.query(query, values);
         if (res.rows.length > 0) {
@@ -299,7 +263,7 @@ class ClientRegistration extends Registration {
      * @throws {RegistrationError} If there is an issue executing the database query.
      */
     async save() {
-        const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}, email_cliente, nome_cliente, cognome_cliente) VALUES ($1, $2, $3, $4, $5)`;
+        const query = `INSERT INTO ${this.dbRef.dbTableName} (${this.dbRef.dbUsername}, ${this.dbRef.dbPassword}, email_cliente, nome_cliente, cognome_cliente) VALUES ($1, $2, $3, $4, $5)`;
         await this.hashPW();
         const values = [this.username, this.hashedPassword, this.email, this.firstName, this.lastName];
         try {
@@ -333,17 +297,18 @@ class ClientRegistration extends Registration {
  */
 class AdminRegistration extends Registration {
     /**
-     * The name of the database table for client registration.
-     * @type {string}
+     * Constructs a new instance of the registration class.
+     *
+     * @param {Object} db - The database connection object.
+     * @param {string} username - The username for the registration.
+     * @param {string} password - The password for the registration.
+     * @param {string} email - The email address of the admin.
+     * @param {string} firstName - The first name of the admin.
+     * @param {string} lastName - The last name of the admin.
      */
-    static dbTableName = 'amministratori';
-
-    /**
-     * The attribute name for the username in the database table.
-     * @type {string|null}
-     */
-    static dbUsername = 'username_amministratore';
-
+    constructor(db, username, password) {
+        super(db, new dbAdminReferences(), username, password);
+    }
     /**
      * Saves the admin registration details into the database.
      * 
@@ -351,7 +316,7 @@ class AdminRegistration extends Registration {
      * @throws {RegistrationError} If there is an issue executing the database query.
      */
     async save() {
-        const query = `INSERT INTO ${this.constructor.dbTableName} (${this.constructor.dbUsername}, ${this.constructor.dbPassword}) VALUES ($1, $2)`;
+        const query = `INSERT INTO ${this.dbRef.dbTableName} (${this.dbRef.dbUsername}, ${this.dbRef.dbPassword}) VALUES ($1, $2)`;
         await this.hashPW();
         const values = [this.username, this.hashedPassword];
         try {

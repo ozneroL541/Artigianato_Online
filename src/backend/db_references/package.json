@@ -1,0 +1,8 @@
+{
+  "name": "db_references",
+  "version": "1.0.0",
+  "description": "Module for managing database references",
+  "keywords": [],
+  "author": "",
+  "license": "GPL-3.0"
+}

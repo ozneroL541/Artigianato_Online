@@ -1,5 +1,6 @@
 import {verifyPassword} from './hash.js';
 import {genArtisanJWT, genClientJWT, genAdminJWT} from './jwt.js';
+import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db_references/dbReferences.js';
 
 /**
  * Represents a User authentication process.
@@ -8,54 +9,33 @@ import {genArtisanJWT, genClientJWT, genAdminJWT} from './jwt.js';
  */
 class Authentication {
     /**
-     * The name of the database table for authentication.
-     * @type {string|null}
-     */
-    static dbTableName = null;
-
-    /**
-     * The attribute name for the username in the database table.
-     * @type {string|null}
-     */
-    static dbUsername = null;
-
-    /**
-     * The attribute name for the password in the database table.
-     * @type {string}
-     */
-    static dbPassword = 'h_password';
-
-    /**
-     * The attribute name fot the type of user who wants to log-in.
-     * @type {string|null}
-     */
-    static type = null;
-
-    /**
      * Creates an instance of Authentication.
      * @param {Object} db - The database connection object.
+     * @param {dbReferences} dbRef - The database reference object.
      * @param {string} username - The username for authentication.
      * @param {string} password - The password for authentication.
      */
-    constructor(db, username, password) {
+    constructor(db, dbRef, username, password) {
         /**
          * The database connection object.
          * @type {Object}
          */
         this.db = db;
-
+        /**
+         * The name of the database table for authentication.
+         * @type {string}
+         */
+        this.dbRef = dbRef;
         /**
          * The username for authentication.
          * @type {string}
          */
         this.username = username;
-
         /**
          * The password for authentication.
          * @type {string}
          */
         this.password = password;
-
         /**
          * Password stored in the database.
          * @type {string|null}
@@ -82,15 +62,15 @@ class Authentication {
      * @returns {Promise<void>}
      */
     async checkUsername() {
-        const query = `SELECT ${this.constructor.dbPassword}
-                       FROM ${this.constructor.dbTableName}
-                       WHERE ${this.constructor.dbUsername} = $1`;
+        const query = `SELECT ${this.dbRef.dbPassword}
+                       FROM ${this.dbRef.dbTableName}
+                       WHERE ${this.dbRef.dbUsername} = $1`;
         const values = [this.username];
         const res = await this.db.query(query, values);
         if (res.rows.length <= 0) {
             throw new AuthenticationError('Username does not exist');
         } else {
-            this.storedPassword = res.rows[0][this.constructor.dbPassword];
+            this.storedPassword = res.rows[0][this.dbRef.dbPassword];
         }
     }
 
@@ -123,21 +103,19 @@ class Authentication {
  */
 class ArtisanAuthentication extends Authentication {
     /**
-     * The name of the database table for artisan authentication.
-     * @type {string}
-     */
-    static dbTableName = 'artigiani';
-    /**
-     * The attribute name for the username in the database table.
-     * @type {string|null}
-     */
-    static dbUsername = 'username_artigiano';
-    /**
      * The attribute name for the type of user who wants to log-in.
      * @type {string|null}
      */
     static type = 'artigiano';
-
+    /**
+     * Creates an instance of Authentication.
+     * @param {Object} db - The database connection object.
+     * @param {string} username - The username for authentication.
+     * @param {string} password - The password for authentication.
+     */
+    constructor(db, username, password) {
+        super(db, new dbArtisanReferences(), username, password);
+    }
     /**
      * Generates a JWT for the artisan user.
      * @returns {Promise<string>} The generated JWT for the artisan user.
@@ -156,21 +134,19 @@ class ArtisanAuthentication extends Authentication {
  */
 class ClientAuthentication extends Authentication {
     /**
-     * The name of the database table for client authentication.
-     * @type {string}
-     */
-    static dbTableName = 'clienti';
-    /**
-     * The attribute name for the username in the database table.
-     * @type {string|null}
-     */
-    static dbUsername = 'username_cliente';
-    /**
      * The attribute name for the type of user who wants to log-in.
      * @type {string|null}
      */
     static type = 'cliente';
-
+    /**
+     * Creates an instance of Authentication.
+     * @param {Object} db - The database connection object.
+     * @param {string} username - The username for authentication.
+     * @param {string} password - The password for authentication.
+     */
+    constructor(db, username, password) {
+        super(db, new dbClientReferences(), username, password);
+    }
     /**
      * Generates a JWT for the client user.
      * @returns {Promise<string>} The generated JWT for the client user.
@@ -189,21 +165,19 @@ class ClientAuthentication extends Authentication {
  */
 class AdminAuthentication extends Authentication {
     /**
-     * The name of the database table for client authentication.
-     * @type {string}
-     */
-    static dbTableName = 'amministratori';
-    /**
-     * The attribute name for the username in the database table.
-     * @type {string|null}
-     */
-    static dbUsername = 'username_amministratore';
-    /**
      * The attribute name for the type of user who wants to log-in.
      * @type {string|null}
      */
     static type = 'amministratore';
-
+    /**
+     * Creates an instance of Authentication.
+     * @param {Object} db - The database connection object.
+     * @param {string} username - The username for authentication.
+     * @param {string} password - The password for authentication.
+     */
+    constructor(db, username, password) {
+        super(db, new dbAdminReferences(), username, password);
+    }
     /**
      * Generates a JWT for the admin user.
      * @returns {Promise<string>} The generated JWT for the admin user.
