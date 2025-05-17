@@ -1,6 +1,6 @@
 import {verifyPassword} from './hash.js';
 import {genArtisanJWT, genClientJWT, genAdminJWT} from './jwt.js';
-import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db_references/dbReferences.js';
+import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db/dbReferences.js';
 
 /**
  * Represents a User authentication process.

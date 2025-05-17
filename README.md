@@ -2,20 +2,22 @@
 Il cliente è una startup che vuole vendere online prodotti artigianali realizzati da creativi locali. La piattaforma consente agli artigiani di creare un profilo, caricare i propri prodotti, gestire l’inventario e gli ordini, mentre i clienti possono sfogliare il catalogo, fare acquisti e gestire il proprio profilo.
 
 ## Run the project
-To run the project build it with the `docker-compose.yml` file.
+To run the project build it with the `docker-compose.yml` file in *src*.
 ```sh
     sudo docker compose up --build --remove-orphans -d
 ```
-Once you have built the project you can also run 
-```shell
-docker compose up
-```
+- Frontend is reachable at port `8000`.
+- Server is reachable at port `8080`.
+
 ### Stop the project
 To stop the project run:
 ```sh
-    sudo docekr compose down
+    sudo docker compose down
 ```
-Client is at port `8000`, server is at port `8080`
+
+## Documentation
+### API Doc
+RESTful API Documentation is avaiable at <http://localhost:8080/api/docs/> after the backend server has started.
 
 ## Authors
 - @Sballerini3    Ballerini Stefano

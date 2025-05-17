@@ -1,27 +1,25 @@
-const dotenv = require('dotenv');
 const cors = require('cors');
 const express = require('express');
 const app = express();
-const { Pool } = require('pg');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
 
-
-const { ArtisanRegistration, ClientRegistration, AdminRegistration } = require('./auth/registration.js');
-const { ArtisanAuthentication, ClientAuthentication, AdminAuthentication } = require('./auth/authentication.js');
 const { Dashboard } = require('./dashboard/dashboard.js');
 const { ProfileClient}= require('./dashboard/ProfileClient.js');
 const { checkArtisan, checkClient, checkAdmin } = require('./auth/jwt.js');
+const {
+    registerArtisan,
+    registerClient,
+    registerAdmin,
+    loginArtisan,
+    loginClient,
+    loginAdmin
+} = require('./auth/auth_api.js');
+// TODO: Remove this dependency
+const { pool } = require('./db/dbConnection.js');
 
 const frontendPort = 8000;
 const port = 8080;
-
-dotenv.config();
-const pool = new Pool({
-    user: process.env.POSTGRES_USER,
-    host: process.env.POSTGRES_HOST,
-    database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD,
-    port: process.env.POSTGRES_PORT
-});
 
 app.use(cors({
     origin: `http://localhost:${frontendPort}`,
@@ -30,72 +28,194 @@ app.use(cors({
 
 app.use(express.json());
 
-app.post('/api/auth/register/artisan', async (req, res) => {
-    try {
-        const { username, password, companyName, iban } = req.body;
-        const reg = new ArtisanRegistration(pool, username, password, companyName, iban);
-        await reg.register();
-        res.status(200).json({ message: 'Registration successful' });
-    } catch (error) {
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Artisan API',
+            version: '1.0.0',
+            description: 'API for Artigiano Online website',
+        },
+        servers: [
+            {
+                url: `http://localhost:${port}`,
+            },
+        ],
+    },
+    apis: ['./server.js'],
+};
 
-app.post('/api/auth/register/client', async (req, res) => {
-    try {
-        const { username, password, email, name, surname } = req.body;
-        const reg = new ClientRegistration(pool, username, password, email, name, surname);
-        await reg.register();
-        res.status(200).json({ message: 'Registration successful' });
-    } catch (error) {
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerOptions)));
 
-app.post('/api/auth/register/admin', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        const reg = new AdminRegistration(pool, username, password);
-        await reg.register();
-        res.status(200).json({ message: 'Registration successful' });
-    } catch (error) {
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
-
-app.post('/api/auth/login/artisan', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        const l = new ArtisanAuthentication(pool, username, password);
-        const jwt = await l.login();
-        res.status(200).json({ message: 'Authentication successful', token: jwt });
-    } catch (error) {
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
-
-app.post('/api/auth/login/client', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        const l = new ClientAuthentication(pool, username, password);
-        const jwt = await l.login();
-        res.status(200).json({ message: 'Authentication successful', token: jwt });
-    } catch (error) {
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
-
-app.post('/api/auth/login/admin', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        const l = new AdminAuthentication(pool, username, password);
-        const jwt = await l.login();
-        res.status(200).json({ message: 'Authentication successful', token: jwt });
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
+/**
+ * @swagger
+ * /api/auth/register/artisan:
+ *   post:
+ *      summary: Register a new artisan
+ *      description: Register a new artisan with username, password, company name, and IBAN.
+ *      parameters:
+ *       - name: username
+ *         in: body
+ *         description: The username of the artisan.
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         in: body
+ *         description: The password of the artisan.
+ *         required: true
+ *         type: string
+ *       - name: companyName
+ *         in: body
+ *         description: The company name of the artisan.
+ *         required: true
+ *         type: string
+ *       - name: iban
+ *         in: body
+ *         description: The IBAN of the artisan.
+ *         required: true
+ *         type: string
+ *      responses:
+ *        200:
+ *          description: Registration successful
+ *        400:
+ *          description: Bad request
+ */
+app.post('/api/auth/register/artisan', registerArtisan);
+/**
+ * @swagger
+ * /api/auth/register/client:
+ *   post:
+ *      summary: Register a new client
+ *      description: Register a new client with username, password, email, name, and surname.
+ *      parameters:
+ *       - name: username
+ *         in: body
+ *         description: The username of the client.
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         in: body
+ *         description: The password of the client.
+ *         required: true
+ *         type: string
+ *       - name: email
+ *         in: body
+ *         description: The email of the client.
+ *         required: true
+ *         type: string
+ *       - name: name
+ *         in: body
+ *         description: The name of the client.
+ *         required: true
+ *         type: string
+ *       - name: surname
+ *         in: body
+ *         description: The surname of the client.
+ *         required: true
+ *         type: string
+ *      responses:
+ *        200:
+ *          description: Registration successful
+ *        400:
+ *          description: Bad request
+ */
+app.post('/api/auth/register/client', registerClient);
+/**
+ * @swagger
+ * /api/auth/register/admin:
+ *   post:
+ *      summary: Register a new admin
+ *      description: Register a new admin with username and password.
+ *      parameters:
+ *       - name: username
+ *         in: body
+ *         description: The username of the admin.
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         in: body
+ *         description: The password of the admin.
+ *         required: true
+ *         type: string
+ *      responses:
+ *        200:
+ *          description: Registration successful
+ *        400:
+ *          description: Bad request
+ */
+app.post('/api/auth/register/admin', registerAdmin);
+/**
+ * @swagger
+ * /api/auth/login/artisan:
+ *  post:
+ *    summary: Login artisan
+ *    description: Login artisan with username and password and get JWT token.
+ *    parameters:
+ *     - name: username
+ *       in: body
+ *       description: The username of the artisan.
+ *       required: true
+ *       type: string
+ *     - name: password
+ *       in: body
+ *       description: The password of the artisan.
+ *       required: true
+ *       type: string
+ *    responses:
+ *      200:
+ *        description: Authentication successful
+ *      400:
+ *        description: Bad request
+ */
+app.post('/api/auth/login/artisan', loginArtisan);
+/**
+ * @swagger
+ * /api/auth/login/client:
+ *  post:
+ *    summary: Login client
+ *    description: Login client with username and password and get JWT token.
+ *    parameters:
+ *     - name: username
+ *       in: body
+ *       description: The username of the client.
+ *       required: true
+ *       type: string
+ *     - name: password
+ *       in: body
+ *       description: The password of the client.
+ *       required: true
+ *       type: string
+ *    responses:
+ *      200:
+ *        description: Authentication successful
+ *      400:
+ *        description: Bad request
+ */
+app.post('/api/auth/login/client', loginClient);
+/**
+ * @swagger
+ * /api/auth/login/admin:
+ *  post:
+ *    summary: Login Admin
+ *    description: Login administrator with username and password and get JWT token.
+ *    parameters:
+ *     - name: username
+ *       in: body
+ *       description: The username of the admin.
+ *       required: true
+ *       type: string
+ *     - name: password
+ *       in: body
+ *       description: The password of the admin.
+ *       required: true
+ *       type: string
+ *    responses:
+ *      200:
+ *        description: Authentication successful
+ *      400:
+ *        description: Bad request
+ */
+app.post('/api/auth/login/admin', loginAdmin);
 
 app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
     try {
@@ -167,4 +287,5 @@ app.post('/api/client/report', async (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
+    console.log(`API documentation available at http://localhost:${port}/api/docs`);
 });

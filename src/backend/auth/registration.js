@@ -1,5 +1,5 @@
 import { hashPassword } from './hash.js';
-import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db_references/dbReferences.js';
+import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db/dbReferences.js';
 
 /**
  * Represents a User registration process.

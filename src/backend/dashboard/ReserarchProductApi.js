@@ -61,7 +61,6 @@ app.get('/api/ricerca/dashboard/:id', async (req, res) => {
     }
 });
 
-}
 
 export { Research, IncompatiblyId };
 
