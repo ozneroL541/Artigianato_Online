@@ -31,15 +31,13 @@ class ProfileClient{
     }
     
     //this constructor is for the segnalacion
-    constructor(id_segn, id_ord, timeStampsen, desc, ris){
-
-        this.id_segn=id_segn;
-        this.id_ord=id_ord;
-        this.timeStampsen=timeStampsen;
-        this.desc=desc;
-        this.ris=ris;
-
-    }
+    //constructor(id_segn, id_ord, timeStampsen, desc, ris){
+    //    this.id_segn=id_segn;
+    //    this.id_ord=id_ord;
+    //    this.timeStampsen=timeStampsen;
+    //    this.desc=desc;
+    //    this.ris=ris;
+    //}
 
 
     async getBuyProducts(){
