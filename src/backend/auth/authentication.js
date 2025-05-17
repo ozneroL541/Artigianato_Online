@@ -2,13 +2,13 @@ import {verifyPassword} from './hash.js';
 import {genArtisanJWT, genClientJWT, genAdminJWT} from './jwt.js';
 
 /**
- * Represents a User registration process.
+ * Represents a User authentication process.
  * This class must be considered as an abstract class.
- * @class Login
+ * @class Authentication
  */
-class Login {
+class Authentication {
     /**
-     * The name of the database table for registration.
+     * The name of the database table for authentication.
      * @type {string|null}
      */
     static dbTableName = null;
@@ -32,10 +32,10 @@ class Login {
     static type = null;
 
     /**
-     * Creates an instance of Login.
+     * Creates an instance of Authentication.
      * @param {Object} db - The database connection object.
-     * @param {string} username - The username for registration.
-     * @param {string} password - The password for registration.
+     * @param {string} username - The username for authentication.
+     * @param {string} password - The password for authentication.
      */
     constructor(db, username, password) {
         /**
@@ -45,13 +45,13 @@ class Login {
         this.db = db;
 
         /**
-         * The username for registration.
+         * The username for authentication.
          * @type {string}
          */
         this.username = username;
 
         /**
-         * The password for registration.
+         * The password for authentication.
          * @type {string}
          */
         this.password = password;
@@ -65,20 +65,20 @@ class Login {
 
     /**
      * Verifies the password by hashing it and comparing it with the stored hash.
-     * @throws {LoginError} If verification fails.
+     * @throws {AuthenticationError} If verification fails.
      * @returns {Promise<void>}
      */
     async verifyPW() {
         try {
             this.hashedPassword = await verifyPassword(this.password, this.storedPassword);
         } catch (err) {
-            throw new LoginError("Wrong password");
+            throw new AuthenticationError("Wrong password");
         }
     }
 
     /**
      * Checks if the username already exists in the database.
-     * @throws {LoginError} If the username already exists.
+     * @throws {AuthenticationError} If the username already exists.
      * @returns {Promise<void>}
      */
     async checkUsername() {
@@ -88,7 +88,7 @@ class Login {
         const values = [this.username];
         const res = await this.db.query(query, values);
         if (res.rows.length <= 0) {
-            throw new LoginError('Username does not exist');
+            throw new AuthenticationError('Username does not exist');
         } else {
             this.storedPassword = res.rows[0][this.constructor.dbPassword];
         }
@@ -96,7 +96,7 @@ class Login {
 
     /**
      * Performs all necessary checks and saves the user to the database.
-     * @throws {LoginError} If any checks fail or saving fails.
+     * @throws {AuthenticationError} If any checks fail or saving fails.
      * @returns {Promise<void>}
      */
     async authenticate() {
@@ -108,7 +108,7 @@ class Login {
      * Performs the login process by checking the username and password.
      * If successful, generates a JWT for the user.
      * @returns {Promise<string>} The generated JWT for the user.
-     * @throws {LoginError} If any checks fail or saving fails.
+     * @throws {AuthenticationError} If any checks fail or saving fails.
      */
     async login() {
         await this.authenticate();
@@ -117,13 +117,13 @@ class Login {
 }
 
 /**
- * Represents a registration process for an artisan.
- * @class ArtisanLogin
- * @extends Login
+ * Represents an authentication process for an artisan.
+ * @class ArtisanAuthentication
+ * @extends Authentication
  */
-class ArtisanLogin extends Login {
+class ArtisanAuthentication extends Authentication {
     /**
-     * The name of the database table for artisan registration.
+     * The name of the database table for artisan authentication.
      * @type {string}
      */
     static dbTableName = 'artigiani';
@@ -148,15 +148,15 @@ class ArtisanLogin extends Login {
 }
 
 /**
- * Represents a client registration process, extending the base Login class.
+ * Represents a client authentication process, extending the base Authentication class.
  * Handles validation and saving of client-specific data such as email, first name, and last name.
  *
- * @class ClientLogin
- * @extends Login
+ * @class ClientAuthentication
+ * @extends Authentication
  */
-class ClientLogin extends Login {
+class ClientAuthentication extends Authentication {
     /**
-     * The name of the database table for client registration.
+     * The name of the database table for client authentication.
      * @type {string}
      */
     static dbTableName = 'clienti';
@@ -181,15 +181,15 @@ class ClientLogin extends Login {
 }
 
 /**
- * Represents a admin registration process, extending the base Login class.
+ * Represents a admin authentication process, extending the base Authentication class.
  * Handles validation and saving of client-specific data such as email, first name, and last name.
  *
- * @class AdminLogin
- * @extends Login
+ * @class AdminAuthentication
+ * @extends Authentication
  */
-class AdminLogin extends Login {
+class AdminAuthentication extends Authentication {
     /**
-     * The name of the database table for client registration.
+     * The name of the database table for client authentication.
      * @type {string}
      */
     static dbTableName = 'amministratori';
@@ -214,24 +214,24 @@ class AdminLogin extends Login {
 }
 
 /**
- * Represents a registration Error.
- * @class LoginError
+ * Represents an authentication Error.
+ * @class AuthenticationError
  * @extends Error
  */
-class LoginError extends Error {
+class AuthenticationError extends Error {
     /**
-     * Constructs a new LoginError.
-     * @param {string} message - The LoginError message.
+     * Constructs a new AuthenticationError.
+     * @param {string} message - The AuthenticationError message.
      */
     constructor(message) {
         super(message);
-        this.name = 'LoginError';
+        this.name = 'AuthenticationError';
     }
 }
 
 export {
-    ArtisanLogin,
-    ClientLogin,
-    AdminLogin,
-    LoginError
+    ArtisanAuthentication,
+    ClientAuthentication,
+    AdminAuthentication,
+    AuthenticationError
 };

@@ -6,7 +6,7 @@ const { Pool } = require('pg');
 
 
 const { ArtisanRegistration, ClientRegistration, AdminRegistration } = require('./auth/registration.js');
-const { ArtisanLogin, ClientLogin, AdminLogin } = require('./auth/login.js');
+const { ArtisanAuthentication, ClientAuthentication, AdminAuthentication } = require('./auth/authentication.js');
 const { Dashboard } = require('./dashboard/dashboard.js');
 const { ProfileClient}= require('./dashboard/ProfileClient.js');
 const { checkArtisan, checkClient, checkAdmin } = require('./auth/jwt.js');
@@ -66,9 +66,9 @@ app.post('/api/auth/register/admin', async (req, res) => {
 app.post('/api/auth/login/artisan', async (req, res) => {
     try {
         const { username, password } = req.body;
-        const l = new ArtisanLogin(pool, username, password);
+        const l = new ArtisanAuthentication(pool, username, password);
         const jwt = await l.login();
-        res.status(200).json({ message: 'Login successful', token: jwt });
+        res.status(200).json({ message: 'Authentication successful', token: jwt });
     } catch (error) {
         res.status(400).json({ message: 'Bad request', error: error.message });
     }
@@ -77,9 +77,9 @@ app.post('/api/auth/login/artisan', async (req, res) => {
 app.post('/api/auth/login/client', async (req, res) => {
     try {
         const { username, password } = req.body;
-        const l = new ClientLogin(pool, username, password);
+        const l = new ClientAuthentication(pool, username, password);
         const jwt = await l.login();
-        res.status(200).json({ message: 'Login successful', token: jwt });
+        res.status(200).json({ message: 'Authentication successful', token: jwt });
     } catch (error) {
         res.status(400).json({ message: 'Bad request', error: error.message });
     }
@@ -88,9 +88,9 @@ app.post('/api/auth/login/client', async (req, res) => {
 app.post('/api/auth/login/admin', async (req, res) => {
     try {
         const { username, password } = req.body;
-        const l = new AdminLogin(pool, username, password);
+        const l = new AdminAuthentication(pool, username, password);
         const jwt = await l.login();
-        res.status(200).json({ message: 'Login successful', token: jwt });
+        res.status(200).json({ message: 'Authentication successful', token: jwt });
     } catch (error) {
         console.error(error);
         res.status(400).json({ message: 'Bad request', error: error.message });
