@@ -7,6 +7,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const { Dashboard } = require('./dashboard/dashboard.js');
 const { ProfileClient}= require('./dashboard/ProfileClient.js');
 const { checkArtisan, checkClient, checkAdmin } = require('./auth/jwt.js');
+const { delClient, delArtisan, delAdmin } = require('./profile/profile_api.js');
 const {
     registerArtisan,
     registerClient,
@@ -216,6 +217,10 @@ app.post('/api/auth/login/client', loginClient);
  *        description: Bad request
  */
 app.post('/api/auth/login/admin', loginAdmin);
+
+app.post('/api/profile/delete/client', checkClient, delClient);
+app.post('/api/profile/delete/artisan', checkArtisan, delArtisan);
+app.post('/api/profile/delete/admin', checkAdmin, delAdmin);
 
 app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
     try {
