@@ -217,9 +217,62 @@ app.post('/api/auth/login/client', loginClient);
  *        description: Bad request
  */
 app.post('/api/auth/login/admin', loginAdmin);
-
+/**
+ * @swagger
+ * /api/profile/delete/client:
+ *  post:
+ *   summary: Delete client
+ *   description: Delete a client profile.
+ *   parameters:
+ *    - name: username
+ *      in: body
+ *      description: The username of the client.
+ *      required: true
+ *      type: string
+ *   responses:
+ *    200:
+ *     description: Client deleted successfully
+ *    500:
+ *     description: Error deleting Client
+ */
 app.post('/api/profile/delete/client', checkClient, delClient);
+/**
+ * @swagger
+ * /api/profile/delete/artisan:
+ *  post:
+ *   summary: Delete artisan
+ *   description: Delete an artisan profile.
+ *   parameters:
+ *    - name: username
+ *      in: body
+ *      description: The username of the artisan.
+ *      required: true
+ *      type: string
+ *   responses:
+ *    200:
+ *     description: Artisan deleted successfully
+ *    500:
+ *     description: Error deleting Artisan
+ */
 app.post('/api/profile/delete/artisan', checkArtisan, delArtisan);
+/**
+ * @swagger
+ * /api/profile/delete/admin:
+ *  post:
+ *   summary: Delete admin
+ *   description: Delete an admin profile.
+ *   parameters:
+ *    - name: username
+ *      in: body
+ *      description: The username of the admin.
+ *      required: true
+ *      type: string
+ *   responses:
+ *    200:
+ *     description: Admin deleted successfully
+ *    500:
+ *     description: Error deleting Admin
+ */
 app.post('/api/profile/delete/admin', checkAdmin, delAdmin);
 
 app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {

@@ -36,7 +36,7 @@ class DeleteProfile {
         const query = `DELETE FROM ${this.dbRef.dbTableName}
                        WHERE ${this.dbRef.dbUsername} = $1`;
         const values = [this.username];
-        await this.db.query(query, values);
+        await this.db.query(query, values)
     }
 };
 
