@@ -7,9 +7,10 @@
     <script defer src="../../components/layout/PageLayout.js"></script>
     <script defer src="../../components/general/ToggleTabs.js"></script>
     <script type="module" src="../../script/state.js"></script>
+    <script type="module" src="../../script/crud/auth/login.js"></script>
 </head>
 <body>
-<page-layout page-title="Login!">
+<page-layout page-title="Login">
     <toggle-tabs tabs='["Artigiano", "Cliente"]' class="login">
         <div class="login__content">
             <div id="Artigiano" data-type="tab">
@@ -36,74 +37,18 @@
 </page-layout>
 
 <script type="module">
-    import { updateUserInfo } from '../../script/state.js';
+    import { login } from '../../script/crud/auth/login.js';
 
-    document.getElementById('artisanLoginButton').addEventListener('click', async () => {
+    document.getElementById('artisanLoginButton').addEventListener('click', () => {
         const username = document.getElementById('artisanUsername').value;
         const password = document.getElementById('artisanPassword').value;
-        const errorDiv = document.getElementById('artisanError');
-
-        try {
-            const response = await fetch('http://localhost:8080/api/auth/login/artisan', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                updateUserInfo({ isLogged: true, jwt_Token: data.token, userType: 'Artigiano', username });
-                window.location.href = '/';
-            } else {
-                if (data.message.includes("utente o password non trovati")) {
-                    errorDiv.textContent = "Utente o password non trovati. Per favore, riprova.";
-                    errorDiv.style.display = 'block';
-                } else {
-                    errorDiv.textContent = data.message;
-                    errorDiv.style.display = 'block';
-                }
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            errorDiv.textContent = 'An error occurred during login.';
-            errorDiv.style.display = 'block';
-        }
+        login(username, password, "artisan");
     });
 
-    document.getElementById('clientLoginButton').addEventListener('click', async () => {
+    document.getElementById('clientLoginButton').addEventListener('click', () => {
         const username = document.getElementById('clientUsername').value;
         const password = document.getElementById('clientPassword').value;
-        const errorDiv = document.getElementById('clientError');
-
-        try {
-            const response = await fetch('http://localhost:8080/api/auth/login/client', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                updateUserInfo({ isLogged: true, jwt_Token: data.token, userType: 'Cliente', username });
-                window.location.href = '/';
-            } else {
-                if (data.message.includes("utente o password non trovati")) {
-                    errorDiv.textContent = "Utente o password non trovati. Per favore, riprova.";
-                    errorDiv.style.display = 'block';
-                } else {
-                    errorDiv.textContent = data.message;
-                    errorDiv.style.display = 'block';
-                }
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            errorDiv.textContent = 'An error occurred during login.';
-            errorDiv.style.display = 'block';
-        }
+        login(username, password, "client");
     });
 </script>
 

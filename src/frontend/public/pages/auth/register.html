@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../../assets/style.css">
     <script defer src="../../components/layout/PageLayout.js"></script>
     <script defer src="../../components/general/ToggleTabs.js"></script>
+    <script type="module" src="../../script/crud/register.js"></script>
 </head>
 <body>
 <page-layout page-title="Registrati!">
@@ -41,70 +42,24 @@
 </page-layout>
 
 <script type="module">
-    // Artisan registration
-    document.getElementById('artisanRegisterButton').addEventListener('click', async () => {
+    import { registerArtisan, registerClient } from '../../script/crud/auth/register.js';
+
+    document.getElementById('artisanRegisterButton').addEventListener('click', () => {
         const username = document.getElementById('artisanUsername').value;
         const companyName = document.getElementById('companyName').value;
         const email = document.getElementById('artisanEmail').value;
         const iban = document.getElementById('artisanIban').value;
         const password = document.getElementById('artisanPassword').value;
-        const errorDiv = document.getElementById('artisanError');
-
-        try {
-            const response = await fetch('http://localhost:8080/api/auth/register/artisan', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password, companyName, email, iban }),
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                alert("Registrazione completata con successo!");
-                window.location.href = '/auth/login';
-            } else {
-                errorDiv.textContent = data.message;
-                errorDiv.style.display = 'block';
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            errorDiv.textContent = 'Si è verificato un errore durante la registrazione.';
-            errorDiv.style.display = 'block';
-        }
+        registerArtisan(username, password, companyName, email, iban);
     });
 
-    // Client registration
-    document.getElementById('clientRegisterButton').addEventListener('click', async () => {
+    document.getElementById('clientRegisterButton').addEventListener('click', () => {
         const username = document.getElementById('clientUsername').value;
         const name = document.getElementById('clientName').value;
         const surname = document.getElementById('clientSurname').value;
         const email = document.getElementById('clientEmail').value;
         const password = document.getElementById('clientPassword').value;
-        const errorDiv = document.getElementById('clientError');
-
-        try {
-            const response = await fetch('http://localhost:8080/api/auth/register/client', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password, email, name, surname }),
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                alert("Registrazione completata con successo!");
-                window.location.href = '/auth/login';
-            } else {
-                errorDiv.textContent = data.message;
-                errorDiv.style.display = 'block';
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            errorDiv.textContent = 'Si è verificato un errore durante la registrazione.';
-            errorDiv.style.display = 'block';
-        }
+        registerClient(username, password, name, surname, email);
     });
 </script>
 

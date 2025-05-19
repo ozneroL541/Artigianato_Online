@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script defer src="../../components/layout/PageLayout.js"></script>
     <script defer src="../../components/general/ToggleTabs.js"></script>
-</head>
 <body>
 <page-layout page-title="Dashboard artigiano">
     <toggle-tabs tabs='["Articoli", "Profilo"]' class="dashboard">
@@ -120,6 +119,7 @@
         </section>
         <section id="Profilo" data-type="tab" class="dashboard__profile">
             <h3>Le tue informazioni</h3>
+            <p>Ciao, <span id="userId"></span>!</p>
             <label class="dashboard__profile__inputs">
                 <input type="text" placeholder="Nome impresa">
                 <input type="text" placeholder="IBAN">
@@ -138,8 +138,6 @@
             </dialog>
         </section>
     </toggle-tabs>
-
-
 </page-layout>
 </body>
 <style>
@@ -148,7 +146,6 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-
     }
 
     .dashboard__add {
@@ -238,7 +235,7 @@
 </html>
 <script>
     /**
-     * This function toggles the visibiility of the modal element.
+     * This function toggles the visibility of the modal element.
      *
      * @author Leonardo Basso
      * */
@@ -250,4 +247,12 @@
             dialog.showModal();
         }
     }
+    import { state } from "../../script/state.js";
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const token = state.user.jwt_Token;
+            const userId = state.user.jwt_Token; // Assicurati che il payload contenga userId
+            const userIdElement = document.getElementById('userId');
+            userIdElement.textContent = userId;
+    });
 </script>
