@@ -19,16 +19,21 @@ const {
 // TODO: Remove this dependency
 const { pool } = require('./db/dbConnection.js');
 
+/** Port for the frontend server */
 const frontendPort = 8000;
+/** Port for the backend server */
 const port = 8080;
 
+/** Middleware to enable CORS */
 app.use(cors({
     origin: `http://localhost:${frontendPort}`,
     methods: ['GET', 'POST'],
 }));
 
+/** Middleware to parse JSON request bodies */
 app.use(express.json());
 
+/** Swagger options for API documentation */
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
@@ -46,6 +51,9 @@ const swaggerOptions = {
     apis: ['./server.js'],
 };
 
+/**
+ * Use Swagger UI to serve the API documentation
+ */
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerOptions)));
 
 /**
