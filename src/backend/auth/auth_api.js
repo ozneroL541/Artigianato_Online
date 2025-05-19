@@ -64,7 +64,6 @@ const loginAdmin = async (req, res) => {
         const jwt = await l.login();
         res.status(200).json({ message: 'Authentication successful', token: jwt });
     } catch (error) {
-        console.error(error);
         res.status(400).json({ message: 'Bad request', error: error.message });
     }
 };

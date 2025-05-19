@@ -251,6 +251,20 @@ class ClientRegistration extends Registration {
         this.checkEmailFormat();
         await this.checkEmailUnique();
     }
+    /**
+     * Validates the first name and last name of the client.
+     * 
+     * This method checks if both the first name and last name are provided.
+     * If either is missing, an RegistrationError is thrown.
+     *
+     * @async
+     * @throws {RegistrationError} If either the first name or last name is missing.
+     */
+    async checkNames() {
+        if (!this.firstName || !this.lastName) {
+            throw new RegistrationError('First name and last name are required');
+        }
+    }
 
     /**
      * Saves the client registration details into the database.
@@ -285,6 +299,7 @@ class ClientRegistration extends Registration {
     async allChecks() {
         await this.checkUsername();
         await this.checkEmail();
+        await this.checkNames();
     }
 }
 

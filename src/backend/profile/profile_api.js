@@ -3,7 +3,7 @@ import { DeleteClient, DeleteArtisan, DeleteAdmin } from './delete.js';
 
 const delClient = async (req, res) => {
     try {
-        const { username } = req.username
+        const { username } = req
         const del = new DeleteClient(pool, username);
         await del.delete();
         res.status(200).json({ message: 'Client deleted successfully' });
@@ -14,7 +14,7 @@ const delClient = async (req, res) => {
 
 const delArtisan = async (req, res) => {
     try {
-        const { username } = req.username
+        const { username } = req
         const del = new DeleteArtisan(pool, username);
         await del.delete();
         res.status(200).json({ message: 'Artisan deleted successfully' });
@@ -25,7 +25,7 @@ const delArtisan = async (req, res) => {
 
 const delAdmin = async (req, res) => {
     try {
-        const { username } = req.username
+        const { username } = req
         const del = new DeleteAdmin(pool, username);
         await del.delete();
         res.status(200).json({ message: 'Admin deleted successfully' });

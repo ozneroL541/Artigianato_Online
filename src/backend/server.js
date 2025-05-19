@@ -220,7 +220,7 @@ app.post('/api/auth/login/admin', loginAdmin);
 /**
  * @swagger
  * /api/profile/delete/client:
- *  post:
+ *  delete:
  *   summary: Delete client
  *   description: Delete a client profile.
  *   parameters:
@@ -235,11 +235,11 @@ app.post('/api/auth/login/admin', loginAdmin);
  *    500:
  *     description: Error deleting Client
  */
-app.post('/api/profile/delete/client', checkClient, delClient);
+app.delete('/api/profile/delete/client', checkClient, delClient);
 /**
  * @swagger
  * /api/profile/delete/artisan:
- *  post:
+ *  delete:
  *   summary: Delete artisan
  *   description: Delete an artisan profile.
  *   parameters:
@@ -254,11 +254,11 @@ app.post('/api/profile/delete/client', checkClient, delClient);
  *    500:
  *     description: Error deleting Artisan
  */
-app.post('/api/profile/delete/artisan', checkArtisan, delArtisan);
+app.delete('/api/profile/delete/artisan', checkArtisan, delArtisan);
 /**
  * @swagger
  * /api/profile/delete/admin:
- *  post:
+ *  delete:
  *   summary: Delete admin
  *   description: Delete an admin profile.
  *   parameters:
@@ -273,7 +273,7 @@ app.post('/api/profile/delete/artisan', checkArtisan, delArtisan);
  *    500:
  *     description: Error deleting Admin
  */
-app.post('/api/profile/delete/admin', checkAdmin, delAdmin);
+app.delete('/api/profile/delete/admin', checkAdmin, delAdmin);
 
 app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
     try {
