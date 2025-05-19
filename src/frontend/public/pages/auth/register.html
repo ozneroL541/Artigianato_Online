@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../../assets/style.css">
-    <script defer src="../../components/layout/PageLayout.js"></script>
-    <script defer src="../../components/general/ToggleTabs.js"></script>
-    <script type="module" src="../../script/crud/register.js"></script>
+    <script defer type="module" src="../../components/layout/PageLayout.js"></script>
+    <script defer type="module" src="../../components/general/ToggleTabs.js"></script>
+    <script type="module" src="../../script/crud/auth/register.js"></script>
 </head>
 <body>
 <page-layout page-title="Registrati!">
@@ -42,7 +42,7 @@
 </page-layout>
 
 <script type="module">
-    import { registerArtisan, registerClient } from '../../script/crud/auth/register.js';
+    import {registerArtisan, registerClient} from '../../script/crud/auth/register.js';
 
     document.getElementById('artisanRegisterButton').addEventListener('click', () => {
         const username = document.getElementById('artisanUsername').value;
