@@ -275,6 +275,7 @@ app.delete('/api/profile/delete/artisan', checkArtisan, delArtisan);
  */
 app.delete('/api/profile/delete/admin', checkAdmin, delAdmin);
 
+// TODO: doc e spostare funzione asincrona in altro file
 app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
     try {
         const artisan_name = req.username;
@@ -293,6 +294,7 @@ app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
 });
 
 // TODO: Utilizzare JWT per autenticazione e ottenere username
+// TODO: doc e spostare funzione asincrona in altro file
 app.get('/api/client/Profile', async (req, res) => {
     try {
         const profile = new ProfileClient(pool, req.query.username); // esempio con username passato da query
@@ -305,6 +307,7 @@ app.get('/api/client/Profile', async (req, res) => {
 });
 
 // TODO: Utilizzare JWT per autenticazione e ottenere username
+// TODO: doc e spostare funzione asincrona in altro file
 app.put('/api/client/password', async (req, res) => {
     const { username, newPassword } = req.body;
     try {
@@ -318,6 +321,7 @@ app.put('/api/client/password', async (req, res) => {
 });
 
 // TODO: Utilizzare JWT per autenticazione e ottenere username
+// TODO: doc e spostare funzione asincrona in altro file
 app.put('/api/client/email', async (req, res) => {
     const { username, newEmail } = req.body;
     try {
@@ -331,6 +335,7 @@ app.put('/api/client/email', async (req, res) => {
 });
 
 // TODO: Utilizzare JWT per autenticazione
+// TODO: doc e spostare funzione asincrona in altro file
 app.post('/api/client/report', async (req, res) => {
     const { idSignal, orderId, description, resolved } = req.body;
     try {
@@ -343,6 +348,10 @@ app.post('/api/client/report', async (req, res) => {
     }
 });
 
+/**
+ * Start the server
+ * @param {number} port - The port number to listen on.
+ */
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
     console.log(`API documentation available at http://localhost:${port}/api/docs`);
