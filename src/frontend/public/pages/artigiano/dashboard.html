@@ -233,7 +233,7 @@
     }
 </style>
 </html>
-<script>
+<script type="module">
     /**
      * This function toggles the visibility of the modal element.
      *
@@ -247,12 +247,9 @@
             dialog.showModal();
         }
     }
-    import { state } from "../../script/state.js";
-
     document.addEventListener('DOMContentLoaded', () => {
-        const token = state.user.jwt_Token;
-            const userId = state.user.jwt_Token; // Assicurati che il payload contenga userId
+        const token = window.localStorage.getItem("userToken")
             const userIdElement = document.getElementById('userId');
-            userIdElement.textContent = userId;
+            userIdElement.textContent = token;
     });
 </script>

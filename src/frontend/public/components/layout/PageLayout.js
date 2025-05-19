@@ -13,26 +13,25 @@ class PageLayout extends HTMLElement {
         const title = this.getAttribute("page-title") || "Artigiani Online";
         document.title = `${title} - Artigiani Online`;
 
+        const isUserLogged = localStorage.getItem('isUserLogged') === 'true';
+
         this.shadowRoot.innerHTML = `
             <section class="page__layout">
                 <header class="navbar" id="navbar">
                     <div class="logo-menu">
                         <h2 class="logo">Artigiani Online</h2>
-                    <span class="burger" aria-label="Navigation menu" aria-expanded="false"></span>
+                        <span class="burger" aria-label="Navigation menu" aria-expanded="false"></span>
                     </div>
                     <nav class="navbar__links" id="navbar_links">
                         <a class="link" href="/">Home</a>
-                        <a class="link" href="/auth/login">Login</a>
+                        ${isUserLogged ? '<a class="link" id="logoutLink" href="#">Logout</a>' : '<a class="link" href="/auth/login">Login</a>'}
                     </nav>
                 </header>
                 <main>
                     <slot></slot>
                 </main>
-<!--                <footer>-->
-<!--                    <p>Artigiani Online, 2025</p>-->
-<!--                </footer>-->
-        </section>
-            
+            </section>
+
             <style> ${css} </style>
         `;
 
@@ -45,7 +44,21 @@ class PageLayout extends HTMLElement {
             const isExpanded = burger.getAttribute('aria-expanded') === 'true';
             burger.setAttribute('aria-expanded', !isExpanded);
         });
+
+        // Aggiungi un listener per il click sul link "Logout"
+        const logoutLink = this.shadowRoot.getElementById('logoutLink');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', (event) => {
+                // Logout code
+                event.preventDefault();
+                localStorage.setItem("userToken", null);
+                localStorage.setItem("userType", null);
+                localStorage.setItem("isUserLogged", "false");
+                window.location.href = "/"
+            });
+        }
     }
+
 }
 
 const css = `
@@ -135,4 +148,5 @@ header, main, footer {
     overflow: hidden;
 }
 `
+
 customElements.define("page-layout", PageLayout);

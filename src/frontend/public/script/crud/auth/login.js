@@ -1,4 +1,4 @@
-import {setUserInfo} from '../../state.js';
+import { setUserInfo } from '../../state.js';
 
 /**
  * This function implements the API for the artisan login
@@ -14,7 +14,7 @@ export const login = async (username, password, type) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({username, password}),
+            body: JSON.stringify({ username, password }),
         });
 
         const data = await response.json();
