@@ -292,7 +292,7 @@ app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
     }
 });
 
-
+// TODO: Utilizzare JWT per autenticazione e ottenere username
 app.get('/api/client/Profile', async (req, res) => {
     try {
         const profile = new ProfileClient(pool, req.query.username); // esempio con username passato da query
@@ -304,7 +304,7 @@ app.get('/api/client/Profile', async (req, res) => {
     }
 });
 
-
+// TODO: Utilizzare JWT per autenticazione e ottenere username
 app.put('/api/client/password', async (req, res) => {
     const { username, newPassword } = req.body;
     try {
@@ -317,7 +317,7 @@ app.put('/api/client/password', async (req, res) => {
     }
 });
 
-
+// TODO: Utilizzare JWT per autenticazione e ottenere username
 app.put('/api/client/email', async (req, res) => {
     const { username, newEmail } = req.body;
     try {
@@ -330,7 +330,7 @@ app.put('/api/client/email', async (req, res) => {
     }
 });
 
-
+// TODO: Utilizzare JWT per autenticazione
 app.post('/api/client/report', async (req, res) => {
     const { idSignal, orderId, description, resolved } = req.body;
     try {
