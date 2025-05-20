@@ -6,7 +6,7 @@ services:
         ports:
             - "6543:5432"
         volumes:
-            - pgdata:/var/lib/postgresql/data-artigianato_online
+            - pgdata:/var/lib/postgresql/data
         environment:
             POSTGRES_USER: artigianato_online
             POSTGRES_HOST: localhost

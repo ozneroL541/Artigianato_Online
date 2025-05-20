@@ -22,7 +22,7 @@ export const login = async (username, password, type) => {
             setUserInfo(data.token);
             window.location.href = '/';
         } else {
-            alert(data.message);
+            alert(data.error);
         }
     } catch (error) {
         console.error('Error:', error);

@@ -22,7 +22,7 @@ export const registerArtisan = async (username, password, companyName, email, ib
             alert("Registrazione completata con successo!");
             window.location.href = '/auth/login';
         } else {
-            alert(data.message);
+            alert(data.error);
         }
     } catch (error) {
         console.error('Error:', error);
