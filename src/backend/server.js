@@ -8,7 +8,7 @@ const { Dashboard } = require('./dashboard/dashboard.js');
 const { ProfileClient}= require('./dashboard/ProfileClient.js');
 const { checkArtisan, checkClient, checkAdmin } = require('./auth/jwt.js');
 const { delClient, delArtisan, delAdmin } = require('./profile/profile_api.js');
-const Research = require('./dasbord/researchProductClass.js');
+const { Search } = require('./dashboard/searchProductClass.js');
 const {
     registerArtisan,
     registerClient,

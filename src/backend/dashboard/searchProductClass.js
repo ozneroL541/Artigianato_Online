@@ -1,9 +1,9 @@
 /**
  * Represents a Product Research process.
  * This class is intended to be used as a base class.
- * @class Research
+ * @class Search
  */
-class Research {
+class Search {
     static dbTableName = null;
     static dbUsernameArtigian = 'username_artigiano';
     static dbCategory = null;
@@ -94,4 +94,4 @@ class IncompatiblyId extends Error {
     }
 }
 
-module.exports = { Research, IncompatiblyId };
+export default { Search };
