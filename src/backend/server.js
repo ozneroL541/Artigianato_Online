@@ -8,6 +8,7 @@ const { Dashboard } = require('./dashboard/dashboard.js');
 const { ProfileClient}= require('./dashboard/ProfileClient.js');
 const { checkArtisan, checkClient, checkAdmin } = require('./auth/jwt.js');
 const { delClient, delArtisan, delAdmin } = require('./profile/profile_api.js');
+const Research = require('./dasbord/researchProductClass.js');
 const {
     registerArtisan,
     registerClient,
@@ -350,6 +351,30 @@ app.post('/api/client/report', async (req, res) => {
         const profile = new ProfileClient(pool); // non servono parametri per segnalazione
         const result = await profile.newSignal(idSignal, orderId, description, resolved);
         res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
+// All products
+app.get('/api/ricerca/dashboard', async (req, res) => {
+    try {
+        const research = new ProductResearch(pool);
+        const products = await research.getAllProducts();
+        res.status(200).json(products);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
+// products by id
+app.get('/api/ricerca/dashboard/:id', async (req, res) => {
+    try {
+        const research = new ProductResearch(pool, req.params.id);
+        const product = await research.getProductById();
+        res.status(200).json(product);
     } catch (error) {
         console.error(error);
         res.status(400).json({ message: 'Bad request', error: error.message });
