@@ -1,4 +1,5 @@
 import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db/dbReferences.js';
+import { pool } from '../db/dbConnection.js';
 
 /**
  * Represents a Profile deleting process.
@@ -8,16 +9,15 @@ import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReference
 class DeleteProfile {
     /**
      * Creates an instance of DeleteProfile.
-     * @param {Object} db - The database connection object.
      * @param {dbReferences} dbRef - The database reference object.
      * @param {string} username - The username for authentication.
      */
-    constructor(db, dbRef, username) {
+    constructor(dbRef, username) {
         /**
          * The database connection object.
          * @type {Object}
          */
-        this.db = db;
+        this.db = pool;
         /**
          * The name of the database table for authentication.
          * @type {string}
@@ -48,11 +48,10 @@ class DeleteProfile {
 class DeleteClient extends DeleteProfile {
     /**
      * Creates an instance of DeleteClient.
-     * @param {Object} db - The database connection object.
      * @param {string} username - The username for authentication.
      */
-    constructor(db, username) {
-        super(db, new dbClientReferences(), username);
+    constructor(username) {
+        super(new dbClientReferences(), username);
     }
 };
 /**
@@ -63,11 +62,10 @@ class DeleteClient extends DeleteProfile {
 class DeleteArtisan extends DeleteProfile {
     /**
      * Creates an instance of DeleteArtisan.
-     * @param {Object} db - The database connection object.
      * @param {string} username - The username for authentication.
      */
-    constructor(db, username) {
-        super(db, new dbArtisanReferences(), username);
+    constructor(username) {
+        super(new dbArtisanReferences(), username);
     }
 };
 
@@ -79,11 +77,10 @@ class DeleteArtisan extends DeleteProfile {
 class DeleteAdmin extends DeleteProfile {
     /**
      * Creates an instance of DeleteAdmin.
-     * @param {Object} db - The database connection object.
      * @param {string} username - The username for authentication.
      */
-    constructor(db, username) {
-        super(db, new dbAdminReferences(), username);
+    constructor(username) {
+        super(new dbAdminReferences(), username);
     }
 };
 
