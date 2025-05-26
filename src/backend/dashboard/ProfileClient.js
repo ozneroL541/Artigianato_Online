@@ -1,3 +1,5 @@
+import { pool } from "../db/dbConnection.js";
+
 class ProfileClient{
 
     static dbTableName = 'ordini';
@@ -22,8 +24,8 @@ class ProfileClient{
 
 
     //this constructor is for the product 
-    constructor(db, usernameClient, productId, orderId, nameProduct) {
-        this.db = db;
+    constructor(usernameClient, productId, orderId, nameProduct) {
+        this.db = pool;
         this.usernameClient = usernameClient; 
         this.productId = productId; 
         this.orderId=orderId;

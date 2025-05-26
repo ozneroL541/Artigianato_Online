@@ -1,5 +1,6 @@
 import { hashPassword } from './hash.js';
 import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db/dbReferences.js';
+import { pool } from '../db/dbConnection.js';
 
 /**
  * Represents a User registration process.
@@ -9,17 +10,16 @@ import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReference
 class Registration {
     /**
      * Creates an instance of Registration.
-     * @param {Object} db - The database connection object.
      * @param {dbReferences} dbRef - The database reference object.
      * @param {string} username - The username for registration.
      * @param {string} password - The password for registration.
      */
-    constructor(db, dbRef, username, password) {
+    constructor(dbRef, username, password) {
         /**
          * The database connection object.
          * @type {Object}
          */
-        this.db = db;
+        this.db = pool;
         /**
          * The name of the database table for registration.
          * @type {string}
@@ -93,14 +93,13 @@ class ArtisanRegistration extends Registration {
     /**
      * Constructs a new instance of the registration class.
      *
-     * @param {Object} db - The database connection object.
      * @param {string} username - The username for the registration.
      * @param {string} password - The password for the registration.
      * @param {string} companyName - The name of the company.
      * @param {string} iban - The IBAN associated with the company.
      */
-    constructor(db, username, password, companyName, iban) {
-        super(db, new dbArtisanReferences(), username, password);
+    constructor(username, password, companyName, iban) {
+        super(new dbArtisanReferences(), username, password);
         /**
          * The name of the company.
          * @type {string}
@@ -193,15 +192,14 @@ class ClientRegistration extends Registration {
     /**
      * Constructs a new instance of the registration class.
      *
-     * @param {Object} db - The database connection object.
      * @param {string} username - The username for the registration.
      * @param {string} password - The password for the registration.
      * @param {string} email - The email address of the client.
      * @param {string} firstName - The first name of the client.
      * @param {string} lastName - The last name of the client.
      */
-    constructor(db, username, password, email, firstName, lastName) {
-        super(db, new dbClientReferences(), username, password);
+    constructor(username, password, email, firstName, lastName) {
+        super(new dbClientReferences(), username, password);
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -314,15 +312,14 @@ class AdminRegistration extends Registration {
     /**
      * Constructs a new instance of the registration class.
      *
-     * @param {Object} db - The database connection object.
      * @param {string} username - The username for the registration.
      * @param {string} password - The password for the registration.
      * @param {string} email - The email address of the admin.
      * @param {string} firstName - The first name of the admin.
      * @param {string} lastName - The last name of the admin.
      */
-    constructor(db, username, password) {
-        super(db, new dbAdminReferences(), username, password);
+    constructor(username, password) {
+        super(new dbAdminReferences(), username, password);
     }
     /**
      * Saves the admin registration details into the database.

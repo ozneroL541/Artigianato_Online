@@ -1,3 +1,4 @@
+import {pool} from '../db/dbConnection.js';
 // TODO documentation
 class Dashboard{
 
@@ -6,8 +7,8 @@ class Dashboard{
     static dbTableArtisanName = 'username_artigiano';
 
     // crea un oggetto passando nome dell'artigiano
-    constructor(db, artisan_name){
-        this.db = db;
+    constructor(artisan_name){
+        this.db = pool;
         this.artisan_name = artisan_name;
     }
 

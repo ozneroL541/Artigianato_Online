@@ -17,9 +17,6 @@ const {
     loginClient,
     loginAdmin
 } = require('./auth/auth_api.js');
-// TODO: Remove this dependency
-const { pool } = require('./db/dbConnection.js');
-
 /** Port for the frontend server */
 const frontendPort = 8000;
 /** Port for the backend server */
@@ -288,7 +285,7 @@ app.delete('/api/profile/delete/admin', checkAdmin, delAdmin);
 app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
     try {
         const artisan_name = req.username;
-        const d = new Dashboard(pool, artisan_name);
+        const d = new Dashboard(artisan_name);
         
         //TODO 
         //metodo per prendere tutti i prodotti
@@ -306,7 +303,7 @@ app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
 // TODO: doc e spostare funzione asincrona in altro file
 app.get('/api/client/Profile', async (req, res) => {
     try {
-        const profile = new ProfileClient(pool, req.query.username); // esempio con username passato da query
+        const profile = new ProfileClient(req.query.username); // esempio con username passato da query
         const products = await profile.getBuyProducts();
         res.status(200).json(products);
     } catch (error) {
@@ -320,7 +317,7 @@ app.get('/api/client/Profile', async (req, res) => {
 app.put('/api/client/password', async (req, res) => {
     const { username, newPassword } = req.body;
     try {
-        const profile = new ProfileClient(pool, username);
+        const profile = new ProfileClient(username);
         const result = await profile.resetPassword(newPassword);
         res.status(200).json(result);
     } catch (error) {
@@ -334,7 +331,7 @@ app.put('/api/client/password', async (req, res) => {
 app.put('/api/client/email', async (req, res) => {
     const { username, newEmail } = req.body;
     try {
-        const profile = new ProfileClient(pool, username);
+        const profile = new ProfileClient(username);
         const result = await profile.ResetMail(newEmail);
         res.status(200).json(result);
     } catch (error) {
@@ -348,7 +345,7 @@ app.put('/api/client/email', async (req, res) => {
 app.post('/api/client/report', async (req, res) => {
     const { idSignal, orderId, description, resolved } = req.body;
     try {
-        const profile = new ProfileClient(pool); // non servono parametri per segnalazione
+        const profile = new ProfileClient(); // non servono parametri per segnalazione
         const result = await profile.newSignal(idSignal, orderId, description, resolved);
         res.status(200).json(result);
     } catch (error) {
@@ -360,9 +357,10 @@ app.post('/api/client/report', async (req, res) => {
 // All products
 app.get('/api/ricerca/dashboard', async (req, res) => {
     try {
-        const research = new ProductResearch(pool);
-        const products = await research.getAllProducts();
-        res.status(200).json(products);
+        //const research = new ProductResearch();
+        //const products = await research.getAllProducts();
+        //res.status(200).json(products);
+        res.status(200).json({ message: 'Not implemented' });
     } catch (error) {
         console.error(error);
         res.status(400).json({ message: 'Bad request', error: error.message });
@@ -372,7 +370,7 @@ app.get('/api/ricerca/dashboard', async (req, res) => {
 // products by id
 app.get('/api/ricerca/dashboard/:id', async (req, res) => {
     try {
-        const research = new ProductResearch(pool, req.params.id);
+        const research = new ProductResearch(req.params.id);
         const product = await research.getProductById();
         res.status(200).json(product);
     } catch (error) {

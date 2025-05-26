@@ -1,11 +1,10 @@
 import { ArtisanRegistration, ClientRegistration, AdminRegistration } from './registration.js';
 import { ArtisanAuthentication, ClientAuthentication, AdminAuthentication } from './authentication.js';
-import { pool } from '../db/dbConnection.js';
 
 const registerArtisan = async (req, res) => {
     try {
         const { username, password, companyName, iban } = req.body;
-        const reg = new ArtisanRegistration(pool, username, password, companyName, iban);
+        const reg = new ArtisanRegistration(username, password, companyName, iban);
         await reg.register();
         res.status(200).json({ message: 'Registration successful' });
     } catch (error) {
@@ -16,7 +15,7 @@ const registerArtisan = async (req, res) => {
 const registerClient = async (req, res) => {
     try {
         const { username, password, email, name, surname } = req.body;
-        const reg = new ClientRegistration(pool, username, password, email, name, surname);
+        const reg = new ClientRegistration(username, password, email, name, surname);
         await reg.register();
         res.status(200).json({ message: 'Registration successful' });
     } catch (error) {
@@ -27,7 +26,7 @@ const registerClient = async (req, res) => {
 const registerAdmin = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const reg = new AdminRegistration(pool, username, password);
+        const reg = new AdminRegistration(username, password);
         await reg.register();
         res.status(200).json({ message: 'Registration successful' });
     } catch (error) {
@@ -38,7 +37,7 @@ const registerAdmin = async (req, res) => {
 const loginArtisan = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const l = new ArtisanAuthentication(pool, username, password);
+        const l = new ArtisanAuthentication(username, password);
         const jwt = await l.login();
         res.status(200).json({ message: 'Authentication successful', token: jwt });
     } catch (error) {
@@ -49,7 +48,7 @@ const loginArtisan = async (req, res) => {
 const loginClient = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const l = new ClientAuthentication(pool, username, password);
+        const l = new ClientAuthentication(username, password);
         const jwt = await l.login();
         res.status(200).json({ message: 'Authentication successful', token: jwt });
     } catch (error) {
@@ -60,7 +59,7 @@ const loginClient = async (req, res) => {
 const loginAdmin = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const l = new AdminAuthentication(pool, username, password);
+        const l = new AdminAuthentication( username, password);
         const jwt = await l.login();
         res.status(200).json({ message: 'Authentication successful', token: jwt });
     } catch (error) {

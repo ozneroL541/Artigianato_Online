@@ -1,6 +1,7 @@
 import {verifyPassword} from './hash.js';
 import {genArtisanJWT, genClientJWT, genAdminJWT} from './jwt.js';
 import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db/dbReferences.js';
+import { pool } from '../db/dbConnection.js';
 
 /**
  * Represents a User authentication process.
@@ -10,17 +11,16 @@ import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReference
 class Authentication {
     /**
      * Creates an instance of Authentication.
-     * @param {Object} db - The database connection object.
      * @param {dbReferences} dbRef - The database reference object.
      * @param {string} username - The username for authentication.
      * @param {string} password - The password for authentication.
      */
-    constructor(db, dbRef, username, password) {
+    constructor(dbRef, username, password) {
         /**
          * The database connection object.
          * @type {Object}
          */
-        this.db = db;
+        this.db = pool;
         /**
          * The name of the database table for authentication.
          * @type {string}
@@ -109,12 +109,11 @@ class ArtisanAuthentication extends Authentication {
     static type = 'artigiano';
     /**
      * Creates an instance of Authentication.
-     * @param {Object} db - The database connection object.
      * @param {string} username - The username for authentication.
      * @param {string} password - The password for authentication.
      */
-    constructor(db, username, password) {
-        super(db, new dbArtisanReferences(), username, password);
+    constructor( username, password) {
+        super(new dbArtisanReferences(), username, password);
     }
     /**
      * Generates a JWT for the artisan user.
@@ -140,12 +139,11 @@ class ClientAuthentication extends Authentication {
     static type = 'cliente';
     /**
      * Creates an instance of Authentication.
-     * @param {Object} db - The database connection object.
      * @param {string} username - The username for authentication.
      * @param {string} password - The password for authentication.
      */
-    constructor(db, username, password) {
-        super(db, new dbClientReferences(), username, password);
+    constructor(username, password) {
+        super(new dbClientReferences(), username, password);
     }
     /**
      * Generates a JWT for the client user.
@@ -171,12 +169,11 @@ class AdminAuthentication extends Authentication {
     static type = 'amministratore';
     /**
      * Creates an instance of Authentication.
-     * @param {Object} db - The database connection object.
      * @param {string} username - The username for authentication.
      * @param {string} password - The password for authentication.
      */
-    constructor(db, username, password) {
-        super(db, new dbAdminReferences(), username, password);
+    constructor( username, password) {
+        super(new dbAdminReferences(), username, password);
     }
     /**
      * Generates a JWT for the admin user.
