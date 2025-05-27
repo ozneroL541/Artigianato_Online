@@ -16,6 +16,7 @@ const {
     loginClient,
     loginAdmin
 } = require('./auth/auth_api.js');
+const { uploadProduct, updateProduct, deleteProduct } = require('./product/product_api.js');
 /** Port for the frontend server */
 const frontendPort = 8000;
 /** Port for the backend server */
@@ -228,12 +229,6 @@ app.post('/api/auth/login/admin', loginAdmin);
  *  delete:
  *   summary: Delete client
  *   description: Delete a client profile.
- *   parameters:
- *    - name: username
- *      in: body
- *      description: The username of the client.
- *      required: true
- *      type: string
  *   responses:
  *    200:
  *     description: Client deleted successfully
@@ -247,12 +242,6 @@ app.delete('/api/profile/delete/client', checkClient, delClient);
  *  delete:
  *   summary: Delete artisan
  *   description: Delete an artisan profile.
- *   parameters:
- *    - name: username
- *      in: body
- *      description: The username of the artisan.
- *      required: true
- *      type: string
  *   responses:
  *    200:
  *     description: Artisan deleted successfully
@@ -266,12 +255,6 @@ app.delete('/api/profile/delete/artisan', checkArtisan, delArtisan);
  *  delete:
  *   summary: Delete admin
  *   description: Delete an admin profile.
- *   parameters:
- *    - name: username
- *      in: body
- *      description: The username of the admin.
- *      required: true
- *      type: string
  *   responses:
  *    200:
  *     description: Admin deleted successfully
@@ -279,6 +262,102 @@ app.delete('/api/profile/delete/artisan', checkArtisan, delArtisan);
  *     description: Error deleting Admin
  */
 app.delete('/api/profile/delete/admin', checkAdmin, delAdmin);
+/**
+ * @swagger
+ * /api/product/upload:
+ *  post:
+ *   summary: Upload a new product
+ *   description: Upload a new product with artisan username, product name, category, price, and availability.
+ *   parameters:
+ *    - name: nome_prodotto
+ *      in: body
+ *      description: The name of the product.
+ *      required: true
+ *      type: string
+ *    - name: categoria
+ *      in: body
+ *      description: The category of the product.
+ *      required: false
+ *      type: string
+ *    - name: prezzo
+ *      in: body
+ *      description: The price of the product.
+ *      required: true
+ *      type: number
+ *    - name: disponibilita
+ *      in: body
+ *      description: The availability of the product (stock quantity).
+ *      required: true
+ *      type: number
+ *   responses:
+ *    201:
+ *     description: Product uploaded successfully
+ *    400:
+ *     description: Bad request
+ */
+app.post('/api/product/upload', checkArtisan, uploadProduct);
+/**
+ * @swagger
+ * /api/product/update:
+ *  put:
+ *   summary: Update an existing product
+ *   description: Update an existing product with product ID, artisan username, product name, category, price, and availability.
+ *   parameters:
+ *    - name: id_prodotto
+ *      in: body
+ *      description: The ID of the product to update.
+ *      required: true
+ *      type: number
+ *    - name: nome_prodotto
+ *      in: body
+ *      description: The name of the product.
+ *      required: true
+ *      type: string
+ *    - name: categoria
+ *      in: body
+ *      description: The category of the product.
+ *      required: false
+ *      type: string
+ *    - name: prezzo
+ *      in: body
+ *      description: The price of the product.
+ *      required: true
+ *      type: number
+ *    - name: disponibilita
+ *      in: body
+ *      description: The availability of the product (stock quantity).
+ *      required: true
+ *      type: number
+ *   responses:
+ *    200:
+ *     description: Product updated successfully
+ *    400:
+ *     description: Bad request
+ *    404:
+ *     description: Product not updated
+ */
+app.put('/api/product/update', checkArtisan, updateProduct);
+/**
+ * @swagger
+ * /api/product/delete:
+ *  delete:
+ *   summary: Delete a product
+ *   description: Delete a product by its ID.
+ *   parameters:
+ *    - name: id_prodotto
+ *      in: body
+ *      description: The ID of the product to delete.
+ *      required: true
+ *      type: number
+ *   responses:
+ *    200:
+ *     description: Product deleted successfully
+ *    400:
+ *     description: Bad request
+ *    404:
+ *     description: Product not deleted
+ */
+app.delete('/api/product/delete', checkArtisan, deleteProduct);
 
 // TODO: doc e spostare funzione asincrona in altro file
 app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {

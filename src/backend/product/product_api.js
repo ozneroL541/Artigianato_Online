@@ -1,0 +1,75 @@
+import { Product } from './Product.js';
+
+/**
+ * Uploads a new product to the database.
+ * @param {Object} req - The request object containing product details { nome_prodotto, categoria, prezzo, disponibilita }.
+ * @param {Object} res - The response object to send the result.
+ * @returns {Promise<void>} A promise that resolves when the product is uploaded.
+ */
+const uploadProduct = async (req, res) => {
+    try {
+        const username_artigiano = req.username;
+        const { nome_prodotto, categoria, prezzo, disponibilita } = req.body;
+        if (!nome_prodotto || !prezzo || !disponibilita) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+        const product = new Product(null, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita);
+        const id = await product.save();
+        res.status(201).json({ message: 'Product uploaded successfully', product_id: id });
+    } catch (error) {
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+}
+
+/**
+ * Updates an existing product in the database.
+ * @param {Object} req - The request object containing updated product details { id_prodotto, nome_prodotto, categoria, prezzo, disponibilita }.
+ * @param {Object} res - The response object to send the result.
+ * @returns {Promise<void>} A promise that resolves when the product is updated.
+ */
+const updateProduct = async (req, res) => {
+    try {
+        const username_artigiano = req.username;
+        const { id_prodotto, nome_prodotto, categoria, prezzo, disponibilita } = req.body;
+        if (!id_prodotto || !nome_prodotto || !prezzo || !disponibilita) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+        const product = new Product(id_prodotto, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita);
+        const updated = await product.update();
+        if (updated) {
+            res.status(200).json({ message: 'Product updated successfully' });
+        } else {
+            res.status(404).json({ message: 'Product not updated' });
+        }
+    }
+    catch (error) {
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+}
+
+/**
+ * Deletes a product from the database.
+ * @param {Object} req - The request object containing the product ID to delete { id_prodotto }.
+ * @param {Object} res - The response object to send the result.
+ * @returns {Promise<void>} A promise that resolves when the product is deleted.
+ */
+const deleteProduct = async (req, res) => {
+    try {
+        const username_artigiano = req.username;
+        const { id_prodotto } = req.body;
+        if (!id_prodotto) {
+            return res.status(400).json({ message: 'Missing product ID' });
+        }
+        const product = new Product(id_prodotto, username_artigiano);
+        const deleted = await product.delete();
+        if (deleted) {
+            res.status(200).json({ message: 'Product deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Product not deleted' });
+        }
+    } catch (error) {
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+}
+
+export { uploadProduct, updateProduct, deleteProduct };

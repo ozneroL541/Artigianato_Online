@@ -25,34 +25,58 @@ class Product {
         this.disponibilita = disponibilita;
     }
     /**
-     * Updates or inserts the product into the database.
+     * Insert the product into the database.
      * If id_prodotto is null, it generates a new ID.
      * @returns {Promise} A promise that resolves to the result of the database operation.
      */
-    async update() {
+    async save() {
         const query = `INSERT INTO prodotti (id_prodotto, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita)
-                       VALUES (?, ?, ?, ?, ?, ?)
-                       ON DUPLICATE KEY (username_artigiano, nome_prodotto) UPDATE SET
-                       (nome_prodotto, categoria, prezzo, disponibilita) = ( ?, ?, ?, ?)`;
-        this.id_prodotto = this.id_prodotto || await this.getNextId(dbConnection);
-        const params = [this.id_prodotto, this.username_artigiano, this.nome_prodotto, this.categoria, this.prezzo, this.disponibilita,
-                        this.nome_prodotto, this.categoria, this.prezzo, this.disponibilita
-                       ];
+                       VALUES ($1, $2, $3, $4, $5, $6);`;
+        this.id_prodotto = this.id_prodotto || await this.getNextId();
+        // TODO implment category check
+        const params = [this.id_prodotto, this.username_artigiano, this.nome_prodotto, this.categoria, this.prezzo, this.disponibilita];
         try {
             const result = await pool.query(query, params);
-            return result;
+            return this.id_prodotto; // Return the ID of the inserted product
         } catch (error) {
-            throw new Error('Error inserting product: ' + error.message);
-        }        
+            throw new Error('Product already inserted');
+        }
+    }
+    /**
+     * Updates the product in the database.
+     * @returns {Promise} A promise that resolves to the result of the update operation.
+     */
+    async update() {
+        const query = `UPDATE prodotti SET 
+                       nome_prodotto = $1, 
+                       categoria = $2, 
+                       prezzo = $3, 
+                       disponibilita = $4 
+                       WHERE id_prodotto = $5 AND username_artigiano = $6;`;
+        // TODO implment category check
+        const params = [
+            this.nome_prodotto,
+            this.categoria,
+            this.prezzo,
+            this.disponibilita,
+            this.id_prodotto,
+            this.artisanUsername
+        ];
+        try {
+            await pool.query(query, params);
+            return true;
+        } catch (error) {
+            return false; // If the update fails, return false
+        }
     }
     /**
      * Deletes the product from the database.
      * @returns {Promise} A promise that resolves to the result of the delete operation.
      */
     async delete() {
-        const query = 'DELETE FROM prodotti WHERE id_prodotto = ?';
+        const query = 'DELETE FROM prodotti WHERE id_prodotto = $1 AND username_artigiano = $2;';
         try {
-            const result = await pool.query(query, [this.id_prodotto]);
+            const result = await pool.query(query, [this.id_prodotto, this.username_artigiano]);
             return result;
         } catch (error) {
             throw new Error('Error deleting product: ' + error.message);
@@ -63,10 +87,11 @@ class Product {
      * @returns {Promise<number>} A promise that resolves to the next product ID.
      */
     async getNextId() {
-        const query = 'SELECT MAX(id_prodotto) AS max_id FROM prodotti';
+        const query = 'SELECT MAX(id_prodotto) AS max_id FROM prodotti;';
         try {
             const result = await pool.query(query);
-            return result[0].max_id + 1;
+            const current_id = result.rows[0].max_id ? result.rows[0].max_id : 0; // If no products exist, start from 0
+            return (current_id + 1); // Increment to get the next ID
         } catch (error) {
             throw new Error('Error getting next product ID: ' + error.message);
         }
@@ -77,19 +102,19 @@ class Product {
      * @returns {Promise<Product>} A promise that resolves to an instance of Product.
      */
     static async getById(id_prodotto) {
-        const query = 'SELECT * FROM prodotti WHERE id_prodotto = ?';
+        const query = 'SELECT * FROM prodotti WHERE id_prodotto = $1;';
         try {
             const result = await pool.query(query, [id_prodotto]);
             if (result.length === 0) {
                 throw new Error('Product not found');
             }
             return new Product(
-                result[0].id_prodotto,
-                result[0].username_artigiano,
-                result[0].nome_prodotto,
-                result[0].categoria,
-                result[0].prezzo,
-                result[0].disponibilita
+                result.rows[0].id_prodotto,
+                result.rows[0].username_artigiano,
+                result.rows[0].nome_prodotto,
+                result.rows[0].categoria,
+                result.rows[0].prezzo,
+                result.rows[0].disponibilita
             );
         } catch (error) {
             throw new Error('Error fetching product: ' + error.message);
@@ -102,7 +127,7 @@ class Product {
      * @returns {Promise<Product>} A promise that resolves to an instance of Product.
      */
     static async getByName(nome_prodotto, username_artigiano) {
-        const query = 'SELECT * FROM prodotti WHERE nome_prodotto = ? AND username_artigiano = ?';
+        const query = 'SELECT * FROM prodotti WHERE nome_prodotto = $1 AND username_artigiano = $2;';
         try {
             const result = await pool.query(query, [nome_prodotto, username_artigiano]);
             if (result.length === 0) {
