@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Module for managing database references",
   "keywords": [],
-  "author": "Lorenzo Radcie",
+  "author": "Lorenzo Radice",
   "type": "module",
   "license": "GPL-3.0",
   "dependencies": {
