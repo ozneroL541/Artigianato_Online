@@ -1,10 +1,18 @@
+/** Username attribute's name for the database */
 const dbUsername        = 'username';
+/** Password attribute's name for the database */
 const dbPassword        = 'h_password';
+/** Artisans' table name for the database */
 const dbArtisanTable    = 'artigiani';
+/** Username attribute's name for the artisans in the database */
 const dbArtisanUsername = dbUsername + '_artigiano';
+/** Clients' table name for the database */
 const dbClientTable     = 'clienti';
+/** Username attribute's name for the clients in the database */
 const dbClientUsername  = dbUsername + '_cliente';
-const dbAdminTable      = 'amministratori';
+/** Admins' table name for the database */
+const dbAdminTable      = 'amministratori'
+/** Username attribute's name for the admins in the database */;
 const dbAdminUsername   = dbUsername + '_amministratore';
 
 /**
