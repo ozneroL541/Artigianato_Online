@@ -30,13 +30,15 @@ class Product {
      * @returns {Promise} A promise that resolves to the result of the database operation.
      */
     async save() {
-        const query = `INSERT INTO prodotti (id_prodotto, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita)
-                       VALUES ($1, $2, $3, $4, $5, $6);`;
-        this.id_prodotto = this.id_prodotto || await this.getNextId();
+        const insertQuery = `INSERT INTO prodotti (id_prodotto, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita)
+                       VALUES ((SELECT MAX(id_prodotto)+1 AS next_id FROM prodotti), $1, $2, $3, $4, $5);`;
+        const getIdQuery = 'SELECT id_prodotto FROM prodotti WHERE username_artigiano = $1 AND nome_prodotto = $2;';
         // TODO implment category check
-        const params = [this.id_prodotto, this.username_artigiano, this.nome_prodotto, this.categoria, this.prezzo, this.disponibilita];
+        const params = [this.username_artigiano, this.nome_prodotto, this.categoria, this.prezzo, this.disponibilita];
         try {
-            const result = await pool.query(query, params);
+            await pool.query(insertQuery, params);
+            const id_prodotto = await pool.query(getIdQuery, [this.username_artigiano, this.nome_prodotto]);
+            this.id_prodotto = id_prodotto.rows[0].id_prodotto; // Set the ID of the product
             return this.id_prodotto; // Return the ID of the inserted product
         } catch (error) {
             throw new Error('Product already inserted');
@@ -80,20 +82,6 @@ class Product {
             return result;
         } catch (error) {
             throw new Error('Error deleting product: ' + error.message);
-        }
-    }
-    /**
-     * Retrieves the next available product ID from the database.
-     * @returns {Promise<number>} A promise that resolves to the next product ID.
-     */
-    async getNextId() {
-        const query = 'SELECT MAX(id_prodotto) AS max_id FROM prodotti;';
-        try {
-            const result = await pool.query(query);
-            const current_id = result.rows[0].max_id ? result.rows[0].max_id : 0; // If no products exist, start from 0
-            return (current_id + 1); // Increment to get the next ID
-        } catch (error) {
-            throw new Error('Error getting next product ID: ' + error.message);
         }
     }
     /**
