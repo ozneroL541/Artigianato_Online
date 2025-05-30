@@ -455,25 +455,6 @@ app.post('/api/auth/login/admin', loginAdmin);
  *       - Delete
  *      security:
  *       - bearerAuth: []
- *      requestBody:
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - username
- *                - password
- *              properties:
- *                username:
- *                  type: string
- *                  description: The username of the admin
- *                  example: "admin123"
- *                password:
- *                  type: string
- *                  format: password
- *                  description: The password of the admin
- *                  example: "securePassword123"
  *      responses:
  *        200:
  *          description: Client deleted successfully
@@ -485,255 +466,492 @@ app.delete('/api/profile/delete/client', checkClient, delClient);
  * @swagger
  * /api/profile/delete/artisan:
  *  delete:
- *   summary: Delete artisan
- *   description: Delete an artisan profile.
- *   tags:
- *    - Profile
- *    - Artisan
- *    - Delete
- *   security:
- *    - bearerAuth: []
- *   responses:
- *    200:
- *     description: Artisan deleted successfully
- *    500:
- *     description: Error deleting Artisan
+ *      summary: Delete artisan
+ *      description: Delete an artisan profile.
+ *      tags:
+ *       - Profile
+ *       - Artisan
+ *       - Delete
+ *      security:
+ *       - bearerAuth: []
+ *      responses:
+ *        200:
+ *          description: Artisan deleted successfully
+ *        500:
+ *          description: Error deleting Artisan
  */
 app.delete('/api/profile/delete/artisan', checkArtisan, delArtisan);
 /**
  * @swagger
  * /api/profile/delete/admin:
  *  delete:
- *   summary: Delete admin
- *   description: Delete an admin profile.
- *   tags:
- *    - Profile
- *    - Admin
- *    - Delete
- *   security:
- *    - bearerAuth: []
- *   responses:
- *    200:
- *     description: Admin deleted successfully
- *    500:
- *     description: Error deleting Admin
+ *      summary: Delete admin
+ *      description: Delete an admin profile.
+ *      tags:
+ *       - Profile
+ *       - Admin
+ *       - Delete
+ *      security:
+ *       - bearerAuth: []
+ *      responses:
+ *        200:
+ *          description: Admin deleted successfully
+ *        500:
+ *          description: Error deleting Admin
  */
 app.delete('/api/profile/delete/admin', checkAdmin, delAdmin);
 /**
  * @swagger
  * /api/product/upload:
  *  post:
- *   summary: Upload a new product
- *   description: Upload a new product with artisan username, product name, category, price, and availability.
- *   tags:
- *    - Product
- *    - Artisan
- *    - Upload
- *   security:
- *    - bearerAuth: []
- *   requestBody:
- *    - name: nome_prodotto
- *      in: body
- *      description: The name of the product.
- *      required: true
- *      type: string
- *    - name: categoria
- *      in: body
- *      description: The category of the product.
- *      required: false
- *      type: string
- *    - name: prezzo
- *      in: body
- *      description: The price of the product.
- *      required: true
- *      type: number
- *    - name: disponibilita
- *      in: body
- *      description: The availability of the product (stock quantity).
- *      required: true
- *      type: number
- *   responses:
- *    201:
- *     description: Product uploaded successfully
- *    400:
- *     description: Bad request
+ *      summary: Upload a new product
+ *      description: Upload a new product with artisan username, product name, category, price, and availability.
+ *      tags:
+ *       - Product
+ *       - Artisan
+ *       - Upload
+ *      security:
+ *       - bearerAuth: []
+ *      requestBody:
+ *       required: true
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: object
+ *          required:
+ *           - nome_prodotto
+ *           - categoria
+ *           - prezzo
+ *           - disponibilita
+ *          properties:
+ *           nome_prodotto:
+ *            type: string
+ *            description: The name of the product.
+ *            example: "Handmade Vase"
+ *           categoria:
+ *            type: string
+ *            description: The category of the product.
+ *            example: "Ceramics"
+ *           prezzo:
+ *            type: number
+ *            description: The price of the product.
+ *            example: 29.99
+ *           disponibilita:
+ *            type: number
+ *            description: The availability of the product (stock quantity).
+ *            example: 100
+ *      responses:
+ *       201:
+ *        description: Product uploaded successfully
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Product uploaded successfully"
+ *            product_id:
+ *             type: number
+ *             description: The ID of the uploaded product.
+ *             example: 12345
+ *       400:
+ *        description: Bad request
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Bad request"
+ *            error:
+ *             type: string
+ *             example: "Missing required fields"
  */
 app.post('/api/product/upload', checkArtisan, uploadProduct);
 /**
  * @swagger
  * /api/product/update:
  *  put:
- *   summary: Update an existing product
- *   description: Update an existing product with product ID, artisan username, product name, category, price, and availability.
- *   tags:
- *    - Product
- *    - Artisan
- *    - Update
- *   security:
- *    - bearerAuth: []
- *   requestBody:
- *    - name: id_prodotto
- *      in: body
- *      description: The ID of the product to update.
- *      required: true
- *      type: number
- *    - name: nome_prodotto
- *      in: body
- *      description: The name of the product.
- *      required: true
- *      type: string
- *    - name: categoria
- *      in: body
- *      description: The category of the product.
- *      required: false
- *      type: string
- *    - name: prezzo
- *      in: body
- *      description: The price of the product.
- *      required: true
- *      type: number
- *    - name: disponibilita
- *      in: body
- *      description: The availability of the product (stock quantity).
- *      required: true
- *      type: number
- *   responses:
- *    200:
- *     description: Product updated successfully
- *    400:
- *     description: Bad request
- *    404:
- *     description: Product not updated
- */
+ *      summary: Update an existing product
+ *      description: Update an existing product with product ID, artisan username, product name, category, price, and availability.
+ *      tags:
+ *       - Product
+ *       - Artisan
+ *       - Update
+ *      security:
+ *       - bearerAuth: []
+ *      requestBody:
+ *       required: true
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: object
+ *          required:
+ *           - id_prodotto
+ *           - nome_prodotto
+ *           - categoria
+ *           - prezzo
+ *           - disponibilita
+ *          properties:
+ *           id_prodotto:
+ *            type: number
+ *            description: The ID of the product to update.
+ *            example: 12345
+ *           nome_prodotto:
+ *            type: string
+ *            description: The name of the product.
+ *            example: "Handmade Vase"
+ *           categoria:
+ *            type: string
+ *            description: The category of the product.
+ *            example: "Ceramics"
+ *           prezzo:
+ *            type: number
+ *            description: The price of the product.
+ *            example: 29.99
+ *           disponibilita:
+ *            type: number
+ *            description: The availability of the product (stock quantity).
+ *            example: 100
+ *      responses:
+ *       200:
+ *        description: Product updated successfully
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Product updated successfully"
+ *       400:
+ *        description: Bad request
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Bad request"
+ *            error:
+ *             type: string
+ *             example: "Missing required fields"
+ *       404:
+ *        description: Product not found
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Product not found"
+ */ 
 app.put('/api/product/update', checkArtisan, updateProduct);
 /**
  * @swagger
  * /api/product/delete:
- *  delete:
- *   summary: Delete a product
- *   description: Delete a product by its ID.
- *   tags:
- *    - Product
- *    - Artisan
- *    - Delete
- *   security:
- *    - bearerAuth: []
- *   requestBody:
- *    - name: id_prodotto
- *      in: body
- *      description: The ID of the product to delete.
- *      required: true
- *      type: number
- *   responses:
- *    200:
- *     description: Product deleted successfully
- *    400:
- *     description: Bad request
- *    404:
- *     description: Product not deleted
+ *   post:
+ *     summary: Delete a product
+ *     description: Delete a product by its ID. Only artisans can perform this operation.
+ *     tags:
+ *       - Product
+ *       - Artisan
+ *       - Delete
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id_prodotto
+ *             properties:
+ *               id_prodotto:
+ *                 type: number
+ *                 description: The ID of the product to delete
+ *                 example: 12345
+ *     responses:
+ *       200:
+ *         description: Product deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Product deleted successfully"
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Bad request"
+ *                 error:
+ *                   type: string
+ *                   example: "Missing or invalid product ID"
+ *       404:
+ *         description: Product not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Product not found"
  */
 app.delete('/api/product/delete', checkArtisan, deleteProduct);
 /**
  * @swagger
  * /api/category/upload:
  *  post:
- *   summary: Upload a new category
- *   description: Upload a new category with the category name.
- *   tags:
- *    - Category
- *    - Admin
- *    - Upload
- *   security:
- *    - bearerAuth: []
- *   requestBody:
- *    - name: categoria
- *      in: body
- *      description: The name of the category to upload.
- *      required: true
- *      type: string
- *   responses:
- *    201:
- *     description: Category uploaded successfully
- *    400:
- *     description: Bad request
- *    500:
- *    description: Internal server error
+ *      summary: Upload a new Category
+ *      description: Create a new category. Only admins can perform this operation.
+ *      tags:
+ *       - Category
+ *       - Admin
+ *       - Upload
+ *      security:
+ *       - bearerAuth: []
+ *      requestBody:
+ *       required: true
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: object
+ *          required:
+ *           - categoria
+ *          properties:
+ *           categoria:
+ *            type: string
+ *            description: The name of the category to create.
+ *            example: "Artigianato"
+ *      responses:
+ *       201:
+ *        description: Category uploaded successfully
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Category uploaded successfully"
+ *       400:
+ *        description: Bad request
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Category name is required"
+ *       500:
+ *        description: Internal server error
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Internal server error"
  */
 app.post('/api/category/upload', checkAdmin, uploadCategory);
 /**
  * @swagger
  * /api/category/update:
  *  put:
- *   summary: Update an existing category
- *   description: Update an existing category with the current category name and the new category name.
- *   tags:
- *    - Category
- *    - Admin
- *    - Update
- *   security:
- *    - bearerAuth: []
- *   requestBody:
- *    - name: categoria
- *      in: body
- *      description: The current name of the category to update.
- *      required: true
- *      type: string
- *    - name: new_categoria
- *      in: body
- *      description: The new name for the category.
- *      required: true
- *      type: string
- *   responses:
- *    200:
- *     description: Category updated successfully
- *    404:
- *     description: Category not updated
- *    500:
- *     description: Internal server error
+ *      summary: Update an existing category
+ *      description: Update an existing category with the current category name and the new category name.
+ *      tags:
+ *       - Category
+ *       - Admin
+ *       - Update
+ *      security:
+ *       - bearerAuth: []
+ *      requestBody:
+ *       required: true
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: object
+ *          required:
+ *           - categoria
+ *           - new_categoria
+ *          properties:
+ *           categoria:
+ *            type: string
+ *            description: The current name of the category to update.
+ *            example: "Artigianato"
+ *           new_categoria:
+ *            type: string
+ *            description: The new name for the category.
+ *            example: "Artigianato Moderno"
+ *      responses:
+ *          200:
+ *           description: Category updated successfully
+ *           content:
+ *            application/json:
+ *             schema:
+ *              type: object
+ *              properties:
+ *               message:
+ *                type: string
+ *                example: "Category updated successfully"
+ *          400:
+ *           description: Bad reques
+ *           content:
+ *            application/json:
+ *             schema:
+ *              type: object
+ *              properties:
+ *               message:
+ *                type: string
+ *                example: "Category name and new category name are required"
+ *          404:
+ *           description: Category not updated
+ *           content:
+ *            application/json:
+ *             schema:
+ *              type: object
+ *              properties:
+ *               message:
+ *                type: string
+ *                example: "Category not updated"
+ *          500:
+ *           description: Internal server error
+ *           content:
+ *            application/json:
+ *             schema:
+ *              type: object
+ *              properties:
+ *               message:
+ *                type: string
+ *                example: "Internal server error"
  */
 app.put('/api/category/update', checkAdmin, updateCategory);
 /**
  * @swagger
  * /api/category/delete:
  *  delete:
- *   summary: Delete a category
- *   tags:
- *    - Category
- *    - Admin
- *    - Delete
- *   security:
- *    - bearerAuth: []
- *   description: Delete a category by its name.
- *   requestBody:
- *    - name: categoria
- *      in: body
- *      description: The name of the category to delete.
- *      required: true
- *      type: string
- *   responses:
- *    200:
- *     description: Category deleted successfully
- *    404:
- *     description: Category not deleted
- *    500:
- *     description: Internal server error
+ *      summary: Delete a category
+ *      description: Delete a category by its name. Only admins can perform this operation.
+ *      tags:
+ *       - Category
+ *       - Admin
+ *       - Delete
+ *      security:
+ *       - bearerAuth: []
+ *      requestBody:
+ *       required: true
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: object
+ *          required:
+ *           - categoria
+ *          properties:
+ *           categoria:
+ *            type: string
+ *            description: The name of the category to delete.
+ *            example: "Artigianato"
+ *      responses:
+ *       200:
+ *        description: Category deleted successfully
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Category deleted successfully"
+ *       400:
+ *        description: Bad request
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Category name is required"
+ *       404:
+ *        description: Category not found
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Category not found"
+ *       500:
+ *        description: Internal server error
+ *        content:
+ *         application/json:
+ *          schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
+ *             example: "Internal server error"
  */
 app.delete('/api/category/delete', checkAdmin, deleteCategory);
 /**
  * @swagger
  * /api/category/all:
  *  get:
- *   summary: Get all categories
- *   description: Retrieve a list of all categories.
- *   tags:
- *    - Category
- *   responses:
- *    200:
- *     description: List of categories retrieved successfully
- *    404:
- *     description: No categories found
- *    500:
- *     description: Internal server error
+ *      summary: Get all categories
+ *      description: Retrieve a list of all categories.
+ *      tags:
+ *       - Category
+ *      responses:
+ *          200:
+ *              description: List of categories retrieved successfully
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              categories:
+ *                                  type: array
+ *                                  items:
+ *                                      type: string
+ *                                      example: "Artigianato"
+ *          404:
+ *              description: No categories found
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  example: "No categories found"
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  example: "Internal server error"
  */
 app.get('/api/category/all', getAllCategories);
 
