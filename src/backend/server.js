@@ -405,7 +405,7 @@ app.post('/api/category/upload', checkAdmin, uploadCategory);
  *    500:
  *     description: Internal server error
  */
-app.put('/api/category/update', checkAdmin, updateProduct);
+app.put('/api/category/update', checkAdmin, updateCategory);
 /**
  * @swagger
  * /api/category/delete:
@@ -429,7 +429,7 @@ app.put('/api/category/update', checkAdmin, updateProduct);
 app.delete('/api/category/delete', checkAdmin, deleteCategory);
 /**
  * @swagger
- * /api/categories:
+ * /api/category/all:
  *  get:
  *   summary: Get all categories
  *   description: Retrieve a list of all categories.
@@ -441,7 +441,7 @@ app.delete('/api/category/delete', checkAdmin, deleteCategory);
  *    500:
  *     description: Internal server error
  */
-app.get('/api/categories', getAllCategories);
+app.get('/api/category/all', getAllCategories);
 
 // TODO: doc e spostare funzione asincrona in altro file
 app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {

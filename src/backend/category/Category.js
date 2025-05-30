@@ -21,11 +21,17 @@ class Category {
     async save() {
         const query = 'INSERT INTO categorie (categoria) VALUES ($1);';
         const params = [this.category_name];
+        if (this.category_name == null) {
+            throw new CategoryError("Category cannot be null");
+        }
+        if (await this.exists()) {
+            return false; // If the category already exists, do not insert it again
+        }
         try {
             await pool.query(query, params);
             return true;
         } catch (error) {
-            return false; // If the insertion fails, return false
+            throw new new CategoryError("Erro saving category: " + error.message);            
         }
     }
     /**
@@ -36,6 +42,12 @@ class Category {
     async update(new_category_name) {
         const query = 'UPDATE categorie SET categoria = $1 WHERE categoria = $2;';
         const params = [new_category_name, this.category_name];
+        if (this.category_name == null || new_category_name == null) {
+            throw new CategoryError("Category name cannot be null");
+        }
+        if (await this.exists() === false) {
+            throw new CategoryError("Category does not exist");
+        }
         try {
             await pool.query(query, params);
             this.category_name = new_category_name; // Update the instance variable
@@ -72,20 +84,20 @@ class Category {
             const result = await pool.query(query, params);
             return result.rows[0].count > 0; // Return true if count is greater than 0
         } catch (error) {
-            throw new Error('Error checking category existence');
+            throw new CategoryError('Error checking category existence');
         }
     }
     /**
      * Get all categories from the database.
      * @returns {Promise<Array>} A promise that resolves to an array of category names.
      */
-    static async getAllCategories() {
+    static async getAll() {
         const query = 'SELECT categoria FROM categorie;';
         try {
             const result = await pool.query(query);
             return result.rows.map(row => row.categoria); // Return an array of category names
         } catch (error) {
-            throw new Error('Error fetching categories');
+            throw new CategoryError('Error fetching categories');
         }
     }
 }
@@ -99,8 +111,8 @@ class CategoryError extends Error {
      * Custom error class for category-related errors.
      * @param {string} message - The error message.
      */
-    constructor(parameters) {
-        super(parameters.message);
+    constructor(message) {
+        super(message);
         this.name = 'CategoryError';
     }
 }

@@ -1,4 +1,4 @@
-import { Category } from "Category.js";
+import { Category } from "./Category.js";
 
 /**
  * Uploads a new category to the database.
@@ -56,11 +56,15 @@ const updateCategory = async (req, res) => {
             return res.status(400).json({ message: 'Category name and new category name are required' });
         }
         const category = new Category(categoria);
-        const updated = await category.update(new_categoria);
-        if (updated) {
-            res.status(200).json({ message: 'Category updated successfully' });
-        } else {
-            res.status(404).json({ message: 'Category not updated' });
+        try {
+            const updated = await category.update(new_categoria);
+            if (updated) {
+                res.status(200).json({ message: 'Category updated successfully' });
+            } else {
+                res.status(404).json({ message: 'Category not updated' });
+            }
+        } catch (error) {
+            res.status(400).json({ message: error.message });
         }
     } catch (error) {
         res.status(500).json({ message: 'Internal server error', error: error.message });
