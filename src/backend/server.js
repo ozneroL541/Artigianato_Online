@@ -35,17 +35,37 @@ app.use(express.json());
 /** Swagger options for API documentation */
 const swaggerOptions = {
     definition: {
-        openapi: '3.0.0',
+        openapi: '3.1.0',
         info: {
-            title: 'Artisan API',
+            title: 'Artigianato Online Server',
             version: '1.0.0',
-            description: 'API for Artigiano Online website',
+            "summary": 'API for Artigiano Online',
+            description: 'Server which provides APIs for Artigiano Online website to manage the database',
+            "license": {
+                "name": "GNU General Public License v3.0",
+                "url": "https://www.gnu.org/licenses/gpl-3.0.en.html"
+            },
         },
         servers: [
             {
                 url: `http://localhost:${port}`,
             },
         ],
+        security: [
+            {
+                bearerAuth: []
+            }
+        ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                    description: 'Enter JWT token received at login'
+                }
+            }
+        },
     },
     apis: ['./server.js'],
 };
@@ -61,6 +81,10 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerOption
  *   post:
  *      summary: Register a new artisan
  *      description: Register a new artisan with username, password, company name, and IBAN.
+ *      tags:
+ *       - Authentication
+ *       - Registration
+ *       - Artisan
  *      parameters:
  *       - name: username
  *         in: body
@@ -95,6 +119,10 @@ app.post('/api/auth/register/artisan', registerArtisan);
  *   post:
  *      summary: Register a new client
  *      description: Register a new client with username, password, email, name, and surname.
+ *      tags:
+ *       - Authentication
+ *       - Registration
+ *       - Client
  *      parameters:
  *       - name: username
  *         in: body
@@ -134,6 +162,10 @@ app.post('/api/auth/register/client', registerClient);
  *   post:
  *      summary: Register a new admin
  *      description: Register a new admin with username and password.
+ *      tags:
+ *       - Authentication
+ *       - Registration
+ *       - Admin
  *      parameters:
  *       - name: username
  *         in: body
@@ -158,6 +190,11 @@ app.post('/api/auth/register/admin', registerAdmin);
  *  post:
  *    summary: Login artisan
  *    description: Login artisan with username and password and get JWT token.
+ *    tags:
+ *     - Authentication
+ *     - Artisan
+ *     - Login
+ *     - JWT
  *    parameters:
  *     - name: username
  *       in: body
@@ -182,6 +219,11 @@ app.post('/api/auth/login/artisan', loginArtisan);
  *  post:
  *    summary: Login client
  *    description: Login client with username and password and get JWT token.
+ *    tags:
+ *     - Authentication
+ *     - Client
+ *     - Login
+ *     - JWT
  *    parameters:
  *     - name: username
  *       in: body
@@ -206,6 +248,11 @@ app.post('/api/auth/login/client', loginClient);
  *  post:
  *    summary: Login Admin
  *    description: Login administrator with username and password and get JWT token.
+ *    tags:
+ *     - Authentication
+ *     - Admin
+ *     - Login
+ *     - JWT
  *    parameters:
  *     - name: username
  *       in: body
@@ -230,6 +277,12 @@ app.post('/api/auth/login/admin', loginAdmin);
  *  delete:
  *   summary: Delete client
  *   description: Delete a client profile.
+ *   tags:
+ *    - Profile
+ *    - Client
+ *    - Delete
+ *   security:
+ *    - bearerAuth: []
  *   responses:
  *    200:
  *     description: Client deleted successfully
@@ -243,6 +296,12 @@ app.delete('/api/profile/delete/client', checkClient, delClient);
  *  delete:
  *   summary: Delete artisan
  *   description: Delete an artisan profile.
+ *   tags:
+ *    - Profile
+ *    - Artisan
+ *    - Delete
+ *   security:
+ *    - bearerAuth: []
  *   responses:
  *    200:
  *     description: Artisan deleted successfully
@@ -256,6 +315,12 @@ app.delete('/api/profile/delete/artisan', checkArtisan, delArtisan);
  *  delete:
  *   summary: Delete admin
  *   description: Delete an admin profile.
+ *   tags:
+ *    - Profile
+ *    - Admin
+ *    - Delete
+ *   security:
+ *    - bearerAuth: []
  *   responses:
  *    200:
  *     description: Admin deleted successfully
@@ -269,6 +334,12 @@ app.delete('/api/profile/delete/admin', checkAdmin, delAdmin);
  *  post:
  *   summary: Upload a new product
  *   description: Upload a new product with artisan username, product name, category, price, and availability.
+ *   tags:
+ *    - Product
+ *    - Artisan
+ *    - Upload
+ *   security:
+ *    - bearerAuth: []
  *   parameters:
  *    - name: nome_prodotto
  *      in: body
@@ -303,6 +374,12 @@ app.post('/api/product/upload', checkArtisan, uploadProduct);
  *  put:
  *   summary: Update an existing product
  *   description: Update an existing product with product ID, artisan username, product name, category, price, and availability.
+ *   tags:
+ *    - Product
+ *    - Artisan
+ *    - Update
+ *   security:
+ *    - bearerAuth: []
  *   parameters:
  *    - name: id_prodotto
  *      in: body
@@ -344,6 +421,12 @@ app.put('/api/product/update', checkArtisan, updateProduct);
  *  delete:
  *   summary: Delete a product
  *   description: Delete a product by its ID.
+ *   tags:
+ *    - Product
+ *    - Artisan
+ *    - Delete
+ *   security:
+ *    - bearerAuth: []
  *   parameters:
  *    - name: id_prodotto
  *      in: body
@@ -365,6 +448,12 @@ app.delete('/api/product/delete', checkArtisan, deleteProduct);
  *  post:
  *   summary: Upload a new category
  *   description: Upload a new category with the category name.
+ *   tags:
+ *    - Category
+ *    - Admin
+ *    - Upload
+ *   security:
+ *    - bearerAuth: []
  *   parameters:
  *    - name: categoria
  *      in: body
@@ -386,6 +475,12 @@ app.post('/api/category/upload', checkAdmin, uploadCategory);
  *  put:
  *   summary: Update an existing category
  *   description: Update an existing category with the current category name and the new category name.
+ *   tags:
+ *    - Category
+ *    - Admin
+ *    - Update
+ *   security:
+ *    - bearerAuth: []
  *   parameters:
  *    - name: categoria
  *      in: body
@@ -411,6 +506,12 @@ app.put('/api/category/update', checkAdmin, updateCategory);
  * /api/category/delete:
  *  delete:
  *   summary: Delete a category
+ *   tags:
+ *    - Category
+ *    - Admin
+ *    - Delete
+ *   security:
+ *    - bearerAuth: []
  *   description: Delete a category by its name.
  *   parameters:
  *    - name: categoria
@@ -433,6 +534,8 @@ app.delete('/api/category/delete', checkAdmin, deleteCategory);
  *  get:
  *   summary: Get all categories
  *   description: Retrieve a list of all categories.
+ *   tags:
+ *    - Category
  *   responses:
  *    200:
  *     description: List of categories retrieved successfully
@@ -517,6 +620,7 @@ app.post('/api/client/report', async (req, res) => {
 });
 
 // All products
+// TODO: doc e spostare funzione asincrona in altro file
 app.get('/api/ricerca/dashboard', async (req, res) => {
     try {
         //const research = new ProductResearch();
@@ -530,6 +634,7 @@ app.get('/api/ricerca/dashboard', async (req, res) => {
 });
 
 // products by id
+// TODO: doc e spostare funzione asincrona in altro file
 app.get('/api/ricerca/dashboard/:id', async (req, res) => {
     try {
         const research = new ProductResearch(req.params.id);
