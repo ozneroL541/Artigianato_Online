@@ -1,4 +1,5 @@
 import { pool } from '../db/dbConnection.js';
+import { Category, CategoryError } from '../category/Category.js'; // Assuming Category is a class that handles categories
 
 /**
  * Product class representing a product in the artisan marketplace.
@@ -20,7 +21,7 @@ class Product {
         this.id_prodotto = id_prodotto;
         this.username_artigiano = username_artigiano;
         this.nome_prodotto = nome_prodotto;
-        this.categoria = categoria;
+        this.categoria = new Category(categoria);
         this.prezzo = prezzo;
         this.disponibilita = disponibilita;
     }
@@ -30,14 +31,15 @@ class Product {
      * @returns {Promise} A promise that resolves to the result of the database operation.
      */
     async save() {
-        const insertQuery = `INSERT INTO prodotti (id_prodotto, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita)
-                       VALUES ((SELECT MAX(id_prodotto)+1 AS next_id FROM prodotti), $1, $2, $3, $4, $5);`;
-        const getIdQuery = 'SELECT id_prodotto FROM prodotti WHERE username_artigiano = $1 AND nome_prodotto = $2;';
-        // TODO implment category check
+        const query = `INSERT INTO prodotti (id_prodotto, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita)
+                       VALUES ((SELECT MAX(id_prodotto)+1 AS next_id FROM prodotti), $1, $2, $3, $4, $5)
+                       RETURNING id_prodotto;`;
         const params = [this.username_artigiano, this.nome_prodotto, this.categoria, this.prezzo, this.disponibilita];
+        if (!this.categoria.exists()) {
+            throw new CategoryError("Category does not exist");
+        }
         try {
-            await pool.query(insertQuery, params);
-            const id_prodotto = await pool.query(getIdQuery, [this.username_artigiano, this.nome_prodotto]);
+            const id_prodotto = await pool.query(query, params);
             this.id_prodotto = id_prodotto.rows[0].id_prodotto; // Set the ID of the product
             return this.id_prodotto; // Return the ID of the inserted product
         } catch (error) {
@@ -55,7 +57,9 @@ class Product {
                        prezzo = $3, 
                        disponibilita = $4 
                        WHERE id_prodotto = $5 AND username_artigiano = $6;`;
-        // TODO implment category check
+        if (!this.categoria.exists()) {
+            throw new CategoryError("Category does not exist");
+        }
         const params = [
             this.nome_prodotto,
             this.categoria,

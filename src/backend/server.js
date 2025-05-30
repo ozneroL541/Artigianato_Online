@@ -17,6 +17,7 @@ const {
     loginAdmin
 } = require('./auth/auth_api.js');
 const { uploadProduct, updateProduct, deleteProduct } = require('./product/product_api.js');
+const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
 /** Port for the frontend server */
 const frontendPort = 8000;
 /** Port for the backend server */
@@ -358,6 +359,89 @@ app.put('/api/product/update', checkArtisan, updateProduct);
  *     description: Product not deleted
  */
 app.delete('/api/product/delete', checkArtisan, deleteProduct);
+/**
+ * @swagger
+ * /api/category/upload:
+ *  post:
+ *   summary: Upload a new category
+ *   description: Upload a new category with the category name.
+ *   parameters:
+ *    - name: categoria
+ *      in: body
+ *      description: The name of the category to upload.
+ *      required: true
+ *      type: string
+ *   responses:
+ *    201:
+ *     description: Category uploaded successfully
+ *    400:
+ *     description: Bad request
+ *    500:
+ *    description: Internal server error
+ */
+app.post('/api/category/upload', checkAdmin, uploadCategory);
+/**
+ * @swagger
+ * /api/category/update:
+ *  put:
+ *   summary: Update an existing category
+ *   description: Update an existing category with the current category name and the new category name.
+ *   parameters:
+ *    - name: categoria
+ *      in: body
+ *      description: The current name of the category to update.
+ *      required: true
+ *      type: string
+ *    - name: new_categoria
+ *      in: body
+ *      description: The new name for the category.
+ *      required: true
+ *      type: string
+ *   responses:
+ *    200:
+ *     description: Category updated successfully
+ *    404:
+ *     description: Category not updated
+ *    500:
+ *     description: Internal server error
+ */
+app.put('/api/category/update', checkAdmin, updateCategory);
+/**
+ * @swagger
+ * /api/category/delete:
+ *  delete:
+ *   summary: Delete a category
+ *   description: Delete a category by its name.
+ *   parameters:
+ *    - name: categoria
+ *      in: body
+ *      description: The name of the category to delete.
+ *      required: true
+ *      type: string
+ *   responses:
+ *    200:
+ *     description: Category deleted successfully
+ *    404:
+ *     description: Category not deleted
+ *    500:
+ *     description: Internal server error
+ */
+app.delete('/api/category/delete', checkAdmin, deleteCategory);
+/**
+ * @swagger
+ * /api/category/all:
+ *  get:
+ *   summary: Get all categories
+ *   description: Retrieve a list of all categories.
+ *   responses:
+ *    200:
+ *     description: List of categories retrieved successfully
+ *    404:
+ *     description: No categories found
+ *    500:
+ *     description: Internal server error
+ */
+app.get('/api/category/all', getAllCategories);
 
 // TODO: doc e spostare funzione asincrona in altro file
 app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
