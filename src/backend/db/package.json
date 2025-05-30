@@ -2,7 +2,15 @@
   "name": "db-module",
   "version": "1.0.0",
   "description": "Module for managing database references",
-  "keywords": [],
+  "keywords": [
+    "database",
+    "db",
+    "postgresql",
+    "pg", 
+    "references",
+    "connections",
+    "connection"
+  ],
   "author": "Lorenzo Radice",
   "type": "module",
   "license": "GPL-3.0",

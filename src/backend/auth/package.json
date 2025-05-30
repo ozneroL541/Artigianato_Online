@@ -5,7 +5,12 @@
   "keywords": [
     "auth",
     "authentication",
-    "authorization"
+    "authorization", 
+    "hash",
+    "argon2",
+    "jwt",
+    "jsonwebtoken",
+    "security"
   ],
   "author": "Lorenzo Radice",
   "license": "GPL-3.0",
