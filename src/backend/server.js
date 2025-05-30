@@ -79,215 +79,406 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerOption
  * @swagger
  * /api/auth/register/artisan:
  *   post:
- *      summary: Register a new artisan
- *      description: Register a new artisan with username, password, company name, and IBAN.
- *      tags:
+ *     summary: Register a new artisan
+ *     description: Register a new artisan with username, password, company name, and IBAN.
+ *     tags:
  *       - Authentication
  *       - Registration
  *       - Artisan
- *      parameters:
- *       - name: username
- *         in: body
- *         description: The username of the artisan.
- *         required: true
- *         type: string
- *       - name: password
- *         in: body
- *         description: The password of the artisan.
- *         required: true
- *         type: string
- *       - name: companyName
- *         in: body
- *         description: The company name of the artisan.
- *         required: true
- *         type: string
- *       - name: iban
- *         in: body
- *         description: The IBAN of the artisan.
- *         required: true
- *         type: string
- *      responses:
- *        200:
- *          description: Registration successful
- *        400:
- *          description: Bad request
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *               - companyName
+ *               - iban
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the artisan
+ *                 example: "artisan123"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The password of the artisan
+ *                 example: "securePassword123"
+ *               companyName:
+ *                 type: string
+ *                 description: The company name of the artisan
+ *                 example: "Traditional Crafts Ltd"
+ *               iban:
+ *                 type: string
+ *                 description: The IBAN of the artisan
+ *                 example: "IT60X0542811101000000123456"
+ *     responses:
+ *       200:
+ *         description: Registration successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Registration successful"
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Bad request"
+ *                 error:
+ *                   type: string
+ *                   example: "Username already exists"
  */
 app.post('/api/auth/register/artisan', registerArtisan);
 /**
  * @swagger
  * /api/auth/register/client:
  *   post:
- *      summary: Register a new client
- *      description: Register a new client with username, password, email, name, and surname.
- *      tags:
+ *     summary: Register a new client
+ *     description: Register a new client with username, password, email, name, and surname.
+ *     tags:
  *       - Authentication
  *       - Registration
  *       - Client
- *      parameters:
- *       - name: username
- *         in: body
- *         description: The username of the client.
- *         required: true
- *         type: string
- *       - name: password
- *         in: body
- *         description: The password of the client.
- *         required: true
- *         type: string
- *       - name: email
- *         in: body
- *         description: The email of the client.
- *         required: true
- *         type: string
- *       - name: name
- *         in: body
- *         description: The name of the client.
- *         required: true
- *         type: string
- *       - name: surname
- *         in: body
- *         description: The surname of the client.
- *         required: true
- *         type: string
- *      responses:
- *        200:
- *          description: Registration successful
- *        400:
- *          description: Bad request
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *               - email
+ *               - name
+ *               - surname
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the client
+ *                 example: "client123"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The password of the client
+ *                 example: "securePassword123"
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email of the client
+ *                 example: "client@example.com"
+ *               name:
+ *                 type: string
+ *                 description: The first name of the client
+ *                 example: "John"
+ *               surname:
+ *                 type: string
+ *                 description: The surname of the client
+ *                 example: "Doe"
+ *     responses:
+ *       200:
+ *         description: Registration successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Registration successful"
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Bad request"
+ *                 error:
+ *                   type: string
+ *                   example: "Email already exists"
  */
 app.post('/api/auth/register/client', registerClient);
 /**
  * @swagger
  * /api/auth/register/admin:
  *   post:
- *      summary: Register a new admin
- *      description: Register a new admin with username and password.
- *      tags:
+ *     summary: Register a new admin
+ *     description: Register a new admin with username and password.
+ *     tags:
  *       - Authentication
  *       - Registration
  *       - Admin
- *      parameters:
- *       - name: username
- *         in: body
- *         description: The username of the admin.
- *         required: true
- *         type: string
- *       - name: password
- *         in: body
- *         description: The password of the admin.
- *         required: true
- *         type: string
- *      responses:
- *        200:
- *          description: Registration successful
- *        400:
- *          description: Bad request
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the admin
+ *                 example: "admin123"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The password of the admin
+ *                 example: "securePassword123"
+ *     responses:
+ *       200:
+ *         description: Registration successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Registration successful"
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Bad request"
+ *                 error:
+ *                   type: string
+ *                   example: "Username already exists"
  */
 app.post('/api/auth/register/admin', registerAdmin);
 /**
  * @swagger
  * /api/auth/login/artisan:
- *  post:
- *    summary: Login artisan
- *    description: Login artisan with username and password and get JWT token.
- *    tags:
- *     - Authentication
- *     - Artisan
- *     - Login
- *     - JWT
- *    parameters:
- *     - name: username
- *       in: body
- *       description: The username of the artisan.
+ *   post:
+ *     summary: Login artisan
+ *     description: Authenticate an artisan user and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
+ *     tags:
+ *       - Authentication
+ *       - Artisan
+ *       - Login
+ *     requestBody:
  *       required: true
- *       type: string
- *     - name: password
- *       in: body
- *       description: The password of the artisan.
- *       required: true
- *       type: string
- *    responses:
- *      200:
- *        description: Authentication successful
- *      400:
- *        description: Bad request
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the artisan
+ *                 example: "artisan123"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The password of the artisan
+ *                 example: "securePassword123"
+ *     responses:
+ *       200:
+ *         description: Authentication successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication successful"
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authentication
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Bad request"
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid username or password"
  */
 app.post('/api/auth/login/artisan', loginArtisan);
 /**
  * @swagger
  * /api/auth/login/client:
- *  post:
- *    summary: Login client
- *    description: Login client with username and password and get JWT token.
- *    tags:
- *     - Authentication
- *     - Client
- *     - Login
- *     - JWT
- *    parameters:
- *     - name: username
- *       in: body
- *       description: The username of the client.
+ *   post:
+ *     summary: Login client
+ *     description: Authenticate a client user and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
+ *     tags:
+ *       - Authentication
+ *       - Client
+ *       - Login
+ *     requestBody:
  *       required: true
- *       type: string
- *     - name: password
- *       in: body
- *       description: The password of the client.
- *       required: true
- *       type: string
- *    responses:
- *      200:
- *        description: Authentication successful
- *      400:
- *        description: Bad request
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the client
+ *                 example: "client123"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The password of the client
+ *                 example: "securePassword123"
+ *     responses:
+ *       200:
+ *         description: Authentication successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication successful"
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authentication
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Bad request"
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid username or password"
  */
 app.post('/api/auth/login/client', loginClient);
 /**
  * @swagger
  * /api/auth/login/admin:
- *  post:
- *    summary: Login Admin
- *    description: Login administrator with username and password and get JWT token.
- *    tags:
- *     - Authentication
- *     - Admin
- *     - Login
- *     - JWT
- *    parameters:
- *     - name: username
- *       in: body
- *       description: The username of the admin.
+ *   post:
+ *     summary: Login Admin
+ *     description: Authenticate an administrator and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
+ *     tags:
+ *       - Authentication
+ *       - Admin
+ *       - Login
+ *     requestBody:
  *       required: true
- *       type: string
- *     - name: password
- *       in: body
- *       description: The password of the admin.
- *       required: true
- *       type: string
- *    responses:
- *      200:
- *        description: Authentication successful
- *      400:
- *        description: Bad request
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the admin
+ *                 example: "admin123"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The password of the admin
+ *                 example: "securePassword123"
+ *     responses:
+ *       200:
+ *         description: Authentication successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication successful"
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authentication
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Bad request"
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid username or password"
  */
 app.post('/api/auth/login/admin', loginAdmin);
 /**
  * @swagger
  * /api/profile/delete/client:
- *  delete:
- *   summary: Delete client
- *   description: Delete a client profile.
- *   tags:
- *    - Profile
- *    - Client
- *    - Delete
- *   security:
- *    - bearerAuth: []
- *   responses:
- *    200:
- *     description: Client deleted successfully
- *    500:
- *     description: Error deleting Client
+ *   delete:
+ *      summary: Delete client
+ *      description: Delete a client profile.
+ *      tags:
+ *       - Profile
+ *       - Client
+ *       - Delete
+ *      security:
+ *       - bearerAuth: []
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - username
+ *                - password
+ *              properties:
+ *                username:
+ *                  type: string
+ *                  description: The username of the admin
+ *                  example: "admin123"
+ *                password:
+ *                  type: string
+ *                  format: password
+ *                  description: The password of the admin
+ *                  example: "securePassword123"
+ *      responses:
+ *        200:
+ *          description: Client deleted successfully
+ *        500:
+ *          description: Error deleting Client
  */
 app.delete('/api/profile/delete/client', checkClient, delClient);
 /**
@@ -340,7 +531,7 @@ app.delete('/api/profile/delete/admin', checkAdmin, delAdmin);
  *    - Upload
  *   security:
  *    - bearerAuth: []
- *   parameters:
+ *   requestBody:
  *    - name: nome_prodotto
  *      in: body
  *      description: The name of the product.
@@ -380,7 +571,7 @@ app.post('/api/product/upload', checkArtisan, uploadProduct);
  *    - Update
  *   security:
  *    - bearerAuth: []
- *   parameters:
+ *   requestBody:
  *    - name: id_prodotto
  *      in: body
  *      description: The ID of the product to update.
@@ -427,7 +618,7 @@ app.put('/api/product/update', checkArtisan, updateProduct);
  *    - Delete
  *   security:
  *    - bearerAuth: []
- *   parameters:
+ *   requestBody:
  *    - name: id_prodotto
  *      in: body
  *      description: The ID of the product to delete.
@@ -454,7 +645,7 @@ app.delete('/api/product/delete', checkArtisan, deleteProduct);
  *    - Upload
  *   security:
  *    - bearerAuth: []
- *   parameters:
+ *   requestBody:
  *    - name: categoria
  *      in: body
  *      description: The name of the category to upload.
@@ -481,7 +672,7 @@ app.post('/api/category/upload', checkAdmin, uploadCategory);
  *    - Update
  *   security:
  *    - bearerAuth: []
- *   parameters:
+ *   requestBody:
  *    - name: categoria
  *      in: body
  *      description: The current name of the category to update.
@@ -513,7 +704,7 @@ app.put('/api/category/update', checkAdmin, updateCategory);
  *   security:
  *    - bearerAuth: []
  *   description: Delete a category by its name.
- *   parameters:
+ *   requestBody:
  *    - name: categoria
  *      in: body
  *      description: The name of the category to delete.
