@@ -16,11 +16,6 @@ class Registration {
      */
     constructor(dbRef, username, password) {
         /**
-         * The database connection object.
-         * @type {Object}
-         */
-        this.db = pool;
-        /**
          * The name of the database table for registration.
          * @type {string}
          */
@@ -66,7 +61,7 @@ class Registration {
     async checkUsername()  {
         const query = `SELECT * FROM ${this.dbRef.dbTableName} WHERE ${this.dbRef.dbUsername} = $1`;
         const values = [this.username];
-        const res = await this.db.query(query, values);
+        const res = await pool.query(query, values);
         if (res.rows.length > 0) {
             throw new RegistrationError('Username already exists');
         }
@@ -126,7 +121,7 @@ class ArtisanRegistration extends Registration {
     async checkCompanyName() {
         const query = `SELECT * FROM ${this.dbRef.dbTableName} WHERE nome_impresa = $1`;
         const values = [this.companyName];
-        const res = await this.db.query(query, values);
+        const res = await pool.query(query, values);
         if (res.rows.length > 0) {
             throw new RegistrationError('Company name already exists');
         }
@@ -160,7 +155,7 @@ class ArtisanRegistration extends Registration {
         await this.hashPW();
         const values = [this.username, this.hashedPassword, this.companyName, this.iban];
         try {
-            await this.db.query(query, values);
+            await pool.query(query, values);
         } catch (err) {
             throw new RegistrationError('Saving registration failed');
         }
@@ -218,7 +213,7 @@ class ClientRegistration extends Registration {
     async checkEmailUnique() {
         const query = `SELECT * FROM ${this.dbRef.dbTableName} WHERE email_cliente = $1`;
         const values = [this.email];
-        const res = await this.db.query(query, values);
+        const res = await pool.query(query, values);
         if (res.rows.length > 0) {
             throw new RegistrationError('Email already exists');
         }
@@ -279,7 +274,7 @@ class ClientRegistration extends Registration {
         await this.hashPW();
         const values = [this.username, this.hashedPassword, this.email, this.firstName, this.lastName];
         try {
-            await this.db.query(query, values);
+            await pool.query(query, values);
         } catch (err) {
             console.error(err);
             throw new RegistrationError('Saving registration failed');
@@ -332,7 +327,7 @@ class AdminRegistration extends Registration {
         await this.hashPW();
         const values = [this.username, this.hashedPassword];
         try {
-            await this.db.query(query, values);
+            await pool.query(query, values);
         } catch (err) {
             console.error(err);
             throw new RegistrationError('Saving registration failed');

@@ -17,11 +17,6 @@ class Authentication {
      */
     constructor(dbRef, username, password) {
         /**
-         * The database connection object.
-         * @type {Object}
-         */
-        this.db = pool;
-        /**
          * The name of the database table for authentication.
          * @type {string}
          */
@@ -66,7 +61,7 @@ class Authentication {
                        FROM ${this.dbRef.dbTableName}
                        WHERE ${this.dbRef.dbUsername} = $1`;
         const values = [this.username];
-        const res = await this.db.query(query, values);
+        const res = await pool.query(query, values);
         if (res.rows.length <= 0) {
             throw new AuthenticationError('Username does not exist');
         } else {
