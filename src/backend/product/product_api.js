@@ -100,5 +100,24 @@ const getProductsByArtisan = async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 }
+/**
+ * Retrives all proucts which match the given parameters.
+ * @param {Object} req - The request object containing search parameters.
+ * @param {Object} res - The response object to send the result.
+ * @returns {Promise<void>} A promise that resolves when the products are retrieved.
+ */
+const getProducts = async (req, res) => {
+    try {
+        const { username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita } = req.query;
+        const products = await Product.search(username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita);
+        if (products.length === 0) {
+            res.status(404).json({ message: 'No products found' });
+        } else {
+            res.status(200).json(products);
+        }
+    } catch (error) {
+        res.status(400).json({ message: 'Bad request' });
+    }
+}
 
-export { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan };
+export { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts };

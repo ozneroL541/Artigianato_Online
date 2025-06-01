@@ -179,6 +179,47 @@ class Product {
             throw new Error('Error fetching products by artisan: ' + error.message);
         }
     }
+    static async search(username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita) {
+        let query = 'SELECT * FROM prodotti WHERE 1=1';
+        const params = [];
+        if (username_artigiano !== undefined && username_artigiano !== null) {
+            query += ' AND username_artigiano = $' + (params.length + 1);
+            params.push(username_artigiano);
+        }
+        if (nome_prodotto !== undefined && nome_prodotto !== null) {
+            query += ' AND nome_prodotto ILIKE $' + (params.length + 1);
+            params.push(`%${nome_prodotto}%`);
+        }
+        if (categoria !== undefined) {
+            query += ' AND categoria = $' + (params.length + 1);
+            params.push(categoria);
+        }
+        if (prezzo_min !== undefined && prezzo_min !== null) {
+            query += ' AND prezzo >= $' + (params.length + 1);
+            params.push(prezzo_min);
+        }
+        if (prezzo_max !== undefined && prezzo_max !== null) {
+            query += ' AND prezzo <= $' + (params.length + 1);
+            params.push(prezzo_max);
+        }
+        if (disponibilita !== undefined && disponibilita !== null) {
+            query += ' AND disponibilita >= $' + (params.length + 1);
+            params.push(disponibilita);
+        }
+        try {
+            const result = await pool.query(query, params);
+            return result.rows.map(row => new Product(
+                row.id_prodotto,
+                row.username_artigiano,
+                row.nome_prodotto,
+                row.categoria,
+                row.prezzo,
+                row.disponibilita
+            ));
+        } catch (error) {
+            throw new Error('Error searching products: ' + error.message);
+        }
+    }
 };
 
 export { Product };

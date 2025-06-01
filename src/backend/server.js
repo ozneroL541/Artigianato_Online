@@ -16,7 +16,7 @@ const {
     loginClient,
     loginAdmin
 } = require('./auth/auth_api.js');
-const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan } = require('./product/product_api.js');
+const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts } = require('./product/product_api.js');
 const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
 /** Port for the frontend server */
 const frontendPort = 8000;
@@ -811,6 +811,91 @@ app.get('/api/product/all', getAllProducts);
  *                                  example: "Internal server error"
  */
 app.get('/api/product/artisan', checkArtisan, getProductsByArtisan);
+/**
+ * @swagger
+ * /api/product/search:
+ *   get:
+ *     summary: Get all products which match the given parameters
+ *     description: Retrieve a list of all the products which match the given parameters.
+ *     tags:
+ *       - Product
+ *     parameters:
+ *       - in: query
+ *         name: username_artigiano
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The username of the artisan to filter products by.
+ *         example: "Gualtiero_Pappalardo63"
+ *       - in: query
+ *         name: nome_prodotto
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The name of the product to filter by.
+ *         example: "Generic Wooden Tuna"
+ *       - in: query
+ *         name: categoria
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The category of the product to filter by.
+ *         example: "Ceramica"
+ *       - in: query
+ *         name: prezzo_min
+ *         required: false
+ *         schema:
+ *           type: number
+ *         description: The minimum price of the product to filter by.
+ *         example: 10.00
+ *       - in: query
+ *         name: prezzo_max
+ *         required: false
+ *         schema:
+ *           type: number
+ *         description: The maximum price of the product to filter by.
+ *         example: 100.00
+ *       - in: query
+ *         name: disponibilita
+ *         required: false
+ *         schema:
+ *           type: number
+ *         description: The availability of the product to filter by.
+ *         example: 50
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   nome_prodotto:
+ *                     type: string
+ *                     example: "Handmade Vase"
+ *                   categoria:
+ *                     type: string
+ *                     example: "Ceramics"
+ *                   prezzo:
+ *                     type: number
+ *                     example: 25.50
+ *                   disponibilita:
+ *                     type: number
+ *                     example: 10
+ *                   username_artigiano:
+ *                     type: string
+ *                     example: "artisan123"
+ *       400:
+ *         description: Bad request - Invalid parameters
+ *       500:
+ *         description: Internal server error
+ */
+app.get('/api/product/search', getProducts);
 /**
  * @swagger
  * /api/category/upload:
