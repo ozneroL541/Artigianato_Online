@@ -71,5 +71,34 @@ const deleteProduct = async (req, res) => {
         res.status(400).json({ message: 'Bad request', error: error.message });
     }
 }
+/*
+ * Retrieves all products from the database.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object to send the result.
+ * @returns {Promise<void>} A promise that resolves when the products are retrieved.
+ */
+const getAllProducts = async (req, res) => {
+    try {
+        const products = await Product.getAll();
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+}
+/**
+ * Retrieves all products by a specific artisan from the database.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object to send the result.
+ * @returns {Promise<void>} A promise that resolves when the products are retrieved.
+ */
+const getProductsByArtisan = async (req, res) => {
+    try {
+        const username_artigiano = req.username;
+        const products = await Product.getByArtisan(username_artigiano);
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+}
 
-export { uploadProduct, updateProduct, deleteProduct };
+export { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan };

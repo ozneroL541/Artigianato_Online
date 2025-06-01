@@ -11,7 +11,7 @@ class Category {
      * @constructor
      */
     constructor(category_name=null) {
-        this.category_name = category_name;        
+        this.categoria = category_name;        
     }
     /**
      * Save the category to the database.
@@ -20,8 +20,8 @@ class Category {
      */
     async save() {
         const query = 'INSERT INTO categorie (categoria) VALUES ($1);';
-        const params = [this.category_name];
-        if (this.category_name == null) {
+        const params = [this.categoria];
+        if (this.categoria == null) {
             throw new CategoryError("Category cannot be null");
         }
         if (await this.exists()) {
@@ -41,8 +41,8 @@ class Category {
      */
     async update(new_category_name) {
         const query = 'UPDATE categorie SET categoria = $1 WHERE categoria = $2;';
-        const params = [new_category_name, this.category_name];
-        if (this.category_name == null || new_category_name == null) {
+        const params = [new_category_name, this.categoria];
+        if (this.categoria == null || new_category_name == null) {
             throw new CategoryError("Category name cannot be null");
         }
         if (await this.exists() === false) {
@@ -50,7 +50,7 @@ class Category {
         }
         try {
             await pool.query(query, params);
-            this.category_name = new_category_name; // Update the instance variable
+            this.categoria = new_category_name; // Update the instance variable
             return true; // Return true if the update was successful
         } catch (error) {
             return false; // If the update fails, return false
@@ -62,7 +62,7 @@ class Category {
      */
     async delete() {
         const query = 'DELETE FROM categorie WHERE categoria = $1;';
-        const params = [this.category_name];
+        const params = [this.categoria];
         try {
             await pool.query(query, params);
             return true; // Return true if the deletion was successful
@@ -75,11 +75,11 @@ class Category {
      * @returns {Promise<boolean>} A promise that resolves to true if the category exists, false otherwise.
      */
     async exists() {
-        if (this.category_name == null) {
+        if (this.categoria == null) {
             return true;
         }
         const query = 'SELECT COUNT(*) FROM categorie WHERE categoria = $1;';
-        const params = [this.category_name];
+        const params = [this.categoria];
         try {
             const result = await pool.query(query, params);
             return result.rows[0].count > 0; // Return true if count is greater than 0

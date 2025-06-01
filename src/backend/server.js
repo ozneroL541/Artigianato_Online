@@ -16,7 +16,7 @@ const {
     loginClient,
     loginAdmin
 } = require('./auth/auth_api.js');
-const { uploadProduct, updateProduct, deleteProduct } = require('./product/product_api.js');
+const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan } = require('./product/product_api.js');
 const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
 /** Port for the frontend server */
 const frontendPort = 8000;
@@ -712,6 +712,105 @@ app.put('/api/product/update', checkArtisan, updateProduct);
  *                   example: "Product not found"
  */
 app.delete('/api/product/delete', checkArtisan, deleteProduct);
+/**
+ * @swagger
+ * /api/product/all:
+ *  get:
+ *      summary: Get all products
+ *      description: Retrieve a list of all products.
+ *      tags:
+ *       - Product
+ *      responses:
+ *          200:
+ *              description: List of products retrieved successfully
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              products:
+ *                                  type: array
+ *                                  items:
+ *                                      type: object
+ *                                      properties:
+ *                                          id_prodotto:
+ *                                              type: number
+ *                                              example: 12345
+ *                                          nome_prodotto:
+ *                                              type: string
+ *                                              example: "Handmade Vase"
+ *                                          categoria:
+ *                                              type: string
+ *                                              example: "Ceramics"
+ *                                          prezzo:
+ *                                              type: number
+ *                                              example: 29.99
+ *                                          disponibilita:
+ *                                              type: number
+ *                                              example: 100
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  example: "Internal server error"
+ */
+app.get('/api/product/all', getAllProducts);
+/**
+ * @swagger
+ * /api/product/artisan:
+ *  get:
+ *      summary: Get all products of an artisan
+ *      description: Retrieve a list of all the artisan products.
+ *      tags:
+ *       - Product
+ *       - Artisan
+ *      security:
+ *       - bearerAuth: []
+ *      responses:
+ *          200:
+ *              description: List of products of the artisan retrieved successfully
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              products:
+ *                                  type: array
+ *                                  items:
+ *                                      type: object
+ *                                      properties:
+ *                                          id_prodotto:
+ *                                              type: number
+ *                                              example: 12345
+ *                                          nome_prodotto:
+ *                                              type: string
+ *                                              example: "Handmade Vase"
+ *                                          categoria:
+ *                                              type: string
+ *                                              example: "Ceramics"
+ *                                          prezzo:
+ *                                              type: number
+ *                                              example: 29.99
+ *                                          disponibilita:
+ *                                              type: number
+ *                                              example: 100
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  example: "Internal server error"
+ */
+app.get('/api/product/artisan', checkArtisan, getProductsByArtisan);
 /**
  * @swagger
  * /api/category/upload:
