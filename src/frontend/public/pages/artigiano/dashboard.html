@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../../assets/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script defer src="../../components/layout/PageLayout.js"></script>
-    <script defer src="../../components/general/ToggleTabs.js"></script>
+    <script defer type="module" src="../../components/layout/PageLayout.js"></script>
+    <script defer type="module" src="../../components/general/ToggleTabs.js"></script>
 </head>
+
 <body>
 <page-layout page-title="Dashboard artigiano">
     <toggle-tabs tabs='["Articoli", "Profilo"]' class="dashboard">
@@ -120,6 +121,7 @@
         </section>
         <section id="Profilo" data-type="tab" class="dashboard__profile">
             <h3>Le tue informazioni</h3>
+            <p>Ciao, <span id="userId"></span>!</p>
             <label class="dashboard__profile__inputs">
                 <input type="text" placeholder="Nome impresa">
                 <input type="text" placeholder="IBAN">
@@ -138,17 +140,39 @@
             </dialog>
         </section>
     </toggle-tabs>
-
-
 </page-layout>
 </body>
+<script>
+    /**
+     * This function toggles the visibility of the modal element.
+     * @param {string} id the dialog to open / close
+     * @author Leonardo Basso
+     * */
+    function toggleDialog(id) {
+        const dialog = document.getElementById(id);
+        if (dialog.open) {
+            dialog.close();
+        } else {
+            dialog.showModal();
+        }
+    }
+</script>
+<script type="module">
+    import {getUsername} from "../../script/jwt.js";
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const token = window.localStorage.getItem("userToken")
+        const userIdElement = document.getElementById('userId');
+
+        userIdElement.textContent = getUsername(token);
+    });
+</script>
 <style>
     .dashboard {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-
     }
 
     .dashboard__add {
@@ -236,18 +260,3 @@
     }
 </style>
 </html>
-<script>
-    /**
-     * This function toggles the visibiility of the modal element.
-     *
-     * @author Leonardo Basso
-     * */
-    function toggleDialog(id) {
-        const dialog = document.getElementById(id);
-        if (dialog.open) {
-            dialog.close();
-        } else {
-            dialog.showModal();
-        }
-    }
-</script>

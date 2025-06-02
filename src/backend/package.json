@@ -10,9 +10,20 @@
     "type": "git",
     "url": "git+https://github.com/ozneroL541/Artigianato_Online.git"
   },
-  "keywords": [],
+  "keywords": [
+    "artigianato",
+    "online",
+    "e-commerce",
+    "startup",
+    "prodotti artigianali",
+    "creativi locali",
+    "profilo artigiano",
+    "catalogo prodotti",
+    "gestione ordini",
+    "inventario"
+  ],
   "author": "Ballerini Stefano, Basso Leonardo, Paredi Giacomo, Radice Lorenzo",
-  "license": "GNU GPLv3",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/ozneroL541/Artigianato_Online/issues"
   },
@@ -21,6 +32,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "pg": "^8.15.6"
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }

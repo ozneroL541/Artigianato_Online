@@ -4,64 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../../assets/style.css">
-    <script defer src="../../components/layout/PageLayout.js"></script>
-    <script defer src="../../components/general/ToggleTabs.js"></script>
+    <script defer type="module" src="../../components/layout/PageLayout.js"></script>
+    <script defer type="module" src="../../components/general/ToggleTabs.js"></script>
+    <script type="module" src="../../script/crud/auth/register.js"></script>
 </head>
 <body>
 <page-layout page-title="Registrati!">
-    <toggle-tabs tabs='["Artigiano", "Cliente"]' class="login">
-        <div class="login__content">
+    <toggle-tabs tabs='["Artigiano", "Cliente"]' class="register">
+        <div class="register__content">
             <div id="Artigiano" data-type="tab">
                 <h2 class="tab__title">Artigiano</h2>
+                <div id="artisanError" class="error-message" style="display: none; color: red;"></div>
                 <label>
-                <input type="text" placeholder="Username">
-                <input type="text" placeholder="Nome Impresa">
-                <input type="email" placeholder="Email">
-                <input type="text" placeholder="IBAN">
-                <input type="password" placeholder="Password">
-                    <button onclick="console.log('hello')" >Registrati!</button>
+                    <input type="text" id="artisanUsername" placeholder="Username">
+                    <input type="text" id="companyName" placeholder="Nome Impresa">
+                    <input type="email" id="artisanEmail" placeholder="Email">
+                    <input type="text" id="artisanIban" placeholder="IBAN">
+                    <input type="password" id="artisanPassword" placeholder="Password">
+                    <button id="artisanRegisterButton">Registrati!</button>
                 </label>
             </div>
             <div id="Cliente" data-type="tab">
                 <h2 class="tab__title">Cliente</h2>
+                <div id="clientError" class="error-message" style="display: none; color: red;"></div>
                 <label>
-                    <input type="text" placeholder="Username">
-                    <input type="text" placeholder="Nome">
-                    <input type="text" placeholder="Cognome">
-                    <input type="email" placeholder="Email">
-                    <input type="password" placeholder="Password">
-                    <button onclick="console.log('world')">Registrati!</button>
+                    <input type="text" id="clientUsername" placeholder="Username">
+                    <input type="text" id="clientName" placeholder="Nome">
+                    <input type="text" id="clientSurname" placeholder="Cognome">
+                    <input type="email" id="clientEmail" placeholder="Email">
+                    <input type="password" id="clientPassword" placeholder="Password">
+                    <button id="clientRegisterButton">Registrati!</button>
                 </label>
-
             </div>
         </div>
         <p class="text-center">Hai già un account? Allora <a href="/auth/login">vai al login</a></p>
     </toggle-tabs>
-
 </page-layout>
-</body>
+
+<script type="module">
+    import {registerArtisan, registerClient} from '../../script/crud/auth/register.js';
+
+    document.getElementById('artisanRegisterButton').addEventListener('click', () => {
+        const username = document.getElementById('artisanUsername').value;
+        const companyName = document.getElementById('companyName').value;
+        const email = document.getElementById('artisanEmail').value;
+        const iban = document.getElementById('artisanIban').value;
+        const password = document.getElementById('artisanPassword').value;
+        registerArtisan(username, password, companyName, email, iban);
+    });
+
+    document.getElementById('clientRegisterButton').addEventListener('click', () => {
+        const username = document.getElementById('clientUsername').value;
+        const name = document.getElementById('clientName').value;
+        const surname = document.getElementById('clientSurname').value;
+        const email = document.getElementById('clientEmail').value;
+        const password = document.getElementById('clientPassword').value;
+        registerClient(username, password, name, surname, email);
+    });
+</script>
+
 <style>
-    .login {
+    .register {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         height: 80vh;
     }
-    .login__content {
+
+    .register__content {
         display: flex;
         align-items: center;
         justify-content: center;
         max-width: 600px;
         height: 320px;
     }
-    .login__content label >* {
+
+    .register__content label > * {
         width: 100%;
         margin-bottom: .5rem;
     }
+
     .tab__title {
         text-align: center;
         margin: 1rem 0;
     }
 </style>
+</body>
 </html>

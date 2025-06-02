@@ -2,11 +2,21 @@
   "name": "auth",
   "version": "1.0.0",
   "description": "Authentication and authorization module for Artigianato Online",
-  "keywords": ["auth", "authentication", "authorization"],
+  "keywords": [
+    "auth",
+    "authentication",
+    "authorization", 
+    "hash",
+    "argon2",
+    "jwt",
+    "jsonwebtoken",
+    "security"
+  ],
   "author": "Lorenzo Radice",
   "license": "GPL-3.0",
   "type": "module",
   "dependencies": {
-    "argon2": "^0.43.0"
+    "argon2": "^0.43.0",
+    "jsonwebtoken": "^9.0.2"
   }
 }

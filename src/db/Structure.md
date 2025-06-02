@@ -1,6 +1,6 @@
 # Struttura Database 
 ## artigianato_online_db
-- [amministratori](./tables/amministratori.sql) (<ins>username_amministratore</ins> , h_password)
+- [amministratori](./tables/amministratori.sql) (<ins>username_amministratore</ins>, h_password)
 - [artigiani](./tables/artigiani.sql) (<ins>username_artigiano</ins>, h_password, nome_impresa, iban)
 - [clienti](./tables/clienti.sql) (<ins>username_cliente</ins>, h_password, email_cliente, nome_cliente, cognome_cliente)
 - [categorie](./tables/categorie.sql) (<ins>categoria</ins>)

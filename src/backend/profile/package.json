@@ -1,0 +1,16 @@
+{
+  "name": "profile",
+  "version": "1.0.0",
+  "description": "Module to manage user profiles",
+  "type": "module",
+  "keywords": [
+    "profile",
+    "user",
+    "profiles",
+    "user profile",
+    "user management",
+    "delete profile"
+  ],
+  "author": "Lorenzo Radice",
+  "license": "GPL-3.0"
+}
