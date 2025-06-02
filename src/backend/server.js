@@ -6,7 +6,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 
 const { Dashboard } = require('./dashboard/dashboard.js');
 const { ProfileClient}= require('./dashboard/ProfileClient.js');
-const { checkArtisan, checkClient, checkAdmin } = require('./auth/jwt.js');
+const { checkArtisan, checkClient, checkAdmin,genClientJWT,checkAuth } = require('./auth/jwt.js');
 const { delClient, delArtisan, delAdmin } = require('./profile/profile_api.js');
 const {
     registerArtisan,
@@ -18,6 +18,8 @@ const {
 } = require('./auth/auth_api.js');
 const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts } = require('./product/product_api.js');
 const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
+const {ReserchProductByID, reserchAllProduct}=require('./profileClient/recuperoProdotti.js');
+const{resetPassword, resetMail,Segnalachion,GetBuyproduct}=require('./profileClient/gestioneprofilo.js');
 /** Port for the frontend server */
 const frontendPort = 8000;
 /** Port for the backend server */
@@ -1157,87 +1159,305 @@ app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
     }
 });
 
-// TODO: Utilizzare JWT per autenticazione e ottenere username
-// TODO: doc e spostare funzione asincrona in altro file
-app.get('/api/client/Profile', async (req, res) => {
-    try {
-        const profile = new ProfileClient(req.query.username); // esempio con username passato da query
-        const products = await profile.getBuyProducts();
-        res.status(200).json(products);
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
 
-// TODO: Utilizzare JWT per autenticazione e ottenere username
-// TODO: doc e spostare funzione asincrona in altro file
-app.put('/api/client/password', async (req, res) => {
-    const { username, newPassword } = req.body;
-    try {
-        const profile = new ProfileClient(username);
-        const result = await profile.resetPassword(newPassword);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
+app.get('/api/client/Profile',checkAuth,genClientJWT,GetBuyproduct); 
+/**
+ * @swagger
+ * /api/client/Profile:
+ *   get:
+ *     summary: Get all products purchased by a client
+ *     tags:
+ *       - Client
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: username
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The username of the client whose purchased products are being fetched
+ *     responses:
+ *       200:
+ *         description: List of products successfully retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   productId:
+ *                     type: string
+ *                   productName:
+ *                     type: string
+ *                   quantity:
+ *                     type: integer
+ *                   price:
+ *                     type: number
+ *                     format: float
+ *       400:
+ *         description: Bad request (e.g., missing username or internal error)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
 
-// TODO: Utilizzare JWT per autenticazione e ottenere username
-// TODO: doc e spostare funzione asincrona in altro file
-app.put('/api/client/email', async (req, res) => {
-    const { username, newEmail } = req.body;
-    try {
-        const profile = new ProfileClient(username);
-        const result = await profile.ResetMail(newEmail);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
 
-// TODO: Utilizzare JWT per autenticazione
-// TODO: doc e spostare funzione asincrona in altro file
-app.post('/api/client/report', async (req, res) => {
-    const { idSignal, orderId, description, resolved } = req.body;
-    try {
-        const profile = new ProfileClient(); // non servono parametri per segnalazione
-        const result = await profile.newSignal(idSignal, orderId, description, resolved);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
+app.put('/api/client/password',resetPassword,checkAuth,genClientJWT); 
+/**
+ * @swagger
+ * /api/client/password:
+ *   put:
+ *     summary: Reset password for a given user
+ *     tags:
+ *       - client
+ *     security:
+ *       - bearerAuth: []
+ *     description: Updates the password associated with a user account.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - newPassword
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: johndoe
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *                 example: NewP@ssw0rd!
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 message: Password updated successfully
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 message: Bad request
+ *                 error: Invalid input data
+ */
 
-// All products
-// TODO: doc e spostare funzione asincrona in altro file
-app.get('/api/ricerca/dashboard', async (req, res) => {
-    try {
-        //const research = new ProductResearch();
-        //const products = await research.getAllProducts();
-        //res.status(200).json(products);
-        res.status(200).json({ message: 'Not implemented' });
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
 
-// products by id
-// TODO: doc e spostare funzione asincrona in altro file
-app.get('/api/ricerca/dashboard/:id', async (req, res) => {
-    try {
-        const research = new ProductResearch(req.params.id);
-        const product = await research.getProductById();
-        res.status(200).json(product);
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
+app.put('/api/client/email',resetMail,checkAuth, genClientJWT); 
+/**
+ * @swagger
+ * /api/client/email:
+ *   put:
+ *     summary: Reset email for a given user
+ *     tags:
+ *       - client
+ *     security:
+ *       - bearerAuth: []
+ *     description: Updates the email address associated with a user account.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - newEmail
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: johndoe
+ *               newEmail:
+ *                 type: string
+ *                 format: email
+ *                 example: johndoe@example.com
+ *     responses:
+ *       200:
+ *         description: Email updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 message: Email updated successfully
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 message: Bad request
+ *                 error: Invalid input data
+ */
+
+
+
+
+app.post('/api/client/report',Segnalachion,checkAuth); 
+/**
+ * @swagger
+ * /api/client/report:
+ *   post:
+ *     summary: Submit a client report (signal)
+ *     description: Allows a client to report a problem or issue related to an order.
+ *     tags:
+ *       - Client
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idSignal
+ *               - orderId
+ *               - description
+ *               - resolved
+ *             properties:
+ *               idSignal:
+ *                 type: string
+ *                 description: Unique identifier of the signal
+ *               orderId:
+ *                 type: string
+ *                 description: The ID of the order related to the report
+ *               description:
+ *                 type: string
+ *                 description: Detailed description of the issue
+ *               resolved:
+ *                 type: boolean
+ *                 description: Whether the issue is already resolved
+ *     responses:
+ *       200:
+ *         description: Report submitted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: Bad request, check the input fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
+
+
+app.get('/api/ricerca/dashboard', reserchAllProduct); 
+/**
+ * @swagger
+ * /api/ricerca/dashboard:
+ *   get:
+ *     summary: Get all available products
+ *     description: Returns a list of all products. No parameters required.
+ *     tags:
+ *       - Product
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved all products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   price:
+ *                     type: number
+ *                   description:
+ *                     type: string
+ *       400:
+ *         description: Bad request or internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
+
+
+
+app.get('/api/ricerca/dashboard/:id',ReserchProductByID);
+ /**
+ * @swagger
+ * /api/ricerca/dashboard/{id}:
+ *   get:
+ *     summary: Research a product by ID
+ *     description: Retrieve product details by providing its unique identifier.
+ *     tags:
+ *       - Product
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique ID of the product to retrieve
+ *     responses:
+ *       200:
+ *         description: Product successfully retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 price:
+ *                   type: number
+ *                 description:
+ *                   type: string
+ *       400:
+ *         description: Bad request (invalid or missing ID)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
+
 
 /**
  * Start the server
