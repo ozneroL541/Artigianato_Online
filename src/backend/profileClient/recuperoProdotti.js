@@ -1,4 +1,4 @@
-import { ProductResearch } from './dashboard/searchProductClass.js';
+import { ProductResearch } from './backend/dashboard/searchProductClass.js';
 
 /**
  * Research of a product by ID.
