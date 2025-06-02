@@ -78,14 +78,14 @@ class ToggleTabs extends HTMLElement {
      * @author Leonardo Basso
      */
     openTab(tabName) {
-        // Hide all tab contents
+        // Hide all tab contents respecting accessibility features in html5
         const tabContents = this.querySelectorAll('[data-type="tab"]');
         tabContents.forEach(tabContent => {
             tabContent.setAttribute('aria-selected', 'false');
             tabContent.style.display = 'none';
         });
 
-        // Show the selected tab content
+        // Show the selected tab content respecting accessibility features in html5
         const selectedTab = this.querySelector(`#${tabName}`);
         if (selectedTab) {
             selectedTab.setAttribute('aria-selected', 'true');

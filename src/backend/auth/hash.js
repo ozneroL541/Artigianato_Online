@@ -35,4 +35,7 @@ async function verifyPassword(password, hashedPassword) {
     }
 }
 
-export { hashPassword, verifyPassword };
+export { 
+    hashPassword, 
+    verifyPassword 
+};

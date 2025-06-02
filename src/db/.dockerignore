@@ -1,0 +1,4 @@
+# .dockerignore
+examples/gen_tables.py
+examples/prodotti.csv
+Structure.md

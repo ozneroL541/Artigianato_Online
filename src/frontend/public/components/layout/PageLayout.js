@@ -1,3 +1,5 @@
+import {decodeJWT, getUserType} from "../../script/jwt.js";
+
 /**
  * This component is used to create the page layout with a navbar, a footer and a dynamic title.
  * @author Leonardo Basso
@@ -6,44 +8,52 @@
 class PageLayout extends HTMLElement {
     constructor() {
         super();
-        this.attachShadow({ mode: "open" });
+        this.attachShadow({mode: "open"});
     }
 
     connectedCallback() {
         const title = this.getAttribute("page-title") || "Artigiani Online";
         document.title = `${title} - Artigiani Online`;
 
+        const token = window.localStorage.getItem("userToken");
+        const payload = getUserType(token);
+        const userType = payload ? payload : null;
+
         this.shadowRoot.innerHTML = `
-            <section class="page__layout">
-                <header class="navbar" id="navbar">
-                    <div class="logo-menu">
-                        <h2 class="logo">Artigiani Online</h2>
+        <section class="page__layout">
+            <header class="navbar" id="navbar">
+                <div class="logo-menu">
+                    <h2 class="logo">Artigiani Online</h2>
                     <span class="burger" aria-label="Navigation menu" aria-expanded="false"></span>
-                    </div>
-                    <nav class="navbar__links" id="navbar_links">
-                        <a class="link" href="/">Home</a>
-                        <a class="link" href="/auth/login">Login</a>
-                    </nav>
-                </header>
-                <main>
-                    <slot></slot>
-                </main>
-<!--                <footer>-->
-<!--                    <p>Artigiani Online, 2025</p>-->
-<!--                </footer>-->
+                </div>
+                <nav class="navbar__links" id="navbar_links">
+                    <a class="link" href="/">Home</a>
+                    ${userType === "artigiano" || userType === "cliente" ? '<a class="link" id="logoutLink" href="#">Logout</a>' : '<a class="link" href="/auth/login">Login</a>'}
+                </nav>
+            </header>
+            <main>
+                <slot></slot>
+            </main>
         </section>
-            
-            <style> ${css} </style>
-        `;
+
+        <style> ${css} </style>
+    `;
 
         const burger = this.shadowRoot.querySelector('.burger');
         const links = this.shadowRoot.querySelector('.navbar__links');
+        const logoutLink = this.shadowRoot.getElementById('logoutLink');
 
         burger.addEventListener('click', () => {
             links.classList.toggle('links_show');
             // Accessibility
             const isExpanded = burger.getAttribute('aria-expanded') === 'true';
             burger.setAttribute('aria-expanded', !isExpanded);
+        });
+
+        logoutLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            localStorage.clear();
+            window.location.href = "/";
         });
     }
 }
@@ -135,4 +145,5 @@ header, main, footer {
     overflow: hidden;
 }
 `
+
 customElements.define("page-layout", PageLayout);
