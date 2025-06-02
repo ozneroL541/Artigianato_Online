@@ -1,5 +1,5 @@
-import { ProfileClient } from './ProfileClient.js';
- import {Segnala} from './Segnalachion.js';
+import { ProfileClient } from './dashboard/ProfileClient.js';
+ import {Segnala} from './dashboard/Segnalachion.js';
 
 /**
  * Reset the password for a given user.
