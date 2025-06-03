@@ -11,6 +11,7 @@ import { pool } from "../db/dbConnection.js";
 
     //this constructor is for the segnalacion
     constructor(id_segn, id_ord, timeStampsen, desc, ris){
+        this.db = pool;
         this.id_segn=id_segn;
         this.id_ord=id_ord;
         this.timeStampsen=timeStampsen;
