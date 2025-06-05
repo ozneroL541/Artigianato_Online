@@ -35,9 +35,10 @@ class Product {
                        VALUES ((SELECT MAX(id_prodotto)+1 AS next_id FROM prodotti), $1, $2, $3, $4, $5)
                        RETURNING id_prodotto;`;
         const params = [this.username_artigiano, this.nome_prodotto, this.categoria, this.prezzo, this.disponibilita];
-        if (!this.categoria.exists()) {
+        if (! (await this.categoria.exists())) {
             throw new CategoryError("Category does not exist");
         }
+        // TODO fix category check
         try {
             const id_prodotto = await pool.query(query, params);
             this.id_prodotto = id_prodotto.rows[0].id_prodotto; // Set the ID of the product
