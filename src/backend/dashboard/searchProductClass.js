@@ -94,4 +94,4 @@ class IncompatiblyId extends Error {
     }
 }
 
-export default { Search };
+export { Search };
