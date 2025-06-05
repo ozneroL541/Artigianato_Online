@@ -18,7 +18,7 @@ const {
 } = require('./auth/auth_api.js');
 const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts } = require('./product/product_api.js');
 const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
-const {reserchProductByID, researchAllProducts}=require('./profileClient/recuperoProdotti.js');
+const {researchProductByID, researchAllProducts}=require('./profileClient/recuperoProdotti.js');
 const{resetPassword, resetMail,Segnalachion,GetBuyproduct}=require('./profileClient/gestioneprofilo.js');
 /** Port for the frontend server */
 const frontendPort = 8000;
@@ -1413,7 +1413,7 @@ app.get('/api/ricerca/dashboard', researchAllProducts);
 
 
 
-app.get('/api/ricerca/dashboard/:id',reserchProductByID);
+app.get('/api/ricerca/dashboard/:id',researchProductByID);
  /**
  * @swagger
  * /api/ricerca/dashboard/{id}:
