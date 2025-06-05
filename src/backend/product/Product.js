@@ -38,7 +38,6 @@ class Product {
         if (! (await this.categoria.exists())) {
             throw new CategoryError("Category does not exist");
         }
-        // TODO fix category check
         try {
             const id_prodotto = await pool.query(query, params);
             this.id_prodotto = id_prodotto.rows[0].id_prodotto; // Set the ID of the product
