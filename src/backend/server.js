@@ -18,7 +18,7 @@ const {
 } = require('./auth/auth_api.js');
 const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts } = require('./product/product_api.js');
 const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
-const {ReserchProductByID, reserchAllProduct}=require('./profileClient/recuperoProdotti.js');
+const {reserchProductByID, researchAllProducts}=require('./profileClient/recuperoProdotti.js');
 const{resetPassword, resetMail,Segnalachion,GetBuyproduct}=require('./profileClient/gestioneprofilo.js');
 /** Port for the frontend server */
 const frontendPort = 8000;
@@ -1371,7 +1371,7 @@ app.post('/api/client/report',Segnalachion,checkAuth);
  */
 
 
-app.get('/api/ricerca/dashboard', reserchAllProduct); 
+app.get('/api/ricerca/dashboard', researchAllProducts); 
 /**
  * @swagger
  * /api/ricerca/dashboard:
@@ -1413,7 +1413,7 @@ app.get('/api/ricerca/dashboard', reserchAllProduct);
 
 
 
-app.get('/api/ricerca/dashboard/:id',ReserchProductByID);
+app.get('/api/ricerca/dashboard/:id',reserchProductByID);
  /**
  * @swagger
  * /api/ricerca/dashboard/{id}:
