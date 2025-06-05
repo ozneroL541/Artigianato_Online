@@ -34,7 +34,7 @@ class Product {
         const query = `INSERT INTO prodotti (id_prodotto, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita)
                        VALUES ((SELECT MAX(id_prodotto)+1 AS next_id FROM prodotti), $1, $2, $3, $4, $5)
                        RETURNING id_prodotto;`;
-        const params = [this.username_artigiano, this.nome_prodotto, this.categoria, this.prezzo, this.disponibilita];
+        const params = [this.username_artigiano, this.nome_prodotto, this.categoria.categoria, this.prezzo, this.disponibilita];
         if (! (await this.categoria.exists())) {
             throw new CategoryError("Category does not exist");
         }
@@ -58,12 +58,12 @@ class Product {
                        prezzo = $3, 
                        disponibilita = $4 
                        WHERE id_prodotto = $5 AND username_artigiano = $6;`;
-        if (!this.categoria.exists()) {
+        if (! (await this.categoria.exists())) {
             throw new CategoryError("Category does not exist");
         }
         const params = [
             this.nome_prodotto,
-            this.categoria,
+            this.categoria.categoria,
             this.prezzo,
             this.disponibilita,
             this.id_prodotto,

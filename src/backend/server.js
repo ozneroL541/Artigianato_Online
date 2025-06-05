@@ -654,7 +654,7 @@ app.put('/api/product/update', checkArtisan, updateProduct);
 /**
  * @swagger
  * /api/product/delete:
- *   post:
+ *   delete:
  *     summary: Delete a product
  *     description: Delete a product by its ID. Only artisans can perform this operation.
  *     tags:
