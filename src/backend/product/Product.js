@@ -220,6 +220,25 @@ class Product {
             throw new Error('Error searching products: ' + error.message);
         }
     }
+    /**
+     * Checks if a product exists in the database by its ID.
+     * @static
+     * @async
+     * @method exists
+     * @description Checks if a product with the given ID exists in the database.
+     * This method is useful for validating product existence before performing operations like update or delete.
+     * @param {number} id_prodotto - The unique identifier of the product to check.
+     * @returns {Promise<boolean>} A promise that resolves to true if the product exists, false otherwise.
+     */
+    static async exists(id_prodotto) {
+        const query = 'SELECT COUNT(*) FROM prodotti WHERE id_prodotto = $1;';
+        try {
+            const result = await pool.query(query, [id_prodotto]);
+            return result.rows[0].count > 0; // Returns true if the product exists
+        } catch (error) {
+            return false; // If there's an error, we assume the product does not exist
+        }
+    }
 };
 
 export { Product };
