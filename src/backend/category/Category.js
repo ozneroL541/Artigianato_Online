@@ -11,7 +11,7 @@ class Category {
      * @constructor
      */
     constructor(category_name=null) {
-        this.categoria = category_name;        
+        this.categoria = category_name.toUpperCase();        
     }
     /**
      * Save the category to the database.
@@ -31,7 +31,7 @@ class Category {
             await pool.query(query, params);
             return true;
         } catch (error) {
-            throw new new CategoryError("Erro saving category: " + error.message);            
+            throw new new CategoryError("Error saving category: " + error.message);            
         }
     }
     /**
@@ -40,7 +40,7 @@ class Category {
      * @returns {Promise<boolean>} A promise that resolves to true if the category was updated successfully, false otherwise.
      */
     async update(new_category_name) {
-        const query = 'UPDATE categorie SET categoria = $1 WHERE categoria = $2;';
+        const query = 'UPDATE categorie SET categoria = $1 WHERE UPPER(categoria) = $2;';
         const params = [new_category_name, this.categoria];
         if (this.categoria == null || new_category_name == null) {
             throw new CategoryError("Category name cannot be null");
@@ -61,7 +61,7 @@ class Category {
      * @returns {Promise<boolean>} A promise that resolves to true if the category was deleted successfully, false otherwise.
      */
     async delete() {
-        const query = 'DELETE FROM categorie WHERE categoria = $1;';
+        const query = 'DELETE FROM categorie WHERE UPPER(categoria) = $1;';
         const params = [this.categoria];
         try {
             await pool.query(query, params);
@@ -78,7 +78,7 @@ class Category {
         if (this.categoria == null) {
             return true;
         }
-        const query = 'SELECT COUNT(*) FROM categorie WHERE categoria = $1;';
+        const query = 'SELECT COUNT(*) FROM categorie WHERE UPPER(categoria) = $1;';
         const params = [this.categoria];
         try {
             const result = await pool.query(query, params);
@@ -92,10 +92,11 @@ class Category {
      * @returns {Promise<Array>} A promise that resolves to an array of category names.
      */
     static async getAll() {
-        const query = 'SELECT categoria FROM categorie;';
+        const query = 'SELECT UPPER(categoria) AS categoria FROM categorie;';
         try {
             const result = await pool.query(query);
-            return result.rows.map(row => row.categoria); // Return an array of category names
+            const allCategories = result.rows.map(row => row.categoria);
+            return allCategories;
         } catch (error) {
             throw new CategoryError('Error fetching categories');
         }
