@@ -28,7 +28,8 @@ class Product {
     /**
      * Insert the product into the database.
      * If id_prodotto is null, it generates a new ID.
-     * @returns {Promise} A promise that resolves to the result of the database operation.
+     * @returns {Promise<number>} A promise that resolves to the ID of the inserted product.
+     * @throws {Error} If there is an error during the database operation or if the category does not exist.
      */
     async save() {
         const query = `INSERT INTO prodotti (id_prodotto, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita)
@@ -48,7 +49,8 @@ class Product {
     }
     /**
      * Updates the product in the database.
-     * @returns {Promise} A promise that resolves to the result of the update operation.
+     * @returns {Promise<Boolean>} True if the update was successful, false otherwise.
+     * @throws {CategoryError} If the category does not exist.
      */
     async update() {
         const query = `UPDATE prodotti SET 

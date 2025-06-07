@@ -35,10 +35,29 @@ class Order {
      * Creates a new order in the database.
      * This method inserts a new order into the database and returns the created order object.
      * @async
-     * @returns {Promise<Order>} A promise that resolves to the created Order object.
+     * @returns {Promise<number>} The order ID of the newly created order.
      * @throws {Error} If there is an error during the database operation.
      */
     async create() {
+        // TODO
+    }
+    /**
+     * Add delivery date to the order.
+     * This method updates the order with the delivery date.
+     * @async
+     * @returns {Promise<Order>} A promise that resolves to the updated Order object.
+     * @throws {Error} If there is an error during the database operation.
+     */
+    async recived() {
+        // TODO
+    }
+    /**
+     * Retrieves an order by its ID.
+     * @param {number} id_ordine - The unique identifier of the order to retrieve.
+     * @returns {Promise<Order>} A promise that resolves to the Order object if found, or null if not found.
+     * @throws {Error} If there is an error during the database operation.
+     */
+    static async getById(id_ordine) {
         // TODO
     }
 }
