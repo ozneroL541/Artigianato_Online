@@ -9,14 +9,6 @@
  */
 export const addProduct = async (token, name, category, price, stock) => {
     try {
-        console.log(
-            `Sending: 
-            ${token},
-            ${name},
-            ${category},
-            ${price},
-            ${stock}`
-        );
         const response = await fetch('http://localhost:8080/api/product/upload', {
             method: 'POST',
             headers: {
@@ -46,3 +38,20 @@ export const addProduct = async (token, name, category, price, stock) => {
         console.error(err);
     }
 }
+export const getArtisanProducts = async (token) => {
+    try {
+        const response = await fetch('http://localhost:8080/api/product/artisan', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) throw new Error("Errore nel caricamento dei prodotti");
+
+        const data = await response.json();
+        return data.products;  // restituisce array di prodotti
+    } catch (err) {
+        console.error(err);
+        alert("Errore nel caricamento dei prodotti.");
+        return [];
+    }
+};
