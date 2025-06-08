@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../../assets/style.css">
+    <script defer type="module" src="../../../components/layout/PageLayout.js"></script>
+    <script defer type="module" src="../../../components/general/ToggleTabs.js"></script>
+    <script type="module" src="../../../script/crud/auth/register.js"></script>
+</head>
+<body>
+<page-layout page-title="Registrati!" class="register">
+        <div class="register__content">
+            <div id="Artigiano" data-type="tab">
+                <h2 class="tab__title">Artigiano</h2>
+                <div id="artisanError" class="error-message" style="display: none; color: red;"></div>
+                <label>
+                    <input type="text" id="username" placeholder="Username">
+                    <input type="password" id="password" placeholder="Password">
+                    <button id="regButton">Registrati!</button>
+                </label>
+            </div>
+        </div>
+        <p class="text-center">Hai già un account? Allora <a href="/auth/admin/login">vai al login</a></p>
+</page-layout>
+
+<script type="module">
+    import {registerAdmin} from '../../../script/crud/admin/register.js';
+
+    document.getElementById('regButton').addEventListener('click', () => {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        registerAdmin(username, password);
+    });
+</script>
+
+<style>
+    .register {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+    }
+
+    .register__content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 600px;
+        height: 320px;
+    }
+
+    .register__content label > * {
+        width: 100%;
+        margin-bottom: .5rem;
+    }
+
+    .tab__title {
+        text-align: center;
+        margin: 1rem 0;
+    }
+</style>
+</body>
+</html>
