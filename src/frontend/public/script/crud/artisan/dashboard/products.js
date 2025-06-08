@@ -1,0 +1,48 @@
+/**
+ * This function, given an artisan, adds a new product in the db
+ * @param {string} token Artisan's token
+ * @param {string} name Product's name
+ * @param {string} category Product's category
+ * @param {number} price Product's price
+ * @param {int} stock Number of products in stock
+ * @author Leonardo Basso
+ */
+export const addProduct = async (token, name, category, price, stock) => {
+    try {
+        console.log(
+            `Sending: 
+            ${token},
+            ${name},
+            ${category},
+            ${price},
+            ${stock}`
+        );
+        const response = await fetch('http://localhost:8080/api/product/upload', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                nome_prodotto: name,         // ✅ Nomi corretti
+                categoria: category,
+                prezzo: price,
+                disponibilita: stock
+            })
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            alert("Prodotto aggiunto con successo!");
+            toggleDialog('addProduct');
+            window.location.reload();
+        } else {
+            const text = await response.text();
+            console.error("Risp:", response.status, text);
+            alert(`Errore: ${response.status} - ${text}`);
+        }
+    } catch (err) {
+        alert("Errore nella richiesta. Controlla la connessione.");
+        console.error(err);
+    }
+}

@@ -18,11 +18,11 @@
                     <span class="btn-close" onclick="toggleDialog('addProduct')"></span>
                 </header>
                 <label class="dashboard__profile__inputs">
-                    <input type="text" placeholder="Nome">
-                    <input type="text" placeholder="Categoria">
-                    <input type="number" placeholder="Prezzo">
-                    <input type="number" placeholder="Disponibilità">
-                    <button>Pubblica</button>
+                    <input type="text" placeholder="Nome" id="addProductName">
+                    <input type="text" placeholder="Categoria" id="addProductCategory">
+                    <input type="number" placeholder="Prezzo" id="addProductPrice">
+                    <input type="number" placeholder="Disponibilità" id="addProductStock">
+                    <button id="addProductButton">Pubblica</button>
                 </label>
             </dialog>
             <section class="dashboard__articles standard-box">
@@ -60,8 +60,11 @@
                             </svg>
                         </button>
                         <button class="btn-delete dashborad__article__iconbutton">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                            <svg
+                                    xmlns="http://www
+.w3.org/20
+00/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-trash3-fill" viewBox="0 0 16 16">
                                 <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
                             </svg>
                         </button>
@@ -98,7 +101,8 @@
                         <button class="btn-delete dashborad__article__iconbutton">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5
+8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
                             </svg>
                         </button>
                     </div>
@@ -159,12 +163,21 @@
 </script>
 <script type="module">
     import {getUsername} from "../../script/jwt.js";
+    import {addProduct} from "../../script/crud/artisan/dashboard/products.js";
 
     document.addEventListener('DOMContentLoaded', () => {
         const token = window.localStorage.getItem("userToken")
         const userIdElement = document.getElementById('userId');
 
         userIdElement.textContent = getUsername(token);
+    });
+    document.getElementById('addProductButton').addEventListener('click', async () => {
+        const nome_prodotto = document.getElementById('addProductName').value;
+        const categoria = document.getElementById('addProductCategory').value;
+        const prezzo = parseFloat(document.getElementById('addProductPrice').value);
+        const disponibilita = parseInt(document.getElementById('addProductStock').value);
+        const token = localStorage.getItem('userToken');
+        await addProduct(token, nome_prodotto, categoria, prezzo, disponibilita)
     });
 </script>
 <style>
