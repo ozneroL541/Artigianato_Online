@@ -95,7 +95,7 @@ const getProductsByArtisan = async (req, res) => {
     try {
         const username_artigiano = req.username;
         const products = await Product.getByArtisan(username_artigiano);
-        res.status(200).json(products);
+        res.status(200).json({ products });
     } catch (error) {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }

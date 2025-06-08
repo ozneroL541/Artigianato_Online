@@ -112,7 +112,7 @@
         userIdElement.textContent = getUsername(token);
 
         const products = await getArtisanProducts(token);
-        const container = document.getElementById("dashboard__articles"); // un div dove mostrare i prodotti
+        const container = document.getElementById("dashboard__articles");
 
         products.forEach(p => {
             const card = document.createElement("article");

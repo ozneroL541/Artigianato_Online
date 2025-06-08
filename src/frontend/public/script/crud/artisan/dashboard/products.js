@@ -16,7 +16,7 @@ export const addProduct = async (token, name, category, price, stock) => {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                nome_prodotto: name,         // ✅ Nomi corretti
+                nome_prodotto: name,
                 categoria: category,
                 prezzo: price,
                 disponibilita: stock
@@ -24,7 +24,7 @@ export const addProduct = async (token, name, category, price, stock) => {
         });
 
         if (response.ok) {
-            const result = await response.json();
+            // const result = await response.json();
             alert("Prodotto aggiunto con successo!");
             toggleDialog('addProduct');
             window.location.reload();
@@ -38,6 +38,12 @@ export const addProduct = async (token, name, category, price, stock) => {
         console.error(err);
     }
 }
+/**
+ * This function returns all the articles from an artisan
+ * @param token the Artisan's token
+ * @returns {Promise<Product[]|*[]>} the articles published
+ * @author Leonardo Basso
+ */
 export const getArtisanProducts = async (token) => {
     try {
         const response = await fetch('http://localhost:8080/api/product/artisan', {
@@ -48,7 +54,7 @@ export const getArtisanProducts = async (token) => {
         if (!response.ok) throw new Error("Errore nel caricamento dei prodotti");
 
         const data = await response.json();
-        return data.products;  // restituisce array di prodotti
+        return data.products;
     } catch (err) {
         console.error(err);
         alert("Errore nel caricamento dei prodotti.");
