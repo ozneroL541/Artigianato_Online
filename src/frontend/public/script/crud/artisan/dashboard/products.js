@@ -18,9 +18,7 @@ export const addProduct = async (token, name, category, price, stock) => {
         });
 
         if (response.ok) {
-            // const result = await response.json();
             alert("Prodotto aggiunto con successo!");
-            toggleDialog('addProduct');
             window.location.reload();
         } else {
             const text = await response.text();
