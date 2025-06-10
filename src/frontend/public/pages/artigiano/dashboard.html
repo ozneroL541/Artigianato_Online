@@ -104,7 +104,7 @@
 </script>
 <script type="module">
     import {getUsername} from "../../script/jwt.js";
-    import {getArtisanProducts, addProduct} from "../../script/crud/artisan/dashboard/products.js";
+    import {getArtisanProducts, addProduct, deleteProduct} from "../../script/crud/artisan/dashboard/products.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         const token = window.localStorage.getItem("userToken")
@@ -141,33 +141,13 @@
         `;
             container.appendChild(card);
         });
-        //! Code does not work
+
+        // Deletes a product
         document.querySelectorAll('.btn-delete').forEach(button => {
             button.addEventListener('click', async function () {
                 const productId = this.getAttribute('data-id');
-
-                try {
-                    const response = await fetch('http://localhost:8080/api/product/delete', {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('userToken')}` // Ensure the key matches
-                        },
-                        body: JSON.stringify({ id_prodotto: productId })
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok) {
-                        alert('Product deleted successfully');
-                        window.location.reload();
-                    } else {
-                        alert(`Error: ${result.message}`);
-                    }
-                } catch (err) {
-                    console.error('Error:', err);
-                    alert('An error occurred while deleting the product');
-                }
+                const token = localStorage.getItem('userToken');
+                await deleteProduct(token, productId)
             });
         });
     });
@@ -195,18 +175,17 @@
 
     // Adds a product to the list
     document.getElementById('addProductButton').addEventListener('click', async () => {
-        const nome_prodotto = document.getElementById('addProductName').value.trim();
-        const categoria = document.getElementById('addProductCategory').value.trim();
-        const prezzo = parseFloat(document.getElementById('addProductPrice').value);
-        const disponibilita = parseInt(document.getElementById('addProductStock').value);
+        const name = document.getElementById('addProductName').value.trim();
+        const category = document.getElementById('addProductCategory').value.trim();
+        const price = parseFloat(document.getElementById('addProductPrice').value);
+        const stock = parseInt(document.getElementById('addProductStock').value);
         const token = localStorage.getItem('userToken');
-        await addProduct(token, nome_prodotto, categoria, prezzo, disponibilita)
+        await addProduct(token, name, category, price, stock)
     });
 
     document.getElementById('modifyProductButton').addEventListener('click', async () => {
         const dialog = document.getElementById('modifyProduct');
         const id_prodotto = dialog.dataset.productId;
-
         const nome_prodotto = document.getElementById('modifyName').value.trim();
         const categoria = document.getElementById('modifyCategory').value.trim();
         const prezzo = parseFloat(document.getElementById('modifyPrice').value);
@@ -215,7 +194,6 @@
 
         if (!nome_prodotto || !categoria || isNaN(prezzo) || isNaN(disponibilita)) {
             alert('Compila tutti i campi correttamente.');
-            return;
         }
 
         try {

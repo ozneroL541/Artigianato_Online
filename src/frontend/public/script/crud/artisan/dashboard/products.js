@@ -38,6 +38,38 @@ export const addProduct = async (token, name, category, price, stock) => {
         console.error(err);
     }
 }
+
+/**
+ * This function deletes a product from the DB
+ * @param {string} token The artisan's token
+ * @param {string} id The id of the product to remove
+ * @author Leonardo Basso
+ */
+export const deleteProduct = async(token, id) => {
+    try {
+        const response = await fetch('http://localhost:8080/api/product/delete', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Ensure the key matches
+            },
+            body: JSON.stringify({ id_prodotto: id })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert('Product deleted successfully');
+            window.location.reload();
+        } else {
+            alert(`Error: ${result.message}`);
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        alert('An error occurred while deleting the product');
+    }
+}
+
 /**
  * This function returns all the articles from an artisan
  * @param token the Artisan's token
