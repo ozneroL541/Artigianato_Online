@@ -182,6 +182,7 @@
         await addProduct(token, name, category, price, stock)
     });
 
+    // Updates the product
     document.getElementById('modifyProductButton').addEventListener('click', async () => {
         const dialog = document.getElementById('modifyProduct');
         const id = dialog.dataset.productId;

@@ -56,3 +56,31 @@ export const deleteCategory = async (token, name) => {
         alert('An error occurred while deleting the product');
     }
 }
+export const updateCategory = async (token, name, newName) => {
+    try {
+        if (!newName) {
+            alert('Compila tutti i campi correttamente.');
+            return
+        }
+
+        const response = await fetch('http://localhost:8080/api/category/update', {
+            method: 'PUT', headers: {
+                'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`
+            }, body: JSON.stringify({
+                categoria: name,
+                new_categoria: newName
+            })
+        });
+
+        if (response.ok) {
+            alert('Categoria modificato con successo!');
+            window.location.reload();
+        } else {
+            const error = await response.json();
+            alert(`Errore: ${error.message || 'Errore nella modifica'}`);
+        }
+    } catch (err) {
+        alert('Errore nella richiesta. Controlla la connessione.');
+        console.error(err);
+    }
+}

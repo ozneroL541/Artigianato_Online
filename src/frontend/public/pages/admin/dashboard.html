@@ -80,7 +80,7 @@
 </script>
 <script type="module">
     import {getCategories} from "../../script/utils.js";
-    import {addCategory ,deleteCategory} from "../../script/crud/admin/dashboard/categories.js";
+    import {addCategory, deleteCategory, updateCategory} from "../../script/crud/admin/dashboard/categories.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         const categories = await getCategories()
@@ -93,7 +93,7 @@
             HTMLcategory.innerHTML = `
                 <h3 class="collapsed-text category__title"> ${c} </h3>
                 <div class="category__buttons">
-                    <button class="btn-edit dashborad__category__iconbutton" onclick="toggleDialog('editCategory')">
+                    <button class="btn-edit dashborad__category__iconbutton editCagegoryButton" data-name="${c}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
                             <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
                         </svg>
@@ -108,23 +108,47 @@
             `
             container.appendChild(HTMLcategory)
 
-            // Deletes a category
-            document.querySelectorAll('.btn-delete').forEach(button => {
-                button.addEventListener('click', async function () {
-                    const name = this.getAttribute('data-name');
-                    const token = localStorage.getItem('userToken');
-                    await deleteCategory(token, name)
-                });
+        })
+        // Deletes a category
+        document.querySelectorAll('.btn-delete').forEach(button => {
+            button.addEventListener('click', async function () {
+                const name = this.getAttribute('data-name');
+                const token = localStorage.getItem('userToken');
+                await deleteCategory(token, name)
             });
+        });
+
+        // Populates the dialog with the correct data from a category
+        document.addEventListener('click', (event) => {
+            if (event.target.closest('.editCagegoryButton')) {
+                const btn = event.target.closest('.editCagegoryButton');
+                const name = btn.dataset.name;
+                console.log(name)
+
+                toggleDialog('editCategory');
+                document.getElementById('editCategoryName').value = name;
+                const dialog = document.getElementById('editCategory');
+                dialog.dataset.name = name;
+
+            }
+        });
+
+        // Updates the category
+        document.getElementById('editCategoryButton').addEventListener('click', async () => {
+            const dialog = document.getElementById('editCategory');
+            const name = dialog.getAttribute('data-name');
+            const newName = document.getElementById('editCategoryName').value.trim();
+            const token = localStorage.getItem('userToken');
+            await updateCategory(token, name, newName)
+
         })
 
-    })
-
-    // Add a new category
-    document.getElementById("addCategoryButton").addEventListener("click", async () => {
-        const token = localStorage.getItem('userToken')
-        const name = document.getElementById("addCategoryName").value
-        await addCategory(token, name)
+        // Add a new category
+        document.getElementById("addCategoryButton").addEventListener("click", async () => {
+            const token = localStorage.getItem('userToken')
+            const name = document.getElementById("addCategoryName").value
+            await addCategory(token, name)
+        })
     })
 </script>
 
@@ -135,6 +159,7 @@
         justify-content: center;
         align-items: center;
     }
+
     .category__panel {
         margin-top: 1rem;
         width: 90vw;
@@ -143,25 +168,30 @@
         gap: .5rem;
         padding: 1rem;
     }
+
     .category__panel__list {
         display: grid;
         gap: .5rem;
     }
+
     .category {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: .2rem .5rem;
     }
-    .category__title{
+
+    .category__title {
         font-weight: 400;
         font-size: 1.1rem;
     }
+
     .categories__panel__buttons {
         display: flex;
         justify-content: end;
         gap: .3rem;
     }
+
     .dashborad__category__iconbutton {
         width: 28px;
         height: 28px;
