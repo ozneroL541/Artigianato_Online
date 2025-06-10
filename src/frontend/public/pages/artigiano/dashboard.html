@@ -46,7 +46,6 @@
                                   d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                         </svg>
                     </button>
-
                 </div>
 
                 <dialog class="dashboard__add" id="modifyProduct">
@@ -104,7 +103,7 @@
 </script>
 <script type="module">
     import {getUsername} from "../../script/jwt.js";
-    import {getArtisanProducts, addProduct, deleteProduct} from "../../script/crud/artisan/dashboard/products.js";
+    import {getArtisanProducts, addProduct, deleteProduct, updateProduct} from "../../script/crud/artisan/dashboard/products.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         const token = window.localStorage.getItem("userToken")
@@ -185,45 +184,15 @@
 
     document.getElementById('modifyProductButton').addEventListener('click', async () => {
         const dialog = document.getElementById('modifyProduct');
-        const id_prodotto = dialog.dataset.productId;
-        const nome_prodotto = document.getElementById('modifyName').value.trim();
-        const categoria = document.getElementById('modifyCategory').value.trim();
-        const prezzo = parseFloat(document.getElementById('modifyPrice').value);
-        const disponibilita = parseInt(document.getElementById('modifyStock').value);
+        const id = dialog.dataset.productId;
+        const name = document.getElementById('modifyName').value.trim();
+        const category = document.getElementById('modifyCategory').value.trim();
+        const price = parseFloat(document.getElementById('modifyPrice').value);
+        const stock  = parseInt(document.getElementById('modifyStock').value);
         const token = localStorage.getItem('userToken');
+        await updateProduct(token, id, name, category, price, stock)
 
-        if (!nome_prodotto || !categoria || isNaN(prezzo) || isNaN(disponibilita)) {
-            alert('Compila tutti i campi correttamente.');
-        }
 
-        try {
-            const response = await fetch('http://localhost:8080/api/product/update', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    id_prodotto,
-                    nome_prodotto,
-                    categoria,
-                    prezzo,
-                    disponibilita
-                })
-            });
-
-            if (response.ok) {
-                alert('Prodotto modificato con successo!');
-                toggleDialog('modifyProduct');
-                window.location.reload(); // o aggiorna dinamicamente la lista se vuoi evitare reload
-            } else {
-                const error = await response.json();
-                alert(`Errore: ${error.message || 'Errore nella modifica'}`);
-            }
-        } catch (err) {
-            alert('Errore nella richiesta. Controlla la connessione.');
-            console.error(err);
-        }
     });
 
 </script>
