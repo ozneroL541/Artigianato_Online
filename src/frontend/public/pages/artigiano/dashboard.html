@@ -13,11 +13,11 @@
     <toggle-tabs tabs='["Articoli", "Profilo"]' class="dashboard">
         <section id="Articoli" data-type="tab">
             <dialog class="dashboard__add" id="addProduct">
-                <header class="dashboard__profile__top">
+                <header class="modal-top">
                     <h3>Inserisci il prodotto</h3>
                     <span class="btn-close" onclick="toggleDialog('addProduct')"></span>
                 </header>
-                <label class="dashboard__profile__inputs">
+                <label class="modal-inputs">
                     <input type="text" placeholder="Nome" id="addProductName">
                     <input type="text" placeholder="Categoria" id="addProductCategory">
                     <input type="number" placeholder="Prezzo" id="addProductPrice">
@@ -49,11 +49,11 @@
                 </div>
 
                 <dialog class="dashboard__add" id="modifyProduct">
-                    <header class="dashboard__profile__top">
+                    <header class="modal-top">
                         <h3>Modifica il prodotto</h3>
                         <span class="btn-close" onclick="toggleDialog('modifyProduct')"></span>
                     </header>
-                    <label class="dashboard__profile__inputs">
+                    <label class="modal-inputs">
                         <input type="text" id="modifyName" placeholder="Nome">
                         <input type="text" id="modifyCategory" placeholder="Categoria">
                         <input type="number" id="modifyPrice" placeholder="Prezzo">
@@ -66,18 +66,18 @@
         <section id="Profilo" data-type="tab" class="dashboard__profile">
             <h3>Le tue informazioni</h3>
             <p>Ciao, <span id="userId"></span>!</p>
-            <label class="dashboard__profile__inputs">
+            <label class="modal-inputs">
                 <input type="text" placeholder="Nome impresa">
                 <input type="text" placeholder="IBAN">
                 <input type="password" placeholder="Password">
                 <button onclick="toggleDialog('confirmPassword')">Modifica</button>
             </label>
             <dialog class="dashboard__add" id="confirmPassword">
-                <header class="dashboard__profile__top">
+                <header class="modal-top">
                     <h3>Conferma</h3>
                     <span class="btn-close" onclick="toggleDialog('confirmPassword')"></span>
                 </header>
-                <label class="dashboard__profile__inputs">
+                <label class="modal-inputs">
                     <input type="password" placeholder="Password">
                     <button>Pubblica</button>
                 </label>
@@ -218,21 +218,6 @@
 
     .dashboard__profile > * {
         margin: 1rem 0
-    }
-
-    .dashboard__profile__top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        gap: .5rem;
-    }
-
-    .dashboard__profile__inputs {
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
-        margin-bottom: .5rem;
     }
 
     .dashboard__articles {
