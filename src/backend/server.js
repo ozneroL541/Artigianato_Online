@@ -26,7 +26,7 @@ const port = 8080;
 /** Middleware to enable CORS */
 app.use(cors({
     origin: `http://localhost:${frontendPort}`,
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 
 /** Middleware to parse JSON request bodies */

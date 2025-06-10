@@ -1,6 +1,6 @@
 /**
  * This component is used to create a tab interface with dynamic tabs.
- * In order for an html element to be considered a tab it needs to have data-type="tab", other elements
+ * In order for a html element to be considered a tab it needs to have data-type="tab", other elements
  * will be shown in all tabs.
  * @slot - The tabs
  * @author Leonardo Basso
