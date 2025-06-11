@@ -22,12 +22,14 @@ export const getCategories = async() => {
     const response = await fetch('http://localhost:8080/api/category/all')
     return await response.json()
 }
-
+/**
+ * This function redirects the user to the `/negated` page if he does not have the right permits
+ * @param {string} token The user's token, used to get the `userType`
+ * @param {string} type The type that has the permits access the page
+ * @author Leonardo Basso
+ */
 export const canSeePage = (token, type) => {
     const userType = token ? getUserType(token) : "unregistered";
-    console.log(userType)
-
-    // Se l'utente non è un amministratore, reindirizzalo
     if ( userType !== type ) {
         window.location.href = "/negated";
     }

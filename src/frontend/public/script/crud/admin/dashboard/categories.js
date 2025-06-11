@@ -56,6 +56,13 @@ export const deleteCategory = async (token, name) => {
         alert('An error occurred while deleting the product');
     }
 }
+/**
+ * This function updates a category in the db
+ * @param {string} token The admin's token
+ * @param {string} name The category you want to modify
+ * @param {string} newName The new category name
+ * @author Leonardo Basso
+ */
 export const updateCategory = async (token, name, newName) => {
     try {
         if (!newName) {

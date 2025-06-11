@@ -28,6 +28,7 @@ class PageLayout extends HTMLElement {
                 </div>
                 <nav class="navbar__links" id="navbar_links">
                     <a class="link" href="/">Home</a>
+                    ${userType === "amministratore" || userType === "artigiano" ? '<a class="link" href="/'+ userType +'/dashboard">Dashboard</a>' : ''}
                     ${userType !== "unregistered" ? '<a class="link" id="logoutLink" href="#">Logout</a>' : '<a class="link" href="/auth/login">Login</a>'}
                 </nav>
             </header>

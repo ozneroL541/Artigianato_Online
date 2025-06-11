@@ -10,7 +10,7 @@
 
 <body>
 <page-layout page-title="Dashboard admin">
-    <toggle-tabs tabs='["Categorie", "Profilo"]' class="dashboard">
+    <toggle-tabs tabs='["Categorie", "Registra"]' class="dashboard">
         <section id="Categorie" data-type="tab">
             <dialog class="category__add" id="addCategory">
                 <header class="modal-top">
@@ -57,8 +57,14 @@
             </section>
 
         </section>
-        <section id="Profilo" data-type="tab" class="dashboard__profile">
-            <h2>Profilo</h2>
+        <section id="Registra" data-type="tab" class="admin__register">
+            <h3 class="admin__register__title">Registra un nuovo admin</h3>
+            <div id="artisanError" class="error-message" style="display: none; color: red;"></div>
+            <label class="admin__register__panel">
+                <input class="admin__registrer__input" type="text" id="username" placeholder="Username">
+                <input class="admin__registrer__input" type="password" id="password" placeholder="Password">
+                <button class="admin__registrer__input" id="regButton">Registra</button>
+            </label>
         </section>
     </toggle-tabs>
 </page-layout>
@@ -81,6 +87,7 @@
 <script type="module">
     import {getCategories, canSeePage} from "../../script/utils.js";
     import {addCategory, deleteCategory, updateCategory} from "../../script/crud/admin/dashboard/categories.js";
+    import {registerAdmin} from '../../script/crud/admin/register.js';
 
     document.addEventListener('DOMContentLoaded', async () => {
 
@@ -154,6 +161,13 @@
         // Permission
         const token = window.localStorage.getItem("userToken");
         canSeePage(token, "amministratore")
+
+        // Register a new admin
+        document.getElementById('regButton').addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            registerAdmin(username, password);
+        });
     })
 </script>
 
@@ -201,5 +215,22 @@
         width: 28px;
         height: 28px;
         padding: .3rem;
+    }
+
+    .admin__register__title {
+        margin: .5rem 0;
+        text-align: center;
+    }
+
+    .admin__registrer__input {
+        width: 90vw;
+        max-width: 400px;
+    }
+
+    .admin__register__panel {
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        gap: .3rem;
     }
 </style>
