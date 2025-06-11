@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
+const reteLimit = require('express-rate-limit');
 
 const { Dashboard } = require('./dashboard/dashboard.js');
 const { ProfileClient}= require('./dashboard/ProfileClient.js');
@@ -18,15 +19,22 @@ const {
 } = require('./auth/auth_api.js');
 const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts } = require('./product/product_api.js');
 const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
-/** Port for the frontend server */
-const frontendPort = 8000;
 /** Port for the backend server */
 const port = 8080;
 
+/** Rate limiting middleware to prevent abuse */
+const limiter = reteLimit({
+    windowMs: 30 * 1000, // 1/2 minute
+    max: 120, // Limit each IP to 120 requests per windowMs
+});
+app.use(limiter);
+
 /** Middleware to enable CORS */
 app.use(cors({
-    origin: `http://localhost:${frontendPort}`,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    optionsSuccessStatus: 200
 }));
 
 /** Middleware to parse JSON request bodies */
