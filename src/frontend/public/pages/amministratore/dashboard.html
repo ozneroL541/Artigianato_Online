@@ -10,7 +10,7 @@
 
 <body>
 <page-layout page-title="Dashboard admin">
-    <toggle-tabs tabs='["Categorie", "Registra"]' class="dashboard">
+    <toggle-tabs tabs='["Categorie", "Profili", "Segnalazioni"]' class="dashboard">
         <section id="Categorie" data-type="tab">
             <dialog class="category__add" id="addCategory">
                 <header class="modal-top">
@@ -57,14 +57,18 @@
             </section>
 
         </section>
-        <section id="Registra" data-type="tab" class="admin__register">
-            <h3 class="admin__register__title">Registra un nuovo admin</h3>
+        <section id="Profili" data-type="tab" class="admin__register">
+                <h3 class="admin__register__title">Registra un admin</h3>
             <div id="artisanError" class="error-message" style="display: none; color: red;"></div>
             <label class="admin__register__panel">
                 <input class="admin__registrer__input" type="text" id="username" placeholder="Username">
                 <input class="admin__registrer__input" type="password" id="password" placeholder="Password">
                 <button class="admin__registrer__input" id="regButton">Registra</button>
             </label>
+            <button class="btn-delete" id="deleteProfileButton">Elimina il tuo profilo</button>
+        </section>
+        <section id="Segnalazioni" data-type="tab">
+            <h2>Qui si vedono le segnalazioni</h2>
         </section>
     </toggle-tabs>
 </page-layout>
@@ -88,6 +92,7 @@
     import {getCategories, canSeePage} from "../../script/utils.js";
     import {addCategory, deleteCategory, updateCategory} from "../../script/crud/admin/dashboard/categories.js";
     import {registerAdmin} from '../../script/crud/admin/register.js';
+    import {deleteProfile} from "../../script/crud/auth/delete.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
 
@@ -106,7 +111,7 @@
                             <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
                         </svg>
                     </button>
-                    <button class="btn-delete dashborad__category__iconbutton" data-name="${c}">
+                    <button class="btn-delete dashborad__category__iconbutton deleteCategoryButton" data-name="${c}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
                             <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
                         </svg>
@@ -118,7 +123,7 @@
 
         })
         // Deletes a category
-        document.querySelectorAll('.btn-delete').forEach(button => {
+        document.querySelectorAll('.deleteCategoryButton').forEach(button => {
             button.addEventListener('click', async function () {
                 const name = this.getAttribute('data-name');
                 const token = localStorage.getItem('userToken');
@@ -168,6 +173,12 @@
             const password = document.getElementById('password').value;
             registerAdmin(username, password);
         });
+
+        // Delete your profile
+        document.getElementById('deleteProfileButton').addEventListener('click', () => {
+            const token = localStorage.getItem('userToken');
+            deleteProfile(token, "admin")
+        })
     })
 </script>
 
@@ -217,20 +228,23 @@
         padding: .3rem;
     }
 
-    .admin__register__title {
-        margin: .5rem 0;
-        text-align: center;
-    }
-
     .admin__registrer__input {
         width: 90vw;
-        max-width: 400px;
+        max-width: 500px;
     }
-
+    .admin__register__title {
+        text-wrap: balance;
+        text-align: center;
+        margin: .5rem 0;
+    }
     .admin__register__panel {
         display: grid;
         justify-content: center;
         align-items: center;
         gap: .3rem;
+    }
+    #deleteProfileButton {
+        margin-top: .5rem;
+        text-align: center;
     }
 </style>
