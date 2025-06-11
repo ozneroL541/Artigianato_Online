@@ -39,7 +39,20 @@ class Order {
      * @throws {Error} If there is an error during the database operation.
      */
     async create() {
-        // TODO
+        const query = `INSERT INTO ordini (id_ordine, id_prodotto, username_cliente, data_ordine, quantita, data_consegna)
+                       VALUE ((SELECT MAX(id_ordine)+1 AS next_id FROM ordini), $1, $2, $3, $4, $5) 
+                       RETURNING id_ordine;`;
+
+        const param = [this.id_prodotto, this.username_cliente, this.data_ordine, this.quantita, this.data_consegna];
+
+        try{
+            const id_ordine = await pool.query(query, params);
+            this.id_ordine = id_ordine.rows[0].id_ordine; // Set the ID of the order
+            return this.id_ordine; // Return the ID of the inserted order
+
+        }catch(error){
+            throw new Error('Order already inserted')
+        }                       
     }
     /**
      * Add delivery date to the order.
