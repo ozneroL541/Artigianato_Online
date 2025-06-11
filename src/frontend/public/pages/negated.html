@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../assets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script defer type="module" src="../components/layout/PageLayout.js"></script>
+    <script defer type="module" src="../components/general/ToggleTabs.js"></script>
+</head>
+
+<body>
+<page-layout page-title="Accesso negato">
+    <article class="negated">
+        <h1>Non hai i permessi per accedere a questa pagina</h1>
+        <button onclick="window.location = '/' ">Torna alla home</button>
+    </article>
+</page-layout>
+</body>
+
+<style>
+    .negated {
+        height: 40vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+    }
+
+</style>

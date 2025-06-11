@@ -104,6 +104,7 @@
 <script type="module">
     import {getUsername} from "../../script/jwt.js";
     import {getArtisanProducts, addProduct, deleteProduct, updateProduct} from "../../script/crud/artisan/dashboard/products.js";
+    import {canSeePage} from "../../script/utils.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         const token = window.localStorage.getItem("userToken")
@@ -149,6 +150,9 @@
                 await deleteProduct(token, productId)
             });
         });
+
+        // Permission
+        canSeePage(token, "artigiano")
     });
 
     // Populates the dialog with the correct data from a product

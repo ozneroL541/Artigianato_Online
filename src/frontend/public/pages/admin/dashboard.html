@@ -79,10 +79,11 @@
     }
 </script>
 <script type="module">
-    import {getCategories} from "../../script/utils.js";
+    import {getCategories, canSeePage} from "../../script/utils.js";
     import {addCategory, deleteCategory, updateCategory} from "../../script/crud/admin/dashboard/categories.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
+
         const categories = await getCategories()
         const container = document.getElementById("category-list")
 
@@ -149,6 +150,10 @@
             const name = document.getElementById("addCategoryName").value
             await addCategory(token, name)
         })
+
+        // Permission
+        const token = window.localStorage.getItem("userToken");
+        canSeePage(token, "amministratore")
     })
 </script>
 

@@ -116,7 +116,6 @@ export const getArtisanProducts = async (token) => {
         return data.products;
     } catch (err) {
         console.error(err);
-        alert("Errore nel caricamento dei prodotti.");
         return [];
     }
 };

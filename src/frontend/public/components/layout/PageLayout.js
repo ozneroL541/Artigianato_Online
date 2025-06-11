@@ -17,7 +17,7 @@ class PageLayout extends HTMLElement {
 
         const token = window.localStorage.getItem("userToken");
         const payload = getUserType(token);
-        const userType = payload ? payload : null;
+        const userType = payload ? payload : "unregistered";
 
         this.shadowRoot.innerHTML = `
         <section class="page__layout">
@@ -28,7 +28,7 @@ class PageLayout extends HTMLElement {
                 </div>
                 <nav class="navbar__links" id="navbar_links">
                     <a class="link" href="/">Home</a>
-                    ${userType === "artigiano" || userType === "cliente" || userType === "amministratore" ? '<a class="link" id="logoutLink" href="#">Logout</a>' : '<a class="link" href="/auth/login">Login</a>'}
+                    ${userType !== "unregistered" ? '<a class="link" id="logoutLink" href="#">Logout</a>' : '<a class="link" href="/auth/login">Login</a>'}
                 </nav>
             </header>
             <main>
