@@ -55,6 +55,9 @@ dialog {
 dialog::backdrop {
     backdrop-filter: blur(2px);
 }
+summary::marker{
+    color: var(--lite-color);
+}
 /* General styles and classes */
 
 .standard-box {

@@ -3,46 +3,54 @@
 <head>
     <script defer type="module" src="../components/layout/PageLayout.js"></script>
     <script defer type="module" src="../components/general/UserMessage.js"></script>
+    <script defer type="module" src="../components/general/SearchBar.js"></script>
     <link rel="stylesheet" href="../assets/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <meta charset="UTF-8">
-
 </head>
 <body>
 <page-layout page-title="Home Page">
-    <h1>Homepage</h1>
-    <p>This is the home page content.</p>
-    <p>Go to dashboard: <a href="/artigiano/dashboard">here</a></p>
+    <search-bar></search-bar>
+
     <user-message
             msg-title="Il tavolo non è bello"
-            msg-desc = "lorem ipsum dolor sit amen altro testo di prova aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            msg-desc="lorem ipsum dolor sit amen altro testo di prova aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             msg-prod="Tavolo"
-            msg-date="23/08/2024"
-    ></user-message>
+            msg-date="23/08/2024">
+    </user-message>
 
     <h2>Categoria</h2>
     <section class="products">
         <div class="product">
             <h3 class="name">Nome</h3>
-            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
+            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at
+                autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam
+                quo reprehenderit rerum vitae, voluptas.</p>
         </div>
         <div class="product">
             <h3 class="name">Nome</h3>
-            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
-        </div>        <div class="product">
-        <h3 class="name">Nome</h3>
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
-    </div>        <div class="product">
-        <h3 class="name">Nome</h3>
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
-
-    </div>
+            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at
+                autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam
+                quo reprehenderit rerum vitae, voluptas.</p>
+        </div>
+        <div class="product">
+            <h3 class="name">Nome</h3>
+            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at
+                autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam
+                quo reprehenderit rerum vitae, voluptas.</p>
+        </div>
+        <div class="product">
+            <h3 class="name">Nome</h3>
+            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at
+                autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam
+                quo reprehenderit rerum vitae, voluptas.</p>
+        </div>
     </section>
 </page-layout>
 </body>
+<script type="module">
+</script>
 <style>
-
     .products {
         display: flex;
     }
@@ -68,7 +76,6 @@
         opacity: .5;
         white-space: normal;
     }
-
 
 </style>
 </html>

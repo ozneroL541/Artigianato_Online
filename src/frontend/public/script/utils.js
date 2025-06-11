@@ -34,3 +34,17 @@ export const canSeePage = (token, type) => {
         window.location.href = "/negated";
     }
 }
+/**
+ * This function populates a given ```<select>``` element with options from a given array
+ * @param {Array} options The list of content which will be put as ```<option>```
+ * @param {HTMLSelectElement} selectElement The ```<select>``` element to populate
+ * @author Leonardo Basso
+ */
+export const populateSelectMenu = (options, selectElement) => {
+    options.forEach(c => {
+        const option = document.createElement('option');
+        option.value = c;
+        option.textContent = c;
+        selectElement.appendChild(option);
+    });
+}
