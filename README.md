@@ -3,7 +3,8 @@ Il cliente è una startup che vuole vendere online prodotti artigianali realizza
 
 ## Run the project
 > [!important]  
-> You need to have [docker](https://www.docker.com/) installed to run the project
+> You need to have [docker](https://www.docker.com/) installed to run the project.
+
 To run the project build it with the `docker-compose.yml` file in *src*.
 ```sh
     sudo docker compose up --build --remove-orphans -d

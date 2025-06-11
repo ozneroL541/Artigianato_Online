@@ -65,7 +65,10 @@
         </section>
         <section id="Profilo" data-type="tab" class="dashboard__profile">
             <h3>Le tue informazioni</h3>
-            <p>Ciao, <span id="userId"></span>!</p>
+            <header class="dashboard__profile__header">
+                <p>Ciao, <span id="userId"></span>!</p>
+                <button class="btn-delete" id="deleteProfileButton">Elimina il tuo profilo</button>
+            </header>
             <label class="modal-inputs">
                 <input type="text" placeholder="Nome impresa">
                 <input type="text" placeholder="IBAN">
@@ -105,6 +108,7 @@
     import {getUsername} from "../../script/jwt.js";
     import {getArtisanProducts, addProduct, deleteProduct, updateProduct} from "../../script/crud/artisan/dashboard/products.js";
     import {canSeePage} from "../../script/utils.js";
+    import {deleteProfile} from "../../script/crud/auth/delete.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         const token = window.localStorage.getItem("userToken")
@@ -196,9 +200,13 @@
         const stock  = parseInt(document.getElementById('modifyStock').value);
         const token = localStorage.getItem('userToken');
         await updateProduct(token, id, name, category, price, stock)
-
-
     });
+
+    // Delete the artisan's profile
+    document.getElementById('deleteProfileButton').addEventListener('click', async () => {
+        const token = localStorage.getItem('userToken')
+        await deleteProfile(token, "artisan")
+    })
 
 </script>
 <style>
@@ -219,6 +227,11 @@
         max-width: 600px;
         display: grid;
         gap: .5rem;
+    }
+    .dashboard__profile__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .dashboard__profile > * {
