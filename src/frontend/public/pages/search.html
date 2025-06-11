@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script defer type="module" src="../components/layout/PageLayout.js"></script>
+    <script defer type="module" src="../components/general/UserMessage.js"></script>
+    <script defer type="module" src="../components/general/SearchBar.js"></script>
+    <link rel="stylesheet" href="../assets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+</head>
+<body>
+<page-layout page-title="Search for: ">
+    <h1>Search</h1>
+</page-layout>
+</body>
+
+<script type="module">
+    import {searchProduct} from "../script/crud/homepage/search.js";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const params = new URLSearchParams(window.location.search);
+        await searchProduct(params);
+
+    })
+
+</script>
+<style>
+
+</style>
+</html>
