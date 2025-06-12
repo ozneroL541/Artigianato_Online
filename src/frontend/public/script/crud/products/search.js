@@ -1,8 +1,13 @@
 /**
  * This function returns a list of products given specific params which are `name`, `category`, `minimum price`,
  * `maximum price` and `stock`
+ * @example
+ * // Search using the page URL to get the parameters
+ * const params = new URLSearchParams(window.location.search);
+ * const products = await searchProduct(params);
+ *
  * @param {URLSearchParams} params The params used to search the data
- * @returns {Array | Null} A list of products
+ * @returns {Array} A list of products
  * @author Leonardo Basso
  */
 export const searchProduct = async (params) => {

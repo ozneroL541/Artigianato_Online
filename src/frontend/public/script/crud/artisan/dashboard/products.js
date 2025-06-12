@@ -100,7 +100,7 @@ export const updateProduct = async (token, id, name, category, price, stock) => 
 /**
  * This function returns all the articles from a specific artisan
  * @param token the Artisan's token
- * @returns {Promise<Product[]|*[]>} the articles published
+ * @returns {Array} the articles published
  * @author Leonardo Basso
  */
 export const getArtisanProducts = async (token) => {

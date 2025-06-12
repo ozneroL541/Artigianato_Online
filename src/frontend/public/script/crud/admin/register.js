@@ -3,9 +3,6 @@
  * This function implements the API for the client registration
  * @param {string} username the username of the client
  * @param {string} password The user password
- * @param {string} name The client name
- * @param {string} surname The client surname
- * @param {string} email The client email
  * @author Leonardo Basso
  */
 export const registerAdmin = async (username, password) => {

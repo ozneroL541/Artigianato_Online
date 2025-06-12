@@ -1,7 +1,16 @@
 /**
  * This function deletes a profile from the db
- * @param token the user's token
- * @param type the user's type (`admin`, `artisan`, `client`)
+ *
+ * The user can be an `admin`, an `artisan` or a `client`
+ * @example
+ * // Delete an admin profile
+ * document.getElementById('deleteProfileButton').addEventListener('click', () => {
+ *    const token = localStorage.getItem('userToken');
+ *    deleteProfile(token, "admin")
+ * })
+ *
+ * @param {string} token the user's token
+ * @param {"admin"|"client"|"artisan"}type the user's type
  * @author Leonardo Basso
  */
 export const deleteProfile = async (token, type) => {

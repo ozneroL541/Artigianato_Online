@@ -1,3 +1,11 @@
+/**
+ * This component generates a card for a product with dynamic parameters
+ * @param {string} name The name of the product
+ * @param {string} category The category of the product
+ * @param {string} artisan The id of the artisan selling the product
+ * @param {number} price The price of the product
+ * @param {int} stock The number of products in stock
+ */
 class ProductCard extends HTMLElement {
     constructor() {
         super();
