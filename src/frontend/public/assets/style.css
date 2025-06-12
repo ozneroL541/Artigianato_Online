@@ -121,7 +121,9 @@ summary::marker{
     gap: .5rem;
     margin-bottom: .5rem;
 }
-
+.text-small {
+    font-size: .8rem;
+}
 /* Styling webkit */
 
 ::-webkit-scrollbar {

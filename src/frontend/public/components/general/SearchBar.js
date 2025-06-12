@@ -10,7 +10,7 @@ class SearchBar extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <label class="homepage__product__search">
                 <span class="homepage__product__search__top">
-                    <input type="text" class="homepage__product__search__input" placeholder="Product Name" id="searchProductName">
+                    <input type="text" class="homepage__product__search__input" placeholder="Nome" id="searchProductName">
                     <button class="homepage__product__search__button" id="searchProductButton">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-search" viewBox="0 0 16 16">
@@ -22,9 +22,9 @@ class SearchBar extends HTMLElement {
                     <select id="searchProductCategory" class="homepage__product__search__category" >
                         <option value="">All Categories</option>
                     </select>
-                    <input id="searchProductMinPrice" type="number" class="homepage__product__search__input" placeholder="Min Price">
-                    <input id="searchProductMaxPrice" type="number" class="homepage__product__search__input" placeholder="Max Price">
-                    <input id="searchProductStock" type="number" class="homepage__product__search__input" placeholder="Stock">
+                    <input id="searchProductMinPrice" type="number" class="homepage__product__search__input" placeholder="Minimo Prezzo">
+                    <input id="searchProductMaxPrice" type="number" class="homepage__product__search__input" placeholder="Massimo Prezzo">
+                    <input id="searchProductStock" type="number" class="homepage__product__search__input" placeholder="Disponibilita">
                 </span>
             </label>
 

@@ -15,11 +15,11 @@ export const searchProduct = async (params) => {
             return products;
         } else {
             const err = await res.json();
-            alert(`Error: ${err}`)
-            console.log(err)
+            alert(`Error: ${err.message}`)
+            console.log(err.message)
         }
 
     } catch (err) {
-        alert(`Error: ${err}`)
+        alert(`Error: ${err.message}`)
     }
 }
