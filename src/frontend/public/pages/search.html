@@ -3,6 +3,7 @@
 <head>
     <script defer type="module" src="../components/layout/PageLayout.js"></script>
     <script defer type="module" src="../components/general/UserMessage.js"></script>
+    <script defer type="module" src="../components/general/ProductCard.js"></script>
     <script defer type="module" src="../components/general/SearchBar.js"></script>
     <link rel="stylesheet" href="../assets/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +17,9 @@
             <h3>Modifica la ricerca</h3>
             <label class="searchbar__sidebar__inputs">
                 <input type="text" name="searchSidebar" id="searchProductName" placeholder="Nome prodotto">
-                <select name="searchSidebar" id="searchProductCategory"></select>
+                <select name="searchSidebar" id="searchProductCategory">
+                    <option value="">All Categories</option>
+                </select>
                 <input type="text" name="searchSidebar" id="searchProductMinPrice" placeholder="Prezzo Minimo">
                 <input type="text" name="searchSidebar" id="searchProductMaxPrice" placeholder="Prezzo Massimo">
                 <input type="text" name="searchSidebar" id="searchProductStock" placeholder="Quantita">
@@ -31,7 +34,7 @@
 </body>
 
 <script type="module">
-    import { searchProduct } from "../script/crud/homepage/search.js";
+    import { searchProduct, prepareSearch } from "../script/crud/homepage/search.js";
     import { populateSelectMenu, getCategories } from "../script/utils.js";
 
     document.addEventListener("DOMContentLoaded", async () => {
@@ -43,8 +46,17 @@
 
         products.forEach(p => {
             const productElement = document.createElement('article');
-            productElement.className = 'product standard-box';
+            productElement.className = 'product__card';
             productElement.innerHTML = `
+                <product-card
+                    name = "${p.nome_prodotto}"
+                    category = "${p.categoria.categoria}"
+                    category = "${p.categoria.categoria}"
+                    price = "${p.prezzo}"
+                    artisan = "${p.username_artigiano}"
+                    stock = "${p.disponibilita}"
+                ></product-card>
+                <!--
                 <div class="product__info text-small">
                     <p class="product__category"><a href="#">${p.categoria.categoria}</a></p>
                     <p class="product__stock">${p.disponibilita} rimasti</p>
@@ -55,7 +67,7 @@
                 </div>
                 <p class="product__price">${p.prezzo}€</p>
                 <button class="btn-edit">Compra!</button>
-            `;
+            -->`;
             productsContainer.appendChild(productElement);
         });
 
@@ -72,6 +84,7 @@
         document.getElementById('searchProductStock').value = params.get('disponibilita') || '';
 
     });
+
     // Add event listener to the search button
     document.getElementById('searchButton').addEventListener('click', () => {
         const productName = document.getElementById('searchProductName').value;
@@ -79,15 +92,8 @@
         const minPrice = document.getElementById('searchProductMinPrice').value;
         const maxPrice = document.getElementById('searchProductMaxPrice').value;
         const availability = document.getElementById('searchProductStock').value;
+        prepareSearch(productName, category, minPrice, maxPrice, availability)
 
-        const searchParams = new URLSearchParams();
-        if (productName) searchParams.set('nome_prodotto', productName);
-        if (category) searchParams.set('categoria', category);
-        if (minPrice) searchParams.set('prezzo_min', minPrice);
-        if (maxPrice) searchParams.set('prezzo_max', maxPrice);
-        if (availability) searchParams.set('disponibilita', availability);
-
-        window.location.href = `/search?${searchParams.toString()}`;
     });
 </script>
 <style>
@@ -110,31 +116,7 @@
         width: 90vw;
     }
 
-    .product {
-        padding: .8rem;
-        display: grid;
-        gap: .4rem;
-        margin-bottom: .5rem;
-        max-height: 200px;
-    }
 
-    .product__name {
-        font-size: 1.2rem;
-        text-wrap: balance;
-    }
-
-    .product__info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .product__category {
-        background-color: rgba(238, 238, 238, 0.05);
-        border: 1px solid rgba(238, 238, 238, 0.05);
-        padding: .35rem;
-        border-radius: 100vh;
-    }
 
     .searchpage__sidebar {
         margin-right: 1.3rem;
