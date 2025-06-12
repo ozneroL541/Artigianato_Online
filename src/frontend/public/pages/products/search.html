@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script defer type="module" src="../components/layout/PageLayout.js"></script>
-    <script defer type="module" src="../components/general/UserMessage.js"></script>
-    <script defer type="module" src="../components/general/ProductCard.js"></script>
-    <script defer type="module" src="../components/general/SearchBar.js"></script>
-    <link rel="stylesheet" href="../assets/style.css">
+    <script defer type="module" src="../../components/layout/PageLayout.js"></script>
+    <script defer type="module" src="../../components/general/ProductCard.js"></script>
+    <script defer type="module" src="../../components/general/SearchBar.js"></script>
+    <link rel="stylesheet" href="../../assets/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
 </head>
@@ -21,8 +20,8 @@
                     <option value="">All Categories</option>
                 </select>
                 <input type="text" name="searchSidebar" id="searchProductMinPrice" placeholder="Prezzo Minimo">
-                <input type="text" name="searchSidebar" id="searchProductMaxPrice" placeholder="Prezzo Massimo">
-                <input type="text" name="searchSidebar" id="searchProductStock" placeholder="Quantita">
+                <input type="number" name="searchSidebar" id="searchProductMaxPrice" placeholder="Prezzo Massimo">
+                <input type="number" name="searchSidebar" id="searchProductStock" placeholder="Quantita">
                 <button id="searchButton">Cerca</button>
             </label>
         </aside>
@@ -34,8 +33,8 @@
 </body>
 
 <script type="module">
-    import { searchProduct, prepareSearch } from "../script/crud/homepage/search.js";
-    import { populateSelectMenu, getCategories } from "../script/utils.js";
+    import {searchProduct, prepareSearch} from "../../script/crud/products/search.js";
+    import {populateSelectMenu, getCategories} from "../../script/utils.js";
 
     document.addEventListener("DOMContentLoaded", async () => {
         const params = new URLSearchParams(window.location.search);
@@ -56,18 +55,7 @@
                     artisan = "${p.username_artigiano}"
                     stock = "${p.disponibilita}"
                 ></product-card>
-                <!--
-                <div class="product__info text-small">
-                    <p class="product__category"><a href="#">${p.categoria.categoria}</a></p>
-                    <p class="product__stock">${p.disponibilita} rimasti</p>
-                </div>
-                <h2 class="product__name"><a href="#">${p.nome_prodotto}</a></h2>
-                <div class="product__info">
-                    <p class="product__artisan text-small"><a href="#">${p.username_artigiano}</a></p>
-                </div>
-                <p class="product__price">${p.prezzo}€</p>
-                <button class="btn-edit">Compra!</button>
-            -->`;
+`;
             productsContainer.appendChild(productElement);
         });
 
@@ -116,8 +104,6 @@
         width: 90vw;
     }
 
-
-
     .searchpage__sidebar {
         margin-right: 1.3rem;
     }
@@ -137,20 +123,15 @@
             gap: 1rem;
             max-width: 70vw;
         }
-        .product {
-            width: 250px;
-            margin-bottom: 0;
-        }
     }
+
     @media screen and (min-width: 900px) {
         .product__list {
             grid-template-columns: repeat(auto-fill, 300px);
 
         }
-        .product {
-            width: 300px;
-        }
     }
+
     @media screen and (min-width: 1000px) {
         .searchpage__sidebar {
             width: 200px;

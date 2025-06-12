@@ -1,5 +1,5 @@
 import {getCategories, populateSelectMenu} from "../../script/utils.js";
-import {prepareSearch} from "../../script/crud/homepage/search.js";
+import {prepareSearch} from "../../script/crud/products/search.js";
 
 class SearchBar extends HTMLElement {
     constructor() {
@@ -103,16 +103,6 @@ class SearchBar extends HTMLElement {
             const maxPrice = this.shadowRoot.getElementById('searchProductMaxPrice').value;
             const availability = this.shadowRoot.getElementById('searchProductStock').value;
             prepareSearch(productName, category, minPrice, maxPrice, availability)
-            //
-            // const searchParams = new URLSearchParams();
-            // if (productName) searchParams.set('nome_prodotto', productName);
-            // if (category) searchParams.set('categoria', category);
-            // if (minPrice) searchParams.set('prezzo_min', minPrice);
-            // if (maxPrice) searchParams.set('prezzo_max', maxPrice);
-            // if (availability) searchParams.set('disponibilita', availability);
-            //
-            // window.location.href = `/search?${searchParams.toString()}`;
-
         });
     }
 }

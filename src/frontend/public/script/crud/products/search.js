@@ -26,11 +26,11 @@ export const searchProduct = async (params) => {
 }
 /**
  * This function redirects the user to the <i>/search/?param</i> url with the given param
- * @param {HTMLInputElement} name The input with the product name
- * @param {HTMLSelectElement | HTMLInputElement} category The input/select with the product category
- * @param {HTMLInputElement} minPrice The input with the product minimum price
- * @param {HTMLInputElement} maxPrice The input with the product maximum price
- * @param {HTMLInputElement} availability The input with the product stock
+ * @param {string} name The input with the product name
+ * @param {string | HTMLInputElement} category The input/select with the product category
+ * @param {string} minPrice The input with the product minimum price
+ * @param {string} maxPrice The input with the product maximum price
+ * @param {string} availability The input with the product stock
  * @author Leonardo Basso
  */
 export const prepareSearch = (name, category, minPrice, maxPrice, availability) => {
@@ -41,5 +41,5 @@ export const prepareSearch = (name, category, minPrice, maxPrice, availability) 
     if (maxPrice) searchParams.set('prezzo_max', maxPrice);
     if (availability) searchParams.set('disponibilita', availability);
 
-    window.location.href = `/search?${searchParams.toString()}`;
+    window.location.href = `http://localhost:8000/products/search?${searchParams.toString()}`;
 }

@@ -10,12 +10,11 @@ class ProductCard extends HTMLElement {
         const artisan = this.getAttribute('artisan')
         const price = this.getAttribute('price');
         const stock = this.getAttribute('stock');
-
         this.shadowRoot.innerHTML = `
 
             <article class="product standard-box">
                 <div class="product__info text-small">
-                    <p class="product__category">${category}</p>
+                    <p class="product__category"><a href="http://localhost:8000/products/category?categoria=${category}">${category}</a></p>
                     <p class="product__stock">${stock} rimasti</p>
                 </div>
                 <h2 class="product__name">${name}</h2>
