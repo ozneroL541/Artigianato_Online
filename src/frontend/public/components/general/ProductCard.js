@@ -19,7 +19,7 @@ class ProductCard extends HTMLElement {
                 </div>
                 <h2 class="product__name">${name}</h2>
                 <div class="product__info">
-                    <p class="product__artisan text-small">Artigiano: ${artisan}</p>
+                    <p class="product__artisan text-small"><a href="http://localhost:8000/products/artisan?username_artigiano=${artisan}">${artisan}</a></p>
                 </div>
                 <p class="product__price">${price}€</p>
                 <button class="btn-edit">Compra!</button>
@@ -57,6 +57,7 @@ class ProductCard extends HTMLElement {
                     padding: .35rem;
                     border-radius: 100vh;
                 }
+                .product__artisan:hover {text-decoration: underline}
                 
                 .btn-edit {
                     border: 1px solid rgba(48, 255, 76, 0.2);
