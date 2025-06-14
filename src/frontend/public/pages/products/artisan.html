@@ -13,8 +13,8 @@
     <search-bar></search-bar>
     <span id="titleContainer" class="category__title"></span>
     <div class="searchpage">
-        <div class="product__list__container">
-            <section class="product__list" id="productsContainer"></section>
+        <div class="cards-container">
+            <section class="cards " id="productsContainer"></section>
         </div>
     </div>
 </page-layout>
@@ -62,32 +62,6 @@
     .searchpage {
         display: flex;
         margin-top: 1rem;
-    }
-
-    .product__list__container {
-        width: 100vw;
-        display: flex;
-        justify-content: center;
-    }
-
-    .product__list {
-        width: 90vw;
-    }
-
-    @media screen and (min-width: 823px) {
-        .product__list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 250px);
-            justify-content: center;
-            gap: 1rem;
-            max-width: 70vw;
-        }
-    }
-    @media screen and (min-width: 900px) {
-        .product__list {
-            grid-template-columns: repeat(auto-fill, 300px);
-        }
-    }
     }
 </style>
 </html>
