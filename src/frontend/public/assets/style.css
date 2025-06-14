@@ -55,6 +55,9 @@ dialog {
 dialog::backdrop {
     backdrop-filter: blur(2px);
 }
+summary::marker{
+    color: var(--lite-color);
+}
 /* General styles and classes */
 
 .standard-box {
@@ -118,7 +121,9 @@ dialog::backdrop {
     gap: .5rem;
     margin-bottom: .5rem;
 }
-
+.text-small {
+    font-size: .8rem;
+}
 /* Styling webkit */
 
 ::-webkit-scrollbar {

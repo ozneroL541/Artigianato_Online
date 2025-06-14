@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script defer type="module" src="../../components/layout/PageLayout.js"></script>
+    <script defer type="module" src="../../components/general/ProductCard.js"></script>
+    <script defer type="module" src="../../components/general/SearchBar.js"></script>
+    <link rel="stylesheet" href="../../assets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+</head>
+<body>
+<page-layout page-title="Search for products">
+    <search-bar></search-bar>
+    <div class="searchpage">
+        <aside class="searchpage__sidebar">
+            <h3>Modifica la ricerca</h3>
+            <label class="searchbar__sidebar__inputs">
+                <input type="text" name="searchSidebar" id="searchProductName" placeholder="Nome prodotto">
+                <select name="searchSidebar" id="searchProductCategory">
+                    <option value="">All Categories</option>
+                </select>
+                <input type="text" name="searchSidebar" id="searchProductMinPrice" placeholder="Prezzo Minimo">
+                <input type="number" name="searchSidebar" id="searchProductMaxPrice" placeholder="Prezzo Massimo">
+                <input type="number" name="searchSidebar" id="searchProductStock" placeholder="Quantita">
+                <button id="searchButton">Cerca</button>
+            </label>
+        </aside>
+        <div class="product__list__container">
+            <section class="product__list" id="productsContainer"></section>
+        </div>
+    </div>
+</page-layout>
+</body>
+
+<script type="module">
+    import {searchProduct, prepareSearch} from "../../script/crud/products/search.js";
+    import {populateSelectMenu, getCategories} from "../../script/utils.js";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const params = new URLSearchParams(window.location.search);
+
+        // Get and show products
+        const products = await searchProduct(params);
+        const productsContainer = document.getElementById('productsContainer');
+
+        products.forEach(p => {
+            const productElement = document.createElement('article');
+            productElement.className = 'product__card';
+            productElement.innerHTML = `
+                <product-card
+                    name = "${p.nome_prodotto}"
+                    category = "${p.categoria.categoria}"
+                    category = "${p.categoria.categoria}"
+                    price = "${p.prezzo}"
+                    artisan = "${p.username_artigiano}"
+                    stock = "${p.disponibilita}"
+                ></product-card>
+`;
+            productsContainer.appendChild(productElement);
+        });
+
+        // Populate the category sidebar
+        const sidebarCategoryMenu = document.getElementById('searchProductCategory');
+        const categories = await getCategories();
+        populateSelectMenu(categories.categories, sidebarCategoryMenu);
+
+        // Populate sidebar inputs with URL parameters
+        document.getElementById('searchProductName').value = params.get('nome_prodotto') || '';
+        document.getElementById('searchProductCategory').value = params.get('categoria') || '';
+        document.getElementById('searchProductMinPrice').value = params.get('prezzo_min') || '';
+        document.getElementById('searchProductMaxPrice').value = params.get('prezzo_max') || '';
+        document.getElementById('searchProductStock').value = params.get('disponibilita') || '';
+
+    });
+
+    // Add event listener to the search button
+    document.getElementById('searchButton').addEventListener('click', () => {
+        const productName = document.getElementById('searchProductName').value;
+        const category = document.getElementById('searchProductCategory').value;
+        const minPrice = document.getElementById('searchProductMinPrice').value;
+        const maxPrice = document.getElementById('searchProductMaxPrice').value;
+        const availability = document.getElementById('searchProductStock').value;
+        prepareSearch(productName, category, minPrice, maxPrice, availability)
+
+    });
+</script>
+<style>
+    .searchpage {
+        display: flex;
+        margin-top: 1rem;
+    }
+
+    .searchpage__sidebar {
+        display: none;
+    }
+
+    .product__list__container {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+    }
+
+    .product__list {
+        width: 90vw;
+    }
+
+    .searchpage__sidebar {
+        margin-right: 1.3rem;
+    }
+
+    .searchbar__sidebar__inputs {
+        display: grid;
+        gap: .3rem;
+        margin-right: .5rem;
+        margin-top: .5rem;
+    }
+
+    @media screen and (min-width: 823px) {
+        .product__list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 250px);
+            justify-content: center;
+            gap: 1rem;
+            max-width: 70vw;
+        }
+    }
+
+    @media screen and (min-width: 900px) {
+        .product__list {
+            grid-template-columns: repeat(auto-fill, 300px);
+
+        }
+    }
+
+    @media screen and (min-width: 1000px) {
+        .searchpage__sidebar {
+            width: 200px;
+            display: block;
+        }
+    }
+</style>
+</html>
