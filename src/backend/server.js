@@ -870,6 +870,20 @@ app.get('/api/product/artisan', checkArtisan, getProductsByArtisan);
  *           type: number
  *         description: The availability of the product to filter by.
  *         example: 50
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         description: The maximum number of products to return.
+ *         example: 10
+ *       - in: query
+ *         name: random
+ *         required: false
+ *         schema:
+ *           type: boolean
+ *         description: If true, returns a random selection of products.
+ *         example: true
  *     responses:
  *       200:
  *         description: Successfully retrieved products
