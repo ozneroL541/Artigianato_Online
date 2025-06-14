@@ -1,3 +1,4 @@
+import { Category } from '../category/Category.js';
 import { Product } from './Product.js';
 
 /**
@@ -95,7 +96,7 @@ const getProductsByArtisan = async (req, res) => {
     try {
         const username_artigiano = req.username;
         const products = await Product.getByArtisan(username_artigiano);
-        res.status(200).json(products);
+        res.status(200).json({ products });
     } catch (error) {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
@@ -108,8 +109,8 @@ const getProductsByArtisan = async (req, res) => {
  */
 const getProducts = async (req, res) => {
     try {
-        const { username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita } = req.query;
-        const products = await Product.search(username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita);
+        const { username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita,  limit, random } = req.query;
+        const products = await Product.search(username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita, limit, random);
         if (products.length === 0) {
             res.status(404).json({ message: 'No products found' });
         } else {

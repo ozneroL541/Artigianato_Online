@@ -35,8 +35,8 @@ class Product {
         const query = `INSERT INTO prodotti (id_prodotto, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita)
                        VALUES ((SELECT MAX(id_prodotto)+1 AS next_id FROM prodotti), $1, $2, $3, $4, $5)
                        RETURNING id_prodotto;`;
-        const params = [this.username_artigiano, this.nome_prodotto, this.categoria, this.prezzo, this.disponibilita];
-        if (!this.categoria.exists()) {
+        const params = [this.username_artigiano, this.nome_prodotto, this.categoria.categoria, this.prezzo, this.disponibilita];
+        if (! (await this.categoria.exists())) {
             throw new CategoryError("Category does not exist");
         }
         try {
@@ -59,12 +59,12 @@ class Product {
                        prezzo = $3, 
                        disponibilita = $4 
                        WHERE id_prodotto = $5 AND username_artigiano = $6;`;
-        if (!this.categoria.exists()) {
+        if (! (await this.categoria.exists())) {
             throw new CategoryError("Category does not exist");
         }
         const params = [
             this.nome_prodotto,
-            this.categoria,
+            this.categoria.categoria,
             this.prezzo,
             this.disponibilita,
             this.id_prodotto,
@@ -181,7 +181,19 @@ class Product {
             throw new Error('Error fetching products by artisan: ' + error.message);
         }
     }
-    static async search(username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita) {
+    /**
+     * Searches for products based on various criteria.
+     * @param {string} username_artigiano - The username of the artisan. If null, it will not filter by artisan.
+     * @param {string} nome_prodotto - The name of the product. If null, it will not filter by product name.
+     * @param {string} categoria - The category of the product. If null, it will not filter by category.
+     * @param {number} prezzo_min - The minimum price of the product. If null, it will not filter by minimum price.
+     * @param {number} prezzo_max - The maximum price of the product. If null, it will not filter by maximum price.
+     * @param {number} disponibilita - The availability of the product. If null, it will not filter by availability.
+     * @param {number} limit - The maximum number of products to retrieve. If null, it will not limit the number of results.
+     * @param {boolean} random - If true, the results will be randomized.
+     * @returns {Promise<Product[]>} A promise that resolves to an array of Product instances matching the search criteria.
+     */
+    static async search(username_artigiano=null, nome_prodotto=null, categoria=null, prezzo_min=null, prezzo_max=null, disponibilita=null, limit=null, random=false) {
         let query = 'SELECT * FROM prodotti WHERE 1=1';
         const params = [];
         if (username_artigiano !== undefined && username_artigiano !== null) {
@@ -192,7 +204,7 @@ class Product {
             query += ' AND nome_prodotto ILIKE $' + (params.length + 1);
             params.push(`%${nome_prodotto}%`);
         }
-        if (categoria !== undefined) {
+        if (categoria !== undefined && categoria !== null) {
             query += ' AND categoria = $' + (params.length + 1);
             params.push(categoria);
         }
@@ -208,6 +220,16 @@ class Product {
             query += ' AND disponibilita >= $' + (params.length + 1);
             params.push(disponibilita);
         }
+        if (random) {
+            query += ' ORDER BY RANDOM()';
+        } else {
+            query += ' ORDER BY id_prodotto'; // Default ordering by product ID
+        }
+        if (limit !== undefined && limit !== null) {
+            query += ' LIMIT $' + (params.length + 1);
+            params.push(limit);
+        }
+        query += ';'; // End the query with a semicolon
         try {
             const result = await pool.query(query, params);
             return result.rows.map(row => new Product(

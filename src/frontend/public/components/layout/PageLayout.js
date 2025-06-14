@@ -1,9 +1,12 @@
 import {decodeJWT, getUserType} from "../../script/jwt.js";
 
 /**
- * This component is used to create the page layout with a navbar, a footer and a dynamic title.
- * @author Leonardo Basso
+ * This component is used to create the page layout with a navbar.
+ *
+ * This component automatically generates SEO tags for the <title> tag, Twitter and Open Graph using the `page-title` parameter
+ * @param {string} page-title The page title
  * @slot - The main content of the page
+ * @author Leonardo Basso
  */
 class PageLayout extends HTMLElement {
     constructor() {
@@ -12,12 +15,30 @@ class PageLayout extends HTMLElement {
     }
 
     connectedCallback() {
+        // SEO
         const title = this.getAttribute("page-title") || "Artigiani Online";
         document.title = `${title} - Artigiani Online`;
 
+        let metaTwitterTitle = document.querySelector('meta[name="twitter:title"]');
+        if (!metaTwitterTitle) {
+            metaTwitterTitle = document.createElement('meta');
+            metaTwitterTitle.name = "twitter:title";
+            metaTwitterTitle.content = `${title} - Artigiani Online`;
+            document.head.appendChild(metaTwitterTitle);
+        } else { metaTwitterTitle.content = `${title} - Artigiani Online`; }
+
+        let metaOgTitle = document.querySelector('meta[property="og:title"]');
+        if (!metaOgTitle) {
+            metaOgTitle = document.createElement('meta');
+            metaOgTitle.property = "og:title";
+            metaOgTitle.content = `${title} - Artigiani Online`;
+            document.head.appendChild(metaOgTitle);
+        } else { metaOgTitle.content = `${title} - Artigiani Online`;}
+
+        // Create Navbar
         const token = window.localStorage.getItem("userToken");
         const payload = getUserType(token);
-        const userType = payload ? payload : null;
+        const userType = payload ? payload : "unregistered";
 
         this.shadowRoot.innerHTML = `
         <section class="page__layout">
@@ -28,7 +49,13 @@ class PageLayout extends HTMLElement {
                 </div>
                 <nav class="navbar__links" id="navbar_links">
                     <a class="link" href="/">Home</a>
-                    ${userType === "artigiano" || userType === "cliente" ? '<a class="link" id="logoutLink" href="#">Logout</a>' : '<a class="link" href="/auth/login">Login</a>'}
+                    ${userType === "amministratore" || userType === "artigiano" ? '<a class="link" href="/' + userType + '/dashboard">Dashboard</a>' : ''}
+                    ${userType !== "unregistered" ? '<a class="link" id="logoutLink" href="#">Logout</a>' : '<a class="link" href="/auth/login">Login</a>'}
+                    <a class="link" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                        </svg>
+                    </a>
                 </nav>
             </header>
             <main>

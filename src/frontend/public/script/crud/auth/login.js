@@ -1,10 +1,20 @@
 import {setUserInfo} from '../../jwt.js';
 
 /**
- * This function implements the API for the artisan login
+ * This function implements the API for logging in a user.
+ *
+ * The user can be a `client`, an `artisan` or an `admin`
+ * @example
+ * // Logging in an admin
+ * document.getElementById('loginBtn').addEventListener('click', () => {
+ *      const username = document.getElementById('username').value;
+ *      const password = document.getElementById('password').value;
+ *      login(username, password, "admin");
+ * }
+ *
  * @param {string} username the username of the user
  * @param {string} password The user password
- * @param {string} type If the user is an artisan or a client
+ * @param {"admin"| "artisan" | "client"} type If the user is an artisan or a client
  * @author Leonardo Basso
  */
 export const login = async (username, password, type) => {

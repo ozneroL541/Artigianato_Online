@@ -1,8 +1,10 @@
 /**
  * This component is used to create a tab interface with dynamic tabs.
- * In order for an html element to be considered a tab it needs to have data-type="tab", other elements
- * will be shown in all tabs.
- * @slot - The tabs
+ *
+ * In order for a html element to be considered a tab it needs to have `data-type="tab"`, other elements
+ * will be shown in all tabs. Each tab needs to have as id the name passed in the array `tabs`
+ * @param {array} tabs An array with a list of all the tabs
+ * @slot The tabs
  * @author Leonardo Basso
  */
 class ToggleTabs extends HTMLElement {

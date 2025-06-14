@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../assets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script defer type="module" src="../../components/layout/PageLayout.js"></script>
+    <script defer type="module" src="../../components/general/ToggleTabs.js"></script>
+</head>
+
+<body>
+<page-layout page-title="Dashboard admin">
+    <toggle-tabs tabs='["Categorie", "Profili", "Segnalazioni"]' class="dashboard">
+        <section id="Categorie" data-type="tab">
+            <dialog class="category__add" id="addCategory">
+                <header class="modal-top">
+                    <h3>Inserisci la categoria</h3>
+                    <span class="btn-close" onclick="toggleDialog('addCategory')"></span>
+                </header>
+                <label class="modal-inputs">
+                    <input type="text" placeholder="Nome" id="addCategoryName">
+                    <button id="addCategoryButton">Pubblica</button>
+                </label>
+            </dialog>
+            <section class="category__panel standard-box">
+                <div class="categories__panel__buttons">
+                    <button onclick="window.location.reload();" class="dashborad__category__iconbutton">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-plus" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                            </svg>
+                        </svg>
+                    </button>
+                    <button onclick="toggleDialog('addCategory')" class="btn-edit dashborad__category__iconbutton">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-plus-lg" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                        </svg>
+                    </button>
+                </div>
+                <dialog class="category__edit" id="editCategory">
+                    <header class="modal-top">
+                        <h3>Inserisci la categoria</h3>
+                        <span class="btn-close" onclick="toggleDialog('editCategory')"></span>
+                    </header>
+                    <label class="modal-inputs">
+                        <input type="text" placeholder="Nome" id="editCategoryName">
+                        <button id="editCategoryButton">Modifica</button>
+                    </label>
+                </dialog>
+                <div class="category__panel__list" id="category-list"></div>
+            </section>
+
+        </section>
+        <section id="Profili" data-type="tab" class="admin__register">
+                <h3 class="admin__register__title">Registra un admin</h3>
+            <div id="artisanError" class="error-message" style="display: none; color: red;"></div>
+            <label class="admin__register__panel">
+                <input class="admin__registrer__input" type="text" id="username" placeholder="Username">
+                <input class="admin__registrer__input" type="password" id="password" placeholder="Password">
+                <button class="admin__registrer__input" id="regButton">Registra</button>
+            </label>
+            <button class="btn-delete" id="deleteProfileButton">Elimina il tuo profilo</button>
+        </section>
+        <section id="Segnalazioni" data-type="tab">
+            <h2>Qui si vedono le segnalazioni</h2>
+        </section>
+    </toggle-tabs>
+</page-layout>
+</body>
+<script>
+    /**
+     * This function toggles the visibility of the modal element.
+     * @param {string} id the dialog to open / close
+     * @author Leonardo Basso
+     * */
+    function toggleDialog(id) {
+        const dialog = document.getElementById(id);
+        if (dialog.open) {
+            dialog.close();
+        } else {
+            dialog.showModal();
+        }
+    }
+</script>
+<script type="module">
+    import {getCategories, canSeePage} from "../../script/utils.js";
+    import {addCategory, deleteCategory, updateCategory} from "../../script/crud/admin/dashboard/categories.js";
+    import {registerAdmin} from '../../script/crud/admin/register.js';
+    import {deleteProfile} from "../../script/crud/auth/delete.js";
+
+    document.addEventListener('DOMContentLoaded', async () => {
+
+        const categories = await getCategories()
+        const container = document.getElementById("category-list")
+
+        // Shows all categories
+        categories.categories.forEach(c => {
+            const HTMLcategory = document.createElement("article")
+            HTMLcategory.className = "category standard-box"
+            HTMLcategory.innerHTML = `
+                <h3 class="collapsed-text category__title"> ${c} </h3>
+                <div class="category__buttons">
+                    <button class="btn-edit dashborad__category__iconbutton editCagegoryButton" data-name="${c}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
+                        </svg>
+                    </button>
+                    <button class="btn-delete dashborad__category__iconbutton deleteCategoryButton" data-name="${c}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                        </svg>
+                    </button>
+                </div>
+
+            `
+            container.appendChild(HTMLcategory)
+
+        })
+        // Deletes a category
+        document.querySelectorAll('.deleteCategoryButton').forEach(button => {
+            button.addEventListener('click', async function () {
+                const name = this.getAttribute('data-name');
+                const token = localStorage.getItem('userToken');
+                await deleteCategory(token, name)
+            });
+        });
+
+        // Populates the dialog with the correct data from a category
+        document.addEventListener('click', (event) => {
+            if (event.target.closest('.editCagegoryButton')) {
+                const btn = event.target.closest('.editCagegoryButton');
+                const name = btn.dataset.name;
+                console.log(name)
+
+                toggleDialog('editCategory');
+                document.getElementById('editCategoryName').value = name;
+                const dialog = document.getElementById('editCategory');
+                dialog.dataset.name = name;
+
+            }
+        });
+
+        // Updates the category
+        document.getElementById('editCategoryButton').addEventListener('click', async () => {
+            const dialog = document.getElementById('editCategory');
+            const name = dialog.getAttribute('data-name');
+            const newName = document.getElementById('editCategoryName').value.trim();
+            const token = localStorage.getItem('userToken');
+            await updateCategory(token, name, newName)
+
+        })
+
+        // Add a new category
+        document.getElementById("addCategoryButton").addEventListener("click", async () => {
+            const token = localStorage.getItem('userToken')
+            const name = document.getElementById("addCategoryName").value
+            await addCategory(token, name)
+        })
+
+        // Permission
+        const token = window.localStorage.getItem("userToken");
+        canSeePage(token, "amministratore")
+
+        // Register a new admin
+        document.getElementById('regButton').addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            registerAdmin(username, password);
+        });
+
+        // Delete your profile
+        document.getElementById('deleteProfileButton').addEventListener('click', () => {
+            const token = localStorage.getItem('userToken');
+            deleteProfile(token, "admin")
+        })
+    })
+</script>
+
+<style>
+    .dashboard {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .category__panel {
+        margin-top: 1rem;
+        width: 90vw;
+        max-width: 1200px;
+        display: grid;
+        gap: .5rem;
+        padding: 1rem;
+    }
+
+    .category__panel__list {
+        display: grid;
+        gap: .5rem;
+    }
+
+    .category {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .2rem .5rem;
+    }
+
+    .category__title {
+        font-weight: 400;
+        font-size: 1.1rem;
+    }
+
+    .categories__panel__buttons {
+        display: flex;
+        justify-content: end;
+        gap: .3rem;
+    }
+
+    .dashborad__category__iconbutton {
+        width: 28px;
+        height: 28px;
+        padding: .3rem;
+    }
+
+    .admin__registrer__input {
+        width: 90vw;
+        max-width: 500px;
+    }
+    .admin__register__title {
+        text-wrap: balance;
+        text-align: center;
+        margin: .5rem 0;
+    }
+    .admin__register__panel {
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        gap: .3rem;
+    }
+    #deleteProfileButton {
+        margin-top: .5rem;
+        text-align: center;
+    }
+</style>

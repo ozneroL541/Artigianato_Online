@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script defer type="module" src="../../components/layout/PageLayout.js"></script>
+    <script defer type="module" src="../../components/general/ProductCard.js"></script>
+    <script defer type="module" src="../../components/general/SearchBar.js"></script>
+    <link rel="stylesheet" href="../../assets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+</head>
+<body>
+<page-layout page-title="Category">
+    <search-bar></search-bar>
+    <span id="titleContainer" class="category__title"></span>
+    <div class="searchpage">
+        <div class="product__list__container">
+            <section class="product__list" id="productsContainer"></section>
+        </div>
+    </div>
+</page-layout>
+</body>
+
+<script type="module">
+    import { searchProduct } from "../../script/crud/products/search.js";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const params = new URLSearchParams(window.location.search);
+        const category = params.get('categoria');
+        if (category === null) {
+            window.location.href = "http://localhost:8000/"
+        }
+
+        // Shows category on top of the page
+        const titleContainer = document.getElementById('titleContainer');
+        titleContainer.innerHTML = `<h1>${category}</h1>`;
+
+        // Shows products by category
+        const products = await searchProduct(params);
+        const productsContainer = document.getElementById('productsContainer');
+
+        products.forEach(p => {
+            const productElement = document.createElement('article');
+            productElement.className = 'product__card';
+            productElement.innerHTML = `
+                <product-card
+                    name="${p.nome_prodotto}"
+                    category="${p.categoria.categoria}"
+                    price="${p.prezzo}"
+                    artisan="${p.username_artigiano}"
+                    stock="${p.disponibilita}"
+                ></product-card>
+            `;
+            productsContainer.appendChild(productElement);
+        });
+    });
+</script>
+<style>
+    .category__title {
+        text-align: center;
+        text-transform: capitalize;
+    }
+    .searchpage {
+        display: flex;
+        margin-top: 1rem;
+    }
+
+    .product__list__container {
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+    }
+
+    .product__list {
+        width: 90vw;
+    }
+
+    @media screen and (min-width: 823px) {
+        .product__list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 250px);
+            justify-content: center;
+            gap: 1rem;
+            max-width: 70vw;
+        }
+    }
+    @media screen and (min-width: 900px) {
+        .product__list {
+            grid-template-columns: repeat(auto-fill, 300px);
+        }
+    }
+    }
+</style>
+</html>
