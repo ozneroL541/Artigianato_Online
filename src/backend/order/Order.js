@@ -20,7 +20,7 @@ class Order {
         id_ordine = null,
         id_prodotto,
         username_cliente,
-        data_ordine,
+        data_ordine = new Date(),
         quantita,
         data_consegna = null
     ) {
@@ -40,16 +40,16 @@ class Order {
      */
     async create() {
         const query = `INSERT INTO ordini (id_ordine, id_prodotto, username_cliente, data_ordine, quantita, data_consegna)
-                       VALUE ((SELECT MAX(id_ordine)+1 AS next_id FROM ordini), $1, $2, $3, $4, $5) 
-                       RETURNING id_ordine;`;
+                       VALUE (((SELECT MAX(id_ordine)+1) AS next_id FROM ordini), $1, $2, CURRENT_TIMESTAMP(), $3, $4) 
+                       RETURNING id_ordine, data_ordine;`;
 
-        const param = [this.id_prodotto, this.username_cliente, this.data_ordine, this.quantita, this.data_consegna];
+        const params = [this.id_prodotto, this.username_cliente, this.data_ordine, this.quantita, this.data_consegna];
 
         try{
             const id_ordine = await pool.query(query, params);
-            this.id_ordine = id_ordine.rows[0].id_ordine; // Set the ID of the order
+            this.id_ordine = id_ordine.rows[0].id_ordine; // Set the order ID from the query result
+            this.data_ordine = id_ordine.rows[0].data_ordine; // Set the order date from the query result
             return this.id_ordine; // Return the ID of the inserted order
-
         }catch(error){
             throw new Error('Order already inserted')
         }                       
