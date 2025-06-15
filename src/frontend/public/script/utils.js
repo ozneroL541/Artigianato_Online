@@ -65,3 +65,8 @@ export const populateSelectMenu = (options, selectElement) => {
  */
 export const frontendUrl = 'http://localhost:8000'
 
+/**
+ * The backend's url
+ * @type {string}
+ */
+export const backendUrl = "http://localhost:8080";
