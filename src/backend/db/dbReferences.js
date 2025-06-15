@@ -75,7 +75,7 @@ class dbAdminReferences extends dbReferences {
     }
 }
 
-export {
+module.exports = {
     dbReferences,
     dbArtisanReferences,
     dbClientReferences,

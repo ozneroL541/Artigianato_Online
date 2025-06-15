@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Module to manage customer orders",
   "main": "Order.js",
-  "type": "module",
+  "type": "commonjs",
   "keywords": ["order", "orders"],
   "author": "Lorenzo Radice",
   "license": "GPL-3.0"

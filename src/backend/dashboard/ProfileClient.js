@@ -1,4 +1,4 @@
-import { pool } from "../db/dbConnection.js";
+const { pool } = require("../db/dbConnection.js");
 
 class ProfileClient{
 
@@ -131,4 +131,4 @@ async newSignal(idSignal, orderId, description, resolved) {
 
    }
 
-export {ProfileClient};
+module.exports = {ProfileClient};

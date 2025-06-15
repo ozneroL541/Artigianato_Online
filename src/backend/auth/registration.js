@@ -1,6 +1,6 @@
-import { hashPassword } from './hash.js';
-import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db/dbReferences.js';
-import { pool } from '../db/dbConnection.js';
+const { hashPassword } = require('./hash.js');
+const { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } = require('../db/dbReferences.js');
+const { pool } = require('../db/dbConnection.js');
 
 /**
  * Represents a User registration process.
@@ -361,7 +361,7 @@ class RegistrationError extends Error {
     }
 }
 
-export { 
+module.exports = { 
     ArtisanRegistration,
     ClientRegistration, 
     AdminRegistration, 

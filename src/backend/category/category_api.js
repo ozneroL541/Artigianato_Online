@@ -1,4 +1,4 @@
-import { Category } from "./Category.js";
+const { Category } = require("./Category.js");
 
 /**
  * Uploads a new category to the database.
@@ -88,4 +88,4 @@ const getAllCategories = async (req, res) => {
     }
 };
 
-export { uploadCategory, deleteCategory, updateCategory, getAllCategories };
+module.exports = { uploadCategory, deleteCategory, updateCategory, getAllCategories };

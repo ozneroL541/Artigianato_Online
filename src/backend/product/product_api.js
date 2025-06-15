@@ -1,5 +1,5 @@
-import { Category } from '../category/Category.js';
-import { Product } from './Product.js';
+const { Category } = require('../category/Category.js');
+const { Product } = require('./Product.js');
 
 /**
  * Uploads a new product to the database.
@@ -121,4 +121,4 @@ const getProducts = async (req, res) => {
     }
 }
 
-export { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts };
+module.exports = { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts };

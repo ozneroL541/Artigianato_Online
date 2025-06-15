@@ -2,7 +2,7 @@
   "name": "category",
   "version": "1.0.0",
   "description": "Module to manage product categories",
-  "type": "module",
+  "type": "commonjs",
   "keywords": ["category"],
   "author": "Lorenzo Radice",
   "license": "GPL-3.0"

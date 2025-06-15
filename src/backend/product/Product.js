@@ -1,5 +1,5 @@
-import { pool } from '../db/dbConnection.js';
-import { Category, CategoryError } from '../category/Category.js'; // Assuming Category is a class that handles categories
+const { pool } = require('../db/dbConnection.js');
+const { Category, CategoryError } = require('../category/Category.js'); // Assuming Category is a class that handles categories
 
 /**
  * Product class representing a product in the artisan marketplace.
@@ -265,4 +265,4 @@ class Product {
     }
 };
 
-export { Product };
+module.exports = { Product };

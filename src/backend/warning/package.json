@@ -2,7 +2,7 @@
   "name": "warining",
   "version": "1.0.0",
   "description": "A module to manage warnings in the system",
-  "type": "module",
+  "type": "commonjs",
   "keywords": ["warning", "warnings"],
   "author": "Lorenzo Radice",
   "license": "GPL-3.0"

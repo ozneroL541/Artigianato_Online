@@ -1,4 +1,4 @@
-import { Order } from "../order/Order.js";
+const { Order } = require("../order/Order.js");
 
 /**
  * Warning class represents a warning associated with an order.
@@ -74,4 +74,4 @@ class Warning {
     }
 }
 
-export { Warning };
+module.exports = { Warning };

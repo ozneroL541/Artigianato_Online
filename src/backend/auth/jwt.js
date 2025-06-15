@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 
 /**
  * Artisan type
@@ -129,7 +129,7 @@ const checkAdmin = async (req, res, next) => {
     }
 };
 
-export {
+module.exports = {
     genArtisanJWT,
     genClientJWT,
     genAdminJWT,

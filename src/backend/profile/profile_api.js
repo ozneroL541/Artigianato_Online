@@ -1,4 +1,4 @@
-import { DeleteClient, DeleteArtisan, DeleteAdmin } from './delete.js';
+const { DeleteClient, DeleteArtisan, DeleteAdmin } = require('./delete.js');
 
 /**
  * Delete a client from the system.
@@ -46,4 +46,4 @@ const delAdmin = async (req, res) => {
     }
 };
 
-export { delClient, delArtisan, delAdmin };
+module.exports = { delClient, delArtisan, delAdmin };
