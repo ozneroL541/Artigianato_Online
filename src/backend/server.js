@@ -4,6 +4,8 @@ const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const reteLimit = require('express-rate-limit');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const { checkArtisan, checkClient, checkAdmin } = require('./auth/jwt.js');
 const { delClient, delArtisan, delAdmin } = require('./profile/profile_api.js');
@@ -18,7 +20,13 @@ const {
 const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts } = require('./product/product_api.js');
 const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
 /** Port for the backend server */
-const port = 8080;
+const port = process.env.PORT || 8080;
+/** IP address */
+const ip = process.env.IP_ADDRESS || 'localhost';
+/** Protocol */
+const protocol = process.env.PROTOCOL || 'http';
+/** URL */
+const url = `${protocol}://${ip}:${port}`;
 
 /** Rate limiting middleware to prevent abuse */
 const limiter = reteLimit({
@@ -54,7 +62,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: `http://localhost:${port}`,
+                url: url,
             },
         ],
         security: [
@@ -1164,6 +1172,6 @@ app.get('/api/category/all', getAllCategories);
  * @param {number} port - The port number to listen on.
  */
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
-    console.log(`API documentation available at http://localhost:${port}/api/docs`);
+    console.log(`Server running at ${url}`);
+    console.log(`API documentation available at ${url}/api/docs`);
 });

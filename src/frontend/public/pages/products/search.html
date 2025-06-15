@@ -25,8 +25,8 @@
                 <button id="searchButton">Cerca</button>
             </label>
         </aside>
-        <div class="product__list__container">
-            <section class="product__list" id="productsContainer"></section>
+        <div class="cards-container">
+            <section class="cards cards__fix" id="productsContainer"></section>
         </div>
     </div>
 </page-layout>
@@ -94,16 +94,6 @@
         display: none;
     }
 
-    .product__list__container {
-        width: 100vw;
-        display: flex;
-        justify-content: center;
-    }
-
-    .product__list {
-        width: 90vw;
-    }
-
     .searchpage__sidebar {
         margin-right: 1.3rem;
     }
@@ -116,19 +106,8 @@
     }
 
     @media screen and (min-width: 823px) {
-        .product__list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 250px);
-            justify-content: center;
-            gap: 1rem;
+        .cards__fix {
             max-width: 70vw;
-        }
-    }
-
-    @media screen and (min-width: 900px) {
-        .product__list {
-            grid-template-columns: repeat(auto-fill, 300px);
-
         }
     }
 

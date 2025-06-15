@@ -16,25 +16,28 @@ class SearchBar extends HTMLElement {
 
     async connectedCallback() {
         this.shadowRoot.innerHTML = `
-            <label class="homepage__product__search">
-                <span class="homepage__product__search__top">
-                    <input type="text" class="homepage__product__search__input" placeholder="Nome" id="searchProductName">
-                    <button class="homepage__product__search__button" id="searchProductButton">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-search" viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                        </svg>
-                    </button>
-                </span>
-                <span class="homepage__product__search__bottom">
-                    <select id="searchProductCategory" class="homepage__product__search__category" >
-                        <option value="">All Categories</option>
-                    </select>
-                    <input id="searchProductMinPrice" type="number" class="homepage__product__search__input" placeholder="Minimo Prezzo">
-                    <input id="searchProductMaxPrice" type="number" class="homepage__product__search__input" placeholder="Massimo Prezzo">
-                    <input id="searchProductStock" type="number" class="homepage__product__search__input" placeholder="Disponibilita">
-                </span>
-            </label>
+            <span id="searchbar" role="search" aria-expanded="false">
+                <label class="homepage__product__search">
+                    <span class="homepage__product__search__top">
+                        <input type="text" class="homepage__product__search__input" placeholder="Nome" id="searchProductName">
+                        <button class="homepage__product__search__button" id="searchProductButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                        </button>
+                    </span>
+                    <span class="homepage__product__search__bottom">
+                        <select id="searchProductCategory" class="homepage__product__search__category" >
+                            <option value="">All Categories</option>
+                        </select>
+                        <input id="searchProductMinPrice" type="number" class="homepage__product__search__input" placeholder="Minimo Prezzo">
+                        <input id="searchProductMaxPrice" type="number" class="homepage__product__search__input" placeholder="Massimo Prezzo">
+                        <input id="searchProductStock" type="number" class="homepage__product__search__input" placeholder="Disponibilita">
+                    </span>
+                </label>
+            </span>
+
 
             <style>
                 * {
@@ -95,6 +98,8 @@ class SearchBar extends HTMLElement {
         const handleFocus = () => {
             searchBottom.classList.add('visible');
             searchNameInput.removeEventListener('focus', handleFocus);
+            const searchbar = this.shadowRoot.getElementById('searchbar');
+            searchbar.ariaExpanded = "true"
         };
         searchNameInput.addEventListener('focus', handleFocus);
 

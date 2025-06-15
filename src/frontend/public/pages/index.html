@@ -4,79 +4,109 @@
     <script defer type="module" src="../components/layout/PageLayout.js"></script>
     <script defer type="module" src="../components/general/UserMessage.js"></script>
     <script defer type="module" src="../components/general/SearchBar.js"></script>
+    <script defer type="module" src="../components/general/ProductCard.js"></script>
+
     <link rel="stylesheet" href="../assets/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
 </head>
 <body>
 <page-layout page-title="Home Page">
-    <h1>Homepage</h1>
+    <h1 class="text-center">Artigiani Online</h1>
     <search-bar></search-bar>
-
-    <user-message
-            msg-title="Il tavolo non è bello"
-            msg-desc="lorem ipsum dolor sit amen altro testo di prova aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-            msg-prod="Tavolo"
-            msg-date="23/08/2024">
-    </user-message>
-
-    <h2>Categoria</h2>
-    <section class="products">
-        <div class="product">
-            <h3 class="name">Nome</h3>
-            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at
-                autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam
-                quo reprehenderit rerum vitae, voluptas.</p>
+        <h2 class="text-center" id="randomProductsSection">Scopri i nostri prodotti:</h2>
+    <section class="random__cards">
+        <div class="cards-container random__products__cards">
+            <div class="cards " id="randomProductContainer"> </div>
         </div>
-        <div class="product">
-            <h3 class="name">Nome</h3>
-            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at
-                autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam
-                quo reprehenderit rerum vitae, voluptas.</p>
-        </div>
-        <div class="product">
-            <h3 class="name">Nome</h3>
-            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at
-                autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam
-                quo reprehenderit rerum vitae, voluptas.</p>
-        </div>
-        <div class="product">
-            <h3 class="name">Nome</h3>
-            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at
-                autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam
-                quo reprehenderit rerum vitae, voluptas.</p>
-        </div>
+    </section>
+    <section class="categories" id="categoryContainer">
     </section>
 </page-layout>
 </body>
 <script type="module">
+    import {searchProduct} from "../script/crud/products/search.js";
+    import {getCategories} from "../script/utils.js";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        // Show 4 random products
+        const paramsForRandomProducts = new URLSearchParams(new URL("http://localhost:8000/").search);
+        paramsForRandomProducts.append("limit", "12")
+        paramsForRandomProducts.append("random", "true")
+        const randomProducts = await searchProduct(paramsForRandomProducts)
+        const randomProductContainer = document.getElementById('randomProductContainer')
+        randomProducts.forEach(p => {
+            const randomProduct = document.createElement('article');
+            randomProduct.className = "random__product";
+            randomProduct.innerHTML = `
+                <product-card
+                    name="${p.nome_prodotto}"
+                    category="${p.categoria.categoria}"
+                    price="${p.prezzo}"
+                    artisan="${p.username_artigiano}"
+                    stock="${p.disponibilita}"
+                ></product-card>
+            `
+            randomProductContainer.appendChild(randomProduct);
+        })
+
+        const cats = await getCategories();
+        const selectedCategories = [cats.categories[0], cats.categories[1], cats.categories[2]];
+
+        const categoryContainer = document.getElementById('categoryContainer')
+        for (let c of selectedCategories) {
+            const categoryCard = document.createElement("div");
+            categoryCard.className = "category";
+            const title = document.createElement("h3");
+            title.textContent = c;
+            title.className = "text-center";
+            categoryCard.appendChild(title);
+
+            const params = new URLSearchParams();
+            params.append("limit", "4");
+            params.append("random", "true");
+            params.append("categoria", c); // ← usa la chiave giusta
+
+            const products = await searchProduct(params);
+
+            products.forEach(p => {
+                const article = document.createElement("article");
+                article.innerHTML = `
+                    <product-card
+                        name="${p.nome_prodotto}"
+                        category="${p.categoria.categoria}"
+                        price="${p.prezzo}"
+                        artisan="${p.username_artigiano}"
+                        stock="${p.disponibilita}"
+                    ></product-card>
+                `;
+                categoryCard.appendChild(article);
+            });
+
+            categoryContainer.appendChild(categoryCard);
+        }
+        console.log(selectedCategories)
+    })
+
 </script>
 <style>
-    .products {
-        display: flex;
-    }
 
-    .product {
-        display: inline-block;
-        border: 1px solid rgba(238, 238, 238, 0.03);
-        background-color: rgba(238, 238, 238, 0.05);
-        border-radius: .5rem;
-        padding: 10px;
-        margin-right: 10px;
-        width: 200px;
-    }
-
-    .product .name {
-        margin-top: 0;
-        font-size: 1.2em;
-    }
-
-    .product .description {
-        font-size: 0.9em;
-        color: #eee;
-        opacity: .5;
-        white-space: normal;
-    }
-
+.random__products__cards {
+    margin: 1rem 0;
+}
+.random__cards {
+    display: flex;
+}
+.categories {
+    margin: 3rem 0;
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+}
+.category {
+    display: grid;
+    justify-content: center;
+    gap: 1rem;
+}
 </style>
 </html>
