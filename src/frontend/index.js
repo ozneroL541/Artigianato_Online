@@ -23,3 +23,9 @@ app.use(express.static(publicPath, {immutable: true, index: false}));
 app.listen(port, () => {
     console.log(`Frontend running at http://localhost:${port}/`);
 });
+
+app.get('/backend/url', (req, res) => {
+    res.json({
+        url: process.env.BACKEND_URL || 'http://localhost:8080'
+    });
+});
