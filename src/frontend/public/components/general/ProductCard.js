@@ -25,7 +25,7 @@ class ProductCard extends HTMLElement {
                     <p class="product__category"><a href="http://localhost:8000/products/category?categoria=${category}">${category}</a></p>
                     <p class="product__stock">${stock} rimasti</p>
                 </div>
-                <h2 class="product__name">${name}</h2>
+                <h2 class="product__name collapsed-text">${name}</h2>
                 <div class="product__info">
                     <p class="product__artisan text-small"><a href="http://localhost:8000/products/artisan?username_artigiano=${artisan}">${artisan}</a></p>
                 </div>
@@ -39,13 +39,19 @@ class ProductCard extends HTMLElement {
                     background-color: rgba(238, 238, 238, 0.05);
                     border-radius: 10px;
                 }
+                .collapsed-text {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    max-width: 80%;
+                }
 
                 .product {
                     padding: .8rem;
                     display: grid;
                     gap: .4rem;
                     margin-bottom: .5rem;
-                    max-height: 200px;
+                    height: 200px;
                 }
             
                 .product__name {

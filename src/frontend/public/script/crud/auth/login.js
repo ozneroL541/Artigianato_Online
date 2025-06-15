@@ -29,6 +29,7 @@ export const login = async (username, password, type) => {
 
         const data = await response.json();
         if (response.ok) {
+
             setUserInfo(data.token);
             window.location.href = '/';
         } else {

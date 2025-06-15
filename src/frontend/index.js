@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 const port = 8000;
 const pagesPath = path.join(__dirname, './public/pages');
 const publicPath = path.join(__dirname, './public');
+
 const options = {
     extensions: ['html', ''],
     immutable: true,
