@@ -1,5 +1,5 @@
 import {setUserInfo} from '../../jwt.js';
-
+import {backendUrl} from "../../utils.js";
 /**
  * This function implements the API for logging in a user.
  *
@@ -19,7 +19,7 @@ import {setUserInfo} from '../../jwt.js';
  */
 export const login = async (username, password, type) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/auth/login/${type}`, {
+        const response = await fetch(`${backendUrl}/api/auth/login/${type}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,3 +1,4 @@
+import {backendUrl} from "../../../utils.js";
 /**
  * This function, given an artisan, adds a new product in the db
  * @param {string} token Artisan's token
@@ -9,7 +10,7 @@
  */
 export const addProduct = async (token, name, category, price, stock) => {
     try {
-        const response = await fetch('http://localhost:8080/api/product/upload', {
+        const response = await fetch(`${backendUrl}/api/product/upload`, {
             method: 'POST', headers: {
                 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`
             }, body: JSON.stringify({
@@ -39,7 +40,7 @@ export const addProduct = async (token, name, category, price, stock) => {
  */
 export const deleteProduct = async (token, id) => {
     try {
-        const response = await fetch('http://localhost:8080/api/product/delete', {
+        const response = await fetch(`${backendUrl}/api/product/delete`, {
             method: 'DELETE', headers: {
                 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` // Ensure the key matches
             }, body: JSON.stringify({id_prodotto: id})
@@ -77,7 +78,7 @@ export const updateProduct = async (token, id, name, category, price, stock) => 
             return
         }
 
-        const response = await fetch('http://localhost:8080/api/product/update', {
+        const response = await fetch(`${backendUrl}/api/product/update`, {
             method: 'PUT', headers: {
                 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`
             }, body: JSON.stringify({
@@ -105,7 +106,7 @@ export const updateProduct = async (token, id, name, category, price, stock) => 
  */
 export const getArtisanProducts = async (token) => {
     try {
-        const response = await fetch('http://localhost:8080/api/product/artisan', {
+        const response = await fetch(`${backendUrl}/api/product/artisan`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

@@ -19,7 +19,7 @@ export function toggleDialog(id) {
  * @author Leonardo Basso
  */
 export const getCategories = async() => {
-    const response = await fetch('http://localhost:8080/api/category/all')
+    const response = await fetch(`${backendUrl}/api/category/all`)
     return await response.json()
 }
 /**
@@ -36,7 +36,7 @@ export const getCategories = async() => {
 export const canSeePage = (token, type) => {
     const userType = token ? getUserType(token) : "unregistered";
     if ( userType !== type ) {
-        window.location.href = "http://localhost:8000/negated";
+        window.location.href = `${frontendUrl}/negated`;
     }
 }
 /**
@@ -59,3 +59,14 @@ export const populateSelectMenu = (options, selectElement) => {
         selectElement.appendChild(option);
     });
 }
+/**
+ * The frontend's url
+ * @type {string}
+ */
+export const frontendUrl = 'http://localhost:8000'
+
+/**
+ * The backend's url
+ * @type {string}
+ */
+export const backendUrl = 'http://localhost:8080'

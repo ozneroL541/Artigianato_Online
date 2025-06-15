@@ -11,6 +11,7 @@ const options = {
     immutable: true,
     index: 'index.html'
 };
+
 /** Rate limiting middleware to prevente abuse */
 const limiter = rateLimit({
     windowMs: 15 * 1000,

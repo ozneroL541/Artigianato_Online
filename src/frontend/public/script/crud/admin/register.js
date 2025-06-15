@@ -1,4 +1,4 @@
-
+import {backendUrl} from "../../utils.js";
 /**
  * This function implements the API for the client registration
  * @param {string} username the username of the client
@@ -7,7 +7,7 @@
  */
 export const registerAdmin = async (username, password) => {
     try {
-        const response = await fetch('http://localhost:8080/api/auth/register/admin', {
+        const response = await fetch(`${backendUrl}/api/auth/register/admin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

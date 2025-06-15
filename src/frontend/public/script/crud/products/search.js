@@ -1,3 +1,4 @@
+import {backendUrl, frontendUrl} from "../../utils.js";
 /**
  * This function returns a list of products given specific params which are `name`, `category`, `minimum price`,
  * `maximum price` and `stock`
@@ -12,7 +13,7 @@
  */
 export const searchProduct = async (params) => {
     try {
-        const res = await fetch(`http://localhost:8080/api/product/search?${params.toString()}`);
+        const res = await fetch(`${backendUrl}/api/product/search?${params.toString()}`);
 
         if (res.ok) {
             const products = await res.json();
@@ -46,5 +47,5 @@ export const prepareSearch = (name, category, minPrice, maxPrice, availability) 
     if (maxPrice) searchParams.set('prezzo_max', maxPrice);
     if (availability) searchParams.set('disponibilita', availability);
 
-    window.location.href = `http://localhost:8000/products/search?${searchParams.toString()}`;
+    window.location.href = `${frontendUrl}/products/search?${searchParams.toString()}`;
 }
