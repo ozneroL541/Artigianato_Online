@@ -5,8 +5,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 
 const { Dashboard } = require('./dashboard/dashboard.js');
-const { ProfileClient}= require('./dashboard/ProfileClient.js');
-const { checkArtisan, checkClient, checkAdmin,genClientJWT,checkAuth } = require('./auth/jwt.js');
+const { checkArtisan, checkClient, checkAdmin,genClientJWT} = require('./auth/jwt.js');
 const { delClient, delArtisan, delAdmin } = require('./profile/profile_api.js');
 const {
     registerArtisan,
@@ -18,7 +17,7 @@ const {
 } = require('./auth/auth_api.js');
 const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts } = require('./product/product_api.js');
 const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
-const {ReserchProductByID, reserchAllProduct}=require('./profileClient/recuperoProdotti.js');
+const {researchAllProducts,researchProductById}=require('./profileClient/recuperoProdotti.js');
 const{resetPassword, resetMail,Segnalachion,GetBuyproduct}=require('./profileClient/gestioneprofilo.js');
 /** Port for the frontend server */
 const frontendPort = 8000;
@@ -1159,27 +1158,31 @@ app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
     }
 });
 
-
-app.get('/api/client/Profile',checkAuth,genClientJWT,GetBuyproduct); 
+app.post('/api/client/Profile', GetBuyproduct);
 /**
  * @swagger
  * /api/client/Profile:
- *   get:
- *     summary: Get all products purchased by a client
+ *   post:
+ *     summary: Retrieve all products purchased by a client
  *     tags:
  *       - Client
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: username
- *         required: true
- *         schema:
- *           type: string
- *         description: The username of the client whose purchased products are being fetched
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: Username of the client whose purchases are being retrieved
  *     responses:
  *       200:
- *         description: List of products successfully retrieved
+ *         description: List of purchased products successfully retrieved
  *         content:
  *           application/json:
  *             schema:
@@ -1189,15 +1192,15 @@ app.get('/api/client/Profile',checkAuth,genClientJWT,GetBuyproduct);
  *                 properties:
  *                   productId:
  *                     type: string
- *                   productName:
+ *                     description: ID of the purchased product
+ *                   nameProduct:
  *                     type: string
+ *                     description: Name of the purchased product
  *                   quantity:
  *                     type: integer
- *                   price:
- *                     type: number
- *                     format: float
+ *                     description: Quantity purchased
  *       400:
- *         description: Bad request (e.g., missing username or internal error)
+ *         description: Bad request (e.g., missing username or internal server error)
  *         content:
  *           application/json:
  *             schema:
@@ -1210,14 +1213,14 @@ app.get('/api/client/Profile',checkAuth,genClientJWT,GetBuyproduct);
  */
 
 
-app.put('/api/client/password',resetPassword,checkAuth,genClientJWT); 
+app.put('/api/client/password', resetPassword);
 /**
  * @swagger
  * /api/client/password:
  *   put:
  *     summary: Reset password for a given user
  *     tags:
- *       - client
+ *       - Client
  *     security:
  *       - bearerAuth: []
  *     description: Updates the password associated with a user account.
@@ -1233,10 +1236,12 @@ app.put('/api/client/password',resetPassword,checkAuth,genClientJWT);
  *             properties:
  *               username:
  *                 type: string
+ *                 description: The user's username
  *                 example: johndoe
  *               newPassword:
  *                 type: string
  *                 format: password
+ *                 description: The new password to set
  *                 example: NewP@ssw0rd!
  *     responses:
  *       200:
@@ -1245,21 +1250,30 @@ app.put('/api/client/password',resetPassword,checkAuth,genClientJWT);
  *           application/json:
  *             schema:
  *               type: object
- *               example:
- *                 message: Password updated successfully
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Password updated successfully
  *       400:
- *         description: Bad request
+ *         description: Bad request (invalid data or internal error)
  *         content:
  *           application/json:
  *             schema:
  *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
  *               example:
  *                 message: Bad request
  *                 error: Invalid input data
  */
 
 
-app.put('/api/client/email',resetMail,checkAuth, genClientJWT); 
+
+app.put('/api/client/email',resetMail);
+
 /**
  * @swagger
  * /api/client/email:
@@ -1294,14 +1308,21 @@ app.put('/api/client/email',resetMail,checkAuth, genClientJWT);
  *           application/json:
  *             schema:
  *               type: object
- *               example:
- *                 message: Email updated successfully
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Email updated successfully
  *       400:
  *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
  *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
  *               example:
  *                 message: Bad request
  *                 error: Invalid input data
@@ -1310,7 +1331,7 @@ app.put('/api/client/email',resetMail,checkAuth, genClientJWT);
 
 
 
-app.post('/api/client/report',Segnalachion,checkAuth); 
+app.post('/api/client/report',Segnalachion); 
 /**
  * @swagger
  * /api/client/report:
@@ -1371,7 +1392,7 @@ app.post('/api/client/report',Segnalachion,checkAuth);
  */
 
 
-app.get('/api/ricerca/dashboard', reserchAllProduct); 
+app.get('/api/ricerca/dashboard',researchAllProducts ); 
 /**
  * @swagger
  * /api/ricerca/dashboard:
@@ -1413,7 +1434,7 @@ app.get('/api/ricerca/dashboard', reserchAllProduct);
 
 
 
-app.get('/api/ricerca/dashboard/:id',ReserchProductByID);
+app.get('/api/ricerca/dashboard/:id', researchProductById);
  /**
  * @swagger
  * /api/ricerca/dashboard/{id}:
