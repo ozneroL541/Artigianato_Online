@@ -10,10 +10,11 @@ export const frontendUrl = 'http://localhost:8000'
  * The backend's url
  * @type {string}
  */
-export const backendUrl = await fetch(`${frontendUrl}/backend/url`)
-        .then(response => response.json())
-        .then(data => data.url)
-        .catch(() => 'http://localhost:8080');
+export const backendUrl = 'http://localhost:8080';
+// export const backendUrl = await fetch(`${frontendUrl}/backend/url`)
+//         .then(response => response.json())
+//         .then(data => data.url)
+//         .catch(() => 'http://localhost:8080');
 
 /**
  * This function toggles the visibility of the modal element.
