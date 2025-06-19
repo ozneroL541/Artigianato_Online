@@ -1586,7 +1586,7 @@ app.get('/api/admin/get/reports', checkAdmin, getReports);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Internal server error
+ *                   example: Internal server error;
  *                 error:
  *                   type: string
  *                   example: Error's description

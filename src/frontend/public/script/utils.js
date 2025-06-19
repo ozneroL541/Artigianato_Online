@@ -8,6 +8,9 @@ export const frontendUrl = 'http://localhost:8000'
 
 /**
  * The backend's url
+ * @example
+ * // Get some data from an API
+ * const response = await fetch(`${backendUrl}/api/category/all`)
  * @type {string}
  */
 export const backendUrl = 'http://localhost:8080';

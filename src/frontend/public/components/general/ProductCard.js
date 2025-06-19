@@ -39,6 +39,10 @@ class ProductCard extends HTMLElement {
                     background-color: rgba(238, 238, 238, 0.05);
                     border-radius: 10px;
                 }
+                .product__category:hover {
+                    transition: ease-in-out .3s;
+                    background-color: rgba(238, 238, 238, 0.08);
+                }
                 .collapsed-text {
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -77,7 +81,10 @@ class ProductCard extends HTMLElement {
                     border: 1px solid rgba(48, 255, 76, 0.2);
                     background-color: rgba(48, 255, 76, 0.2);
                 }
-                
+                .btn-edit:hover {
+                    transition: ease-in-out .3s;
+                    background-color: rgba(48, 255, 76, 0.4);
+                }
                 * {
                     margin: 0;
                     padding: 0;

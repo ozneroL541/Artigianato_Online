@@ -53,6 +53,11 @@ class SearchBar extends HTMLElement {
                     color: #eee;
                 }
                 button {cursor: pointer}
+                
+                button:hover {
+                    transition: ease-in-out .3s;
+                    background-color: rgba(238, 238, 238, 0.08);
+                }
                 .homepage__product__search {
                     display: grid;
                     width: 90vw;

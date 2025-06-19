@@ -41,7 +41,7 @@
             listElement.className = "category__list"
             categories.forEach(c => {
                 const categoryElement = document.createElement('li');
-                categoryElement.className = "standard-box category";
+                categoryElement.className = "standard-box standard-box-hover category ";
                 categoryElement.innerHTML = `<a href="${frontendUrl}/products/category?categoria=${c}">${c}</a>`;
                 listElement.appendChild(categoryElement);
             });
