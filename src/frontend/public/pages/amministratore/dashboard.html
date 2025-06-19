@@ -58,17 +58,18 @@
 
         </section>
         <section id="Profili" data-type="tab" class="admin__register">
-                <h3 class="admin__register__title">Registra un admin</h3>
+            <h3 class="admin__register__title">Registra un admin</h3>
             <div id="artisanError" class="error-message" style="display: none; color: red;"></div>
             <label class="admin__register__panel">
                 <input class="admin__registrer__input" type="text" id="username" placeholder="Username">
                 <input class="admin__registrer__input" type="password" id="password" placeholder="Password">
                 <button class="admin__registrer__input" id="regButton">Registra</button>
             </label>
-            <button class="btn-delete" id="deleteProfileButton">Elimina il tuo profilo</button>
+            <button class="btn-delete" id="deleteProfileButton" >Elimina il tuo profilo</button>
         </section>
         <section id="Segnalazioni" data-type="tab">
-            <h2>Qui si vedono le segnalazioni</h2>
+            <button class="btn-delete" id="toggleClosedReports">Nascondi i report gia risolti </button>
+            <section class="admin__reports" id="reportsContainer"></section>
         </section>
     </toggle-tabs>
 </page-layout>
@@ -89,12 +90,17 @@
     }
 </script>
 <script type="module">
-    import {getCategories, canSeePage} from "../../script/utils.js";
+    import {getCategories, canSeePage, formatDate} from "../../script/utils.js";
     import {addCategory, deleteCategory, updateCategory} from "../../script/crud/admin/dashboard/categories.js";
     import {registerAdmin} from '../../script/crud/admin/register.js';
     import {deleteProfile} from "../../script/crud/auth/delete.js";
+    import {getReports, solveReport} from "../../script/crud/admin/dashboard/reports.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
+
+        // Permission
+        const token = window.localStorage.getItem("userToken");
+        canSeePage(token, "amministratore")
 
         const categories = await getCategories()
         const container = document.getElementById("category-list")
@@ -131,42 +137,6 @@
             });
         });
 
-        // Populates the dialog with the correct data from a category
-        document.addEventListener('click', (event) => {
-            if (event.target.closest('.editCagegoryButton')) {
-                const btn = event.target.closest('.editCagegoryButton');
-                const name = btn.dataset.name;
-                console.log(name)
-
-                toggleDialog('editCategory');
-                document.getElementById('editCategoryName').value = name;
-                const dialog = document.getElementById('editCategory');
-                dialog.dataset.name = name;
-
-            }
-        });
-
-        // Updates the category
-        document.getElementById('editCategoryButton').addEventListener('click', async () => {
-            const dialog = document.getElementById('editCategory');
-            const name = dialog.getAttribute('data-name');
-            const newName = document.getElementById('editCategoryName').value.trim();
-            const token = localStorage.getItem('userToken');
-            await updateCategory(token, name, newName)
-
-        })
-
-        // Add a new category
-        document.getElementById("addCategoryButton").addEventListener("click", async () => {
-            const token = localStorage.getItem('userToken')
-            const name = document.getElementById("addCategoryName").value
-            await addCategory(token, name)
-        })
-
-        // Permission
-        const token = window.localStorage.getItem("userToken");
-        canSeePage(token, "amministratore")
-
         // Register a new admin
         document.getElementById('regButton').addEventListener('click', () => {
             const username = document.getElementById('username').value;
@@ -174,11 +144,70 @@
             registerAdmin(username, password);
         });
 
-        // Delete your profile
-        document.getElementById('deleteProfileButton').addEventListener('click', () => {
-            const token = localStorage.getItem('userToken');
-            deleteProfile(token, "admin")
+        // Show all reports
+        const response = await getReports(token)
+        const reportsContainer = document.getElementById("reportsContainer")
+        response.forEach(r => {
+            const HTMLReport = document.createElement("article");
+            HTMLReport.className = "report standard-box";
+            HTMLReport.innerHTML = `
+                <header class="report__top">
+                    <p class="report__id standard-box">#${r.id_segnalazione}</p>
+                    <p class="report__id">Ordine: ${r.id_ordine}</p>
+                </header>
+                <p class="report__text">${r.descrizione}</p>
+                <footer class="report__bottom">
+                    <time datetime="${r.timestamp_segnalazione}" class="report__date">${formatDate(r.timestamp_segnalazione)}</time>
+                    <p class="report__solved">Risolta: ${r.risolta}</p>
+                </footer>
+                ${!r.risolta ? `<button class="reportButton btn-edit" data-id="${r.id_segnalazione}">Resolve</button>` : `<input type="button" value="Resolved" disabled>`}
+    `;
+            reportsContainer.appendChild(HTMLReport); // Qui sta l'errore
+        });
+
+        document.querySelectorAll('.reportButton').forEach(button => {
+            button.addEventListener('click', async function () {
+                const token = localStorage.getItem('userToken');
+                const idReport = this.getAttribute('data-id')
+                solveReport(token, idReport)
+                alert(`id = ${idReport}`)
+            })
         })
+
+    })
+
+    // Populates the dialog with the correct data from a category
+    document.addEventListener('click', (event) => {
+        if (event.target.closest('.editCagegoryButton')) {
+            const btn = event.target.closest('.editCagegoryButton');
+            const name = btn.dataset.name;
+            toggleDialog('editCategory');
+            document.getElementById('editCategoryName').value = name;
+            const dialog = document.getElementById('editCategory');
+            dialog.dataset.name = name;
+        }
+    });
+
+    // Updates the category
+    document.getElementById('editCategoryButton').addEventListener('click', async () => {
+        const dialog = document.getElementById('editCategory');
+        const name = dialog.getAttribute('data-name');
+        const newName = document.getElementById('editCategoryName').value.trim();
+        const token = localStorage.getItem('userToken');
+        await updateCategory(token, name, newName)
+    })
+
+    // Add a new category
+    document.getElementById("addCategoryButton").addEventListener("click", async () => {
+        const token = localStorage.getItem('userToken')
+        const name = document.getElementById("addCategoryName").value
+        await addCategory(token, name)
+    });
+
+    // Delete your profile
+    document.getElementById('deleteProfileButton').addEventListener('click', () => {
+        const token = localStorage.getItem('userToken');
+        deleteProfile(token, "admin")
     })
 </script>
 
@@ -232,19 +261,46 @@
         width: 90vw;
         max-width: 500px;
     }
+
     .admin__register__title {
         text-wrap: balance;
         text-align: center;
         margin: .5rem 0;
     }
+
     .admin__register__panel {
         display: grid;
         justify-content: center;
         align-items: center;
         gap: .3rem;
     }
+
     #deleteProfileButton {
         margin-top: .5rem;
         text-align: center;
     }
+
+    .admin__reports {
+        display: grid;
+        gap: .5rem;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        width: 90vw;
+    }
+
+    .report {
+        padding: .5rem;
+        display: grid;
+        gap: .5rem;
+    }
+
+    .report__top, .report__bottom {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .report__id {
+        padding: 0 .5rem;
+        height: 21px
+    }
+    #toggleClosedReports {margin: 1rem 0;}
 </style>

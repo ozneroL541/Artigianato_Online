@@ -34,7 +34,7 @@ export function toggleDialog(id) {
  * @returns {Object} An Object containing an array with the categories
  * @author Leonardo Basso
  */
-export const getCategories = async() => {
+export const getCategories = async () => {
     const response = await fetch(`${backendUrl}/api/category/all`)
     return await response.json()
 }
@@ -51,7 +51,7 @@ export const getCategories = async() => {
  */
 export const canSeePage = (token, type) => {
     const userType = token ? getUserType(token) : "unregistered";
-    if ( userType !== type ) {
+    if (userType !== type) {
         window.location.href = `${frontendUrl}/negated`;
     }
 }
@@ -74,4 +74,23 @@ export const populateSelectMenu = (options, selectElement) => {
         option.textContent = c;
         selectElement.appendChild(option);
     });
+}
+/**
+ * This function returns a formattet date
+ * @example
+ * //Convert a timestamp to a date
+ * const timestamp = "2022-04-24T00:49:08.000Z"
+ * console.log(formatDate(timestamp)) //2022/04/24 02:49
+ * @param {string} timestamp the timestamp to format
+ * @returns {string} The formatted date
+ * @author Leonardo Basso
+ */
+export const formatDate = (timestamp) => {
+    const dateObj = new Date(timestamp);
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // I mesi partono da 0
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+    return `${year}/${month}/${day} ${hours}:${minutes}`;
 }

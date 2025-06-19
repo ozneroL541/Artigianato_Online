@@ -17,7 +17,6 @@ export const searchProduct = async (params) => {
 
         if (res.ok) {
             const products = await res.json();
-            console.log(products)
             return products;
         } else {
             const err = await res.json();

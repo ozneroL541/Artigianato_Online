@@ -7,9 +7,9 @@ const reteLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const { Dashboard } = require('./dashboard/dashboard.js');
-const { checkArtisan, checkClient, checkAdmin,genClientJWT} = require('./auth/jwt.js');
-const { delClient, delArtisan, delAdmin } = require('./profile/profile_api.js');
+const {Dashboard} = require('./dashboard/dashboard.js');
+const {checkArtisan, checkClient, checkAdmin, genClientJWT} = require('./auth/jwt.js');
+const {delClient, delArtisan, delAdmin} = require('./profile/profile_api.js');
 const {
     registerArtisan,
     registerClient,
@@ -18,10 +18,24 @@ const {
     loginClient,
     loginAdmin
 } = require('./auth/auth_api.js');
-const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts } = require('./product/product_api.js');
-const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
-const {researchAllProducts,researchProductById}=require('./profileClient/recuperoProdotti.js');
-const{resetPassword, resetMail,Segnalachion,GetBuyproduct}=require('./profileClient/gestioneprofilo.js');
+const {
+    uploadProduct,
+    updateProduct,
+    deleteProduct,
+    getAllProducts,
+    getProductsByArtisan,
+    getProducts
+} = require('./product/product_api.js');
+const {uploadCategory, deleteCategory, updateCategory, getAllCategories} = require('./category/category_api.js');
+const {researchAllProducts, researchProductById} = require('./profileClient/recuperoProdotti.js');
+const {
+    getReports,
+    resetPassword,
+    resetMail,
+    Report,
+    GetBuyproduct,
+    solveReport
+} = require('./profileClient/gestioneprofilo.js');
 /** Port for the frontend server */
 const frontendPort = 8000;
 /** Port for the backend server */
@@ -668,7 +682,7 @@ app.post('/api/product/upload', checkArtisan, uploadProduct);
  *            message:
  *             type: string
  *             example: "Product not found"
- */ 
+ */
 app.put('/api/product/update', checkArtisan, updateProduct);
 /**
  * @swagger
@@ -1177,13 +1191,13 @@ app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
     try {
         const artisan_name = req.username;
         const d = new Dashboard(artisan_name);
-        
+
         //TODO 
         //metodo per prendere tutti i prodotti
 
-        res.status(200).json({ message: 'Dashboard data', data: "TODO" });
+        res.status(200).json({message: 'Dashboard data', data: "TODO"});
 
-    } catch (error){
+    } catch (error) {
         console.error(error);
         res.status(400).json({message: 'Bad request', error: error.message})
 
@@ -1303,8 +1317,7 @@ app.put('/api/client/password', resetPassword);
  */
 
 
-
-app.put('/api/client/email',resetMail);
+app.put('/api/client/email', resetMail);
 
 /**
  * @swagger
@@ -1364,32 +1377,32 @@ app.put('/api/client/email',resetMail);
 // TODO: Utilizzare JWT per autenticazione e ottenere username
 // TODO: doc e spostare funzione asincrona in altro file
 app.put('/api/client/password', async (req, res) => {
-    const { username, newPassword } = req.body;
+    const {username, newPassword} = req.body;
     try {
         const profile = new ProfileClient(username);
         const result = await profile.resetPassword(newPassword);
         res.status(200).json(result);
     } catch (error) {
         console.error(error);
-        res.status(400).json({ message: 'Bad request', error: error.message });
+        res.status(400).json({message: 'Bad request', error: error.message});
     }
 });
 
 // TODO: Utilizzare JWT per autenticazione e ottenere username
 // TODO: doc e spostare funzione asincrona in altro file
 app.put('/api/client/email', async (req, res) => {
-    const { username, newEmail } = req.body;
+    const {username, newEmail} = req.body;
     try {
         const profile = new ProfileClient(username);
         const result = await profile.ResetMail(newEmail);
         res.status(200).json(result);
     } catch (error) {
         console.error(error);
-        res.status(400).json({ message: 'Bad request', error: error.message });
+        res.status(400).json({message: 'Bad request', error: error.message});
     }
 });
 
-app.post('/api/client/report',Segnalachion);
+
 /**
  * @swagger
  * /api/client/report:
@@ -1398,6 +1411,7 @@ app.post('/api/client/report',Segnalachion);
  *     description: Allows a client to report a problem or issue related to an order.
  *     tags:
  *       - Client
+ *       - Report
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -1448,7 +1462,136 @@ app.post('/api/client/report',Segnalachion);
  *                 error:
  *                   type: string
  */
+app.post('/api/client/report', Report);
 
+/**
+ * @swagger
+ * /api/admin/get/reports:
+ *   get:
+ *     summary: Gets a list of all the reports
+ *     description: Gets a list of all the reports
+ *     tags:
+ *      - Admin
+ *      - Report
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List successfully accessed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id_segnalazione:
+ *                     type: integer
+ *                     description: Report's id
+ *                   id_ordine:
+ *                     type: integer
+ *                     description: Associated order's id
+ *                   timestamp:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Report's timestamp
+ *                   descrizione:
+ *                     type: string
+ *                     description: Report's description
+ *                   risolta:
+ *                     type: boolean
+ *                     description: The state of the report (solved or not)
+ *       400:
+ *         description: Invalid request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Bad request
+ *                 error:
+ *                   type: string
+ *                   example: Error's description
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ *                 error:
+ *                   type: string
+ *                   example: Error's description
+ */
+
+app.get('/api/admin/get/reports', checkAdmin, getReports);
+/**
+ * @swagger
+ * /api/admin/solve/report:
+ *   put:
+ *     summary: Sets a report as solved
+ *     description: Sets a report as solved
+ *     tags:
+ *      - Admin
+ *      - Report
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idSignal
+ *             properties:
+ *               idSignal:
+ *                 type: integer
+ *                 description: Report's id
+ *     responses:
+ *       200:
+ *         description: Report marked as solved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Report marked as solved successfully
+ *       400:
+ *         description: Invalid request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Bad request
+ *                 error:
+ *                   type: string
+ *                   example: Error's description
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ *                 error:
+ *                   type: string
+ *                   example: Error's description
+ */
+app.put('/api/admin/solve/report', checkAdmin, solveReport);
 // All products
 // TODO: doc e spostare funzione asincrona in altro file
 app.get('/api/ricerca/dashboard', async (req, res) => {
@@ -1456,14 +1599,14 @@ app.get('/api/ricerca/dashboard', async (req, res) => {
         //const research = new ProductResearch();
         //const products = await research.getAllProducts();
         //res.status(200).json(products);
-        res.status(200).json({ message: 'Not implemented' });
+        res.status(200).json({message: 'Not implemented'});
     } catch (error) {
         console.error(error);
-        res.status(400).json({ message: 'Bad request', error: error.message });
+        res.status(400).json({message: 'Bad request', error: error.message});
     }
 });
 
-app.get('/api/ricerca/dashboard',researchAllProducts );
+app.get('/api/ricerca/dashboard', researchAllProducts);
 /**
  * @swagger
  * /api/ricerca/dashboard:
@@ -1504,9 +1647,8 @@ app.get('/api/ricerca/dashboard',researchAllProducts );
  */
 
 
-
 app.get('/api/ricerca/dashboard/:id', researchProductById);
- /**
+/**
  * @swagger
  * /api/ricerca/dashboard/{id}:
  *   get:
