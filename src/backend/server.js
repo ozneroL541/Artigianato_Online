@@ -36,6 +36,12 @@ const {
     GetBuyproduct,
     solveReport
 } = require('./profileClient/gestioneprofilo.js');
+const {
+    createOrder,
+    getOrdersByArtisan,
+    getOrdersByCustomer
+} = require('./order/order_api.js');
+
 /** Port for the frontend server */
 const frontendPort = 8000;
 /** Port for the backend server */
@@ -1691,6 +1697,9 @@ app.get('/api/ricerca/dashboard/:id', researchProductById);
  *                 error:
  *                   type: string
  */
+app.post('/api/order/buy', checkClient, createOrder); // POST /api/ordini
+app.get('/api/order/get/client', checkClient, getOrdersByCustomer); // GET /api/ordini/cliente
+app.get('/api/order/get/artisan', checkClient, getOrdersByArtisan); // GET /api/ordini/artigiano
 
 
 /**
