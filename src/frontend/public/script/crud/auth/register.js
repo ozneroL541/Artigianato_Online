@@ -34,7 +34,7 @@ export const registerArtisan = async (username, password, companyName, email, ib
 /**
  * This function implements the API for the client registration
  * @param {string} username the username of the client
- * @param {string} password The user password
+ * @param {string} password The cliente password
  * @param {string} name The client name
  * @param {string} surname The client surname
  * @param {string} email The client email

@@ -2,7 +2,7 @@ import { backendUrl } from "../../utils.js";
 
 /**
  * This function, given a cart (which is a list of orders) publishes all the orders
- * @param {string} token The user's token
+ * @param {string} token The cliente's token
  * @param {Object} cart The cart full of orders
  * @author Leonardo Basso
  */
@@ -10,29 +10,31 @@ export const addOrder = async (token, cart) => {
     try {
         for (const p of cart) {
             console.log(p)
-            const response = await fetch(`${backendUrl}/api/order/buy`, {
-                method: "POST", headers: {
-                    'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`
-                }, body: JSON.stringify({
-                    id_prodotto: p.id,
-                    quantita: p.quantity,
+            if (p.quantity > 0) {
+                const response = await fetch(`${backendUrl}/api/order/buy`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`
+                    }, body: JSON.stringify({
+                        id_prodotto: p.id,
+                        quantita: p.quantity,
+                    })
                 })
-            })
-            if (response.ok) {
-                console.log("Ordine aggiunto con successo!")
-            } else {
-                const text = await response.text();
-                console.error("Risp:", response.status, text);
-                alert(`Errore: ${response.status} - ${text}`);
+                if (response.ok) {
+                    console.log("Ordine aggiunto con successo!")
+                } else {
+                    const text = await response.text();
+                    console.error("Risp:", response.status, text);
+                    alert(`Errore: ${response.status} - ${text}`);
+                }
             }
         }
     } catch (e) {console.error(e)}
 }
 
 /**
- * This function returns all the orders given a user token
- * @param {string} token The user's token
- * @returns {Promise<Object>} The list of orders done by a specific user
+ * This function returns all the orders given a cliente token
+ * @param {string} token The cliente's token
+ * @returns {Promise<Object>} The list of orders done by a specific cliente
  * @author Leonardo Basso
  */
 export const getOrdersByClient = async (token) => {

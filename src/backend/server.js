@@ -24,7 +24,8 @@ const {
     deleteProduct,
     getAllProducts,
     getProductsByArtisan,
-    getProducts
+    getProducts,
+    getNameByProductId,
 } = require('./product/product_api.js');
 const {uploadCategory, deleteCategory, updateCategory, getAllCategories} = require('./category/category_api.js');
 const {researchAllProducts, researchProductById} = require('./profileClient/recuperoProdotti.js');
@@ -310,7 +311,7 @@ app.post('/api/auth/register/admin', registerAdmin);
  * /api/auth/login/artisan:
  *   post:
  *     summary: Login artisan
- *     description: Authenticate an artisan user and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
+ *     description: Authenticate an artisan cliente and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
  *     tags:
  *       - Authentication
  *       - Artisan
@@ -369,7 +370,7 @@ app.post('/api/auth/login/artisan', loginArtisan);
  * /api/auth/login/client:
  *   post:
  *     summary: Login client
- *     description: Authenticate a client user and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
+ *     description: Authenticate a client cliente and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
  *     tags:
  *       - Authentication
  *       - Client
@@ -1270,12 +1271,12 @@ app.put('/api/client/password', resetPassword);
  * @swagger
  * /api/client/password:
  *   put:
- *     summary: Reset password for a given user
+ *     summary: Reset password for a given cliente
  *     tags:
  *       - Client
  *     security:
  *       - bearerAuth: []
- *     description: Updates the password associated with a user account.
+ *     description: Updates the password associated with a cliente account.
  *     requestBody:
  *       required: true
  *       content:
@@ -1288,7 +1289,7 @@ app.put('/api/client/password', resetPassword);
  *             properties:
  *               username:
  *                 type: string
- *                 description: The user's username
+ *                 description: The cliente's username
  *                 example: johndoe
  *               newPassword:
  *                 type: string
@@ -1329,12 +1330,12 @@ app.put('/api/client/email', resetMail);
  * @swagger
  * /api/client/email:
  *   put:
- *     summary: Reset email for a given user
+ *     summary: Reset email for a given cliente
  *     tags:
  *       - client
  *     security:
  *       - bearerAuth: []
- *     description: Updates the email address associated with a user account.
+ *     description: Updates the email address associated with a cliente account.
  *     requestBody:
  *       required: true
  *       content:
@@ -1697,9 +1698,10 @@ app.get('/api/ricerca/dashboard/:id', researchProductById);
  *                 error:
  *                   type: string
  */
-app.post('/api/order/buy', checkClient, createOrder); // POST /api/ordini
-app.get('/api/order/get/client', checkClient, getOrdersByCustomer); // GET /api/ordini/cliente
-app.get('/api/order/get/artisan', checkClient, getOrdersByArtisan); // GET /api/ordini/artigiano
+app.post('/api/order/buy', checkClient, createOrder);
+app.get('/api/order/get/client', checkClient, getOrdersByCustomer);
+app.get('/api/order/get/artisan', checkClient, getOrdersByArtisan);
+app.get('/api/product/get/id', getNameByProductId);
 
 
 /**

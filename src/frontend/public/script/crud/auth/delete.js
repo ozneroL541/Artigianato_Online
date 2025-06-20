@@ -2,7 +2,7 @@ import {backendUrl} from "../../utils.js";
 /**
  * This function deletes a profile from the db
  *
- * The user can be an `admin`, an `artisan` or a `client`
+ * The cliente can be an `admin`, an `artisan` or a `client`
  * @example
  * // Delete an admin profile
  * document.getElementById('deleteProfileButton').addEventListener('click', () => {
@@ -10,8 +10,8 @@ import {backendUrl} from "../../utils.js";
  *    deleteProfile(token, "admin")
  * })
  *
- * @param {string} token the user's token
- * @param {"admin"|"client"|"artisan"}type the user's type
+ * @param {string} token the cliente's token
+ * @param {"admin"|"client"|"artisan"}type the cliente's type
  * @author Leonardo Basso
  */
 export const deleteProfile = async (token, type) => {

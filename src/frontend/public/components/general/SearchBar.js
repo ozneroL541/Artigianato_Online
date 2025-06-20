@@ -5,7 +5,7 @@ import {prepareSearch} from "../../script/crud/products/search.js";
  * This component implements a searchbar with the following inputs: `name`, `category`, `minimum price`, `maximum price`
  * and `minimum available products`
  *
- * The search redirects the user to the following url: <i>/products/search?params</i>
+ * The search redirects the cliente to the following url: <i>/products/search?params</i>
  * @author Leonardo Basso
  */
 class SearchBar extends HTMLElement {

@@ -2,7 +2,7 @@ import {ProfileClient, PassWord, Email} from './ProfileClient.js';
 import {Segnala} from './Report.js';
 
 /**
- * Reset the password for a given user.
+ * Reset the password for a given cliente.
  * @param {Object} req - The request object containing { username, newPassword }
  * @param {Object} res - The response object to send the result
  */
@@ -20,7 +20,7 @@ const resetPassword = async (req, res) => {
 };
 
 /**
- * Reset the email for a given user.
+ * Reset the email for a given cliente.
  * @param {Object} req - The request object containing { username, newEmail }
  * @param {Object} res - The response object to send the result
  */
@@ -38,7 +38,7 @@ const resetMail = async (req, res) => {
 };
 
 /**
- * Reset the email for a given user.
+ * Reset the email for a given cliente.
  * @param {Object} req - The request object {idSignal, orderId, description, resolved}
  * @param {Object} res - The response object to send the result
  */
@@ -70,7 +70,7 @@ const getReports = async (req, res) => {
     }
 };
 /**
- * Reset the email for a given user.
+ * Reset the email for a given cliente.
  * @param {Object} req - The request object
  * @param {Object} res - The response object to send the result
  */

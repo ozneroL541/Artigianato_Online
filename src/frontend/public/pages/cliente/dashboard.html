@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../assets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script defer type="module" src="../../components/layout/PageLayout.js"></script>
+    <script defer type="module" src="../../components/general/ToggleTabs.js"></script>
+</head>
+
+<body>
+<page-layout page-title="Dashboard admin">
+  <section class="order__list__container">
+      <h3 class="text-center">I miei ordini</h3>
+      <section class="order__list" id="orderList"></section>
+  </section>
+</page-layout>
+</body>
+<script>
+    /**
+     * This function toggles the visibility of the modal element.
+     * @param {string} id the dialog to open / close
+     * @author Leonardo Basso
+     * */
+    function toggleDialog(id) {
+        const dialog = document.getElementById(id);
+        if (dialog.open) {
+            dialog.close();
+        } else {
+            dialog.showModal();
+        }
+    }
+</script>
+<script type="module">
+    import {getOrdersByClient} from "../../script/crud/order/order.js";
+    import {formatDate, backendUrl} from "../../script/utils.js";
+
+    const orderContainer = document.getElementById('orderList');
+    const token = localStorage.getItem('userToken');
+    const orders = await getOrdersByClient(token)
+    orders.forEach(async o  => {
+        const orderDate = formatDate(o.data_ordine);
+        const arrriveDate = formatDate(o.data_consegna);
+        const response = await fetch(`${backendUrl}/api/product/get/id?id_prodotto=${o.id_prodotto}`);
+        const productName = await response.json();
+
+        const orderElement = document.createElement('article');
+        orderElement.className = "order standard-box"
+        orderElement.innerHTML = `
+            <header class="order__header">
+                <p class="order__id standard-box text-small">#${o.id_ordine}</p>
+                <button class="btn-delete order__button__report reportButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                      <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
+                      <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                    </svg>
+                </button>
+            </header>
+            <h3>${productName}</h3>
+            <p><time datetime="${o.data_ordine}"> <b>Fatto il:</b> ${orderDate}</time></p>
+            <p><time datetime="${o.data_consegna}"> <b>Arriva il:</b> ${arrriveDate}</time></p>
+        `
+        orderContainer.appendChild(orderElement)
+    })
+</script>
+
+<style>
+    .order__list__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .order__list {
+        margin: 1rem 0;
+        display: grid;
+        gap: .5rem;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    .order {
+        padding: 1rem;
+        display: grid;
+        gap: .3rem;
+    }
+    .order__id {
+        border-radius: 100vh;
+        padding: .3rem;
+    }
+    .order__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .order__button__report {
+        width: 28px;
+        height: 28px;
+        padding: .3rem;
+    }
+</style>

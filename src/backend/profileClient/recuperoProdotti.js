@@ -7,7 +7,7 @@ import { SearchProductById, SearchAllProduct } from'./searchProductClass.js';
  */
 const researchProductById = async (req, res) => {
     try {
-        const { idProduct } = req.body;  
+        const { idProduct } = req.params;
         const research = new SearchProductById(idProduct);
         const product = await research.getProductById();
         res.status(200).json(product);
@@ -16,6 +16,7 @@ const researchProductById = async (req, res) => {
         res.status(400).json({ message: 'Bad request', error: error.message });
     }
 };
+
 
 /**
  * Research all products (no parameters required).

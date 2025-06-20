@@ -42,13 +42,13 @@ export const getCategories = async () => {
     return await response.json()
 }
 /**
- * This function redirects the user to the <i>/negated</i> page if he does not have the right permits
+ * This function redirects the cliente to the <i>/negated</i> page if he does not have the right permits
  * @example
  * //Only admin can see the page
  * const token = window.localStorage.getItem("userToken");
  * canSeePage(token, "amministratore")
  *
- * @param {string} token The user's token, used to get the `userType`
+ * @param {string} token The cliente's token, used to get the `userType`
  * @param {string} type The type that has the permits access the page
  * @author Leonardo Basso
  */

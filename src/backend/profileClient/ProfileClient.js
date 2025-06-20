@@ -50,7 +50,7 @@ class ProfileClient{
         const result = await pool.query(query, values);
 
         if (result.rowCount === 0) {
-            throw new Error('No user found with the given username');
+            throw new Error('No cliente found with the given username');
         }
 
         return { message: 'Password updated successfully' };
@@ -83,7 +83,7 @@ class Email{
         const result = await pool.query(query, values);
 
         if (result.rowCount === 0) {
-            throw new Error('No user found with the given username');
+            throw new Error('No cliente found with the given username');
         }
 
         return { message: 'Mail updated successfully' };

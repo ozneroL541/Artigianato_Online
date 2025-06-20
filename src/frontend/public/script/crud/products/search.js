@@ -30,7 +30,7 @@ export const searchProduct = async (params) => {
     }
 }
 /**
- * This function redirects the user to the <i>/search/?param</i> url with the given param
+ * This function redirects the cliente to the <i>/search/?param</i> url with the given param
  * @param {string} name The input with the product name
  * @param {string | HTMLInputElement} category The input/select with the product category
  * @param {string} minPrice The input with the product minimum price
