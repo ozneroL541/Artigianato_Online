@@ -61,7 +61,7 @@ export function getUsername(token) {
  *  }
  *
  * @param {string} token The user token
- * @return {string} The user type, which can be `artigiano`, `cliente`, `admin`
+ * @return {"artigiano" | "cliente" | "amministratore"} The user type, which can be `artigiano`, `cliente`, `amministratore`
  * @default returns "unregistered"
  * @author Leonardo Basso
  * */

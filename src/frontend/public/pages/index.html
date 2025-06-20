@@ -28,8 +28,6 @@
 <script type="module">
     import {searchProduct} from "../script/crud/products/search.js";
     import {getCategories, frontendUrl} from "../script/utils.js";
-    import {getReports} from "../script/crud/admin/dashboard/reports.js";
-
 
     document.addEventListener("DOMContentLoaded", async () => {
         // Show 4 random products
@@ -52,7 +50,7 @@
                     <p class="product__artisan text-small"><a href="${frontendUrl}/products/artisan?username_artigiano=${p.username_artigiano}">${p.username_artigiano}</a></p>
                 </div>
                 <p class="product__price">${p.prezzo}€</p>
-                <button class="btn-edit">Compra!</button>
+                <button class="btn-edit" data-id="${p.id_prodotto}" data-prodname="${p.nome_prodotto}">Compra!</button>
             </article>
             `;
             randomProductContainer.appendChild(randomProduct);
@@ -84,11 +82,11 @@
                     <article class="standard__card standard-box">
                         <header class="standard__card__top">
                             <p class="text-small">${p.disponibilita} rimasti</p>
-                            <p class="text-small"><a href="${frontendUrl}/artisan?username_artigiano=${c}">${p.username_artigiano}</a></p>
+                            <p class="text-small"><a href="${frontendUrl}/artigiano?username_artigiano=${c}">${p.username_artigiano}</a></p>
                         </header>
                         <h2 class="standard__card__name collapsed-text">${p.nome_prodotto}</h2>
                         <p>${p.prezzo}€</p>
-                        <button class="">Compra</button>
+                        <button class="" data-id="${p.id_prodotto}" data-prodname="${p.nome_prodotto}">Compra</button>
                     </article>
                 `;
                 categoryCard.appendChild(article);
