@@ -19,6 +19,7 @@ export const searchProduct = async (params) => {
             console.log(products)
             return products;
         } else {
+            // TODO: fix this error handling
             const err = await res.json();
             alert(`Error: ${err.message}`)
             console.log(err.message)
