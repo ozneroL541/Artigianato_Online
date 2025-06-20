@@ -112,7 +112,7 @@ const getProducts = async (req, res) => {
         const { username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita,  limit, random } = req.query;
         const products = await Product.search(username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita, limit, random);
         if (products.length === 0) {
-            res.status(404).json({ message: 'No products found' });
+            res.status(404).json({ message: 'No product found' });
         } else {
             res.status(200).json(products);
         }
