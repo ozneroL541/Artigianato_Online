@@ -43,10 +43,10 @@ const resetMail = async (req, res) => {
  * @param {Object} res - The response object to send the result
  */
 const Report = async (req, res) => {
-    const {idSignal, orderId, description, resolved} = req.body;
-    const username = req.username;
+    const {orderId, description, resolved = false} = req.body;
+
     try {
-        const sen = new Segnala(idSignal, orderId, null, description, resolved);
+        const sen = new Segnala(null, orderId, null, description, resolved);
         const result = await sen.newReport();
         res.status(200).json(result);
     } catch (error) {
@@ -54,6 +54,7 @@ const Report = async (req, res) => {
         res.status(400).json({message: 'Bad request', error: error.message});
     }
 };
+
 /**
  * Get all reports.
  * @param {Object} req - The request object

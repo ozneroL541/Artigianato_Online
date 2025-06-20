@@ -1469,7 +1469,7 @@ app.put('/api/client/email', async (req, res) => {
  *                 error:
  *                   type: string
  */
-app.post('/api/client/report', Report);
+app.post('/api/client/report', Report, checkClient);
 
 /**
  * @swagger

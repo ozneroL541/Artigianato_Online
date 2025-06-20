@@ -1,4 +1,4 @@
-import {addToCart} from "../../script/crud/products/cart.js";
+import {addToCart} from "../../script/crud/user/cart.js";
 
 /**
  * This component generates a card for a product with dynamic parameters

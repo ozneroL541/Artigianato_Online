@@ -1,15 +1,14 @@
 import {pool} from "../db/dbConnection.js";
 
 class Segnala {
-
     static db3TableName = 'segnalazioni';
 
     static idsen = 'id_segnalazione';
-    static timestamp_segnalazione = 'timestamp';
+    static timestamp_segnalazione = 'timestamp_segnalazione'; // <-- colonna corretta
     static descr = 'descrizione';
     static ris = 'risolta';
+    static dbTableIdOrder = 'id_ordine';
 
-    //this constructor is for the segnalacion
     constructor(id_segn, id_ord, timeStampsen, desc, ris) {
         this.db = pool;
         this.id_segn = id_segn;
@@ -19,17 +18,17 @@ class Segnala {
         this.ris = ris;
     }
 
-    async newReport(idSignal, orderId, description, resolved) {
+    async newReport() {
         const query = `
-            INSERT INTO ${this.constructor.db3TableName}
-                (${this.constructor.idsen}, ${this.constructor.dbTableIdOrder}, ${this.constructor.timestamp_segnalazione}, ${this.constructor.descr}, ${this.constructor.ris})
-            VALUES ($1, $2, CURRENT_TIMESTAMP, $3, $4)
+            INSERT INTO ${Segnala.db3TableName}
+                (${Segnala.dbTableIdOrder}, ${Segnala.timestamp_segnalazione}, ${Segnala.descr}, ${Segnala.ris})
+            VALUES ($1, CURRENT_TIMESTAMP, $2, $3)
         `;
-        const values = [idSignal, orderId, description, resolved];
+        const values = [this.id_ord, this.desc, this.ris];
 
         try {
             await this.db.query(query, values);
-            return {message: 'Report inserted successfully'};
+            return { message: 'Report inserted successfully' };
         } catch (err) {
             console.error('Error while inserting report:', err);
             throw new Error('Failed to insert report into the database');
@@ -38,7 +37,6 @@ class Segnala {
 
     static async getReports() {
         const query = `SELECT * FROM ${Segnala.db3TableName}`;
-
         try {
             const result = await pool.query(query);
             return result.rows;
@@ -62,7 +60,6 @@ class Segnala {
             throw new Error('Failed to mark report as solved in the database');
         }
     }
-
 }
 
-export {Segnala};
+export { Segnala };

@@ -29,7 +29,7 @@ a {
     text-decoration: none;
 }
 
-input, button, dialog, select, option {
+input, button, dialog, select, option, textarea {
     border: 1px solid rgba(238, 238, 238, 0.03);
     padding: .5rem 1rem;
     background-color: rgba(238, 238, 238, 0.05);

@@ -10,10 +10,20 @@
 
 <body>
 <page-layout page-title="Dashboard admin">
-  <section class="order__list__container">
-      <h3 class="text-center">I miei ordini</h3>
-      <section class="order__list" id="orderList"></section>
-  </section>
+    <section class="order__list__container">
+        <h3 class="text-center">I miei ordini</h3>
+        <section class="order__list" id="orderList"></section>
+    </section>
+    <dialog class="dashboard__add" id="reportDialog">
+        <header class="modal-top">
+            <h3>Modifica il prodotto</h3>
+            <span class="btn-close" onclick="toggleDialog('reportDialog')"></span>
+        </header>
+        <label class="modal-inputs">
+            <textarea id="reportContent"></textarea>
+            <button id="sendReport">Invia</button>
+        </label>
+    </dialog>
 </page-layout>
 </body>
 <script>
@@ -33,12 +43,19 @@
 </script>
 <script type="module">
     import {getOrdersByClient} from "../../script/crud/order/order.js";
-    import {formatDate, backendUrl} from "../../script/utils.js";
+    import {canSeePage, formatDate, backendUrl} from "../../script/utils.js";
+    import {sendReport} from "../../script/crud/user/dashboard/reports.js";
 
+    document.addEventListener("DOMContentLoaded", () => {
+        const token = localStorage.getItem('userToken');
+        // Permissions
+        canSeePage(token, "cliente")
+    })
     const orderContainer = document.getElementById('orderList');
     const token = localStorage.getItem('userToken');
     const orders = await getOrdersByClient(token)
-    orders.forEach(async o  => {
+    // Show Orders
+    orders.forEach(async o => {
         const orderDate = formatDate(o.data_ordine);
         const arrriveDate = formatDate(o.data_consegna);
         const response = await fetch(`${backendUrl}/api/product/get/id?id_prodotto=${o.id_prodotto}`);
@@ -49,7 +66,7 @@
         orderElement.innerHTML = `
             <header class="order__header">
                 <p class="order__id standard-box standard-box-hover text-small">#${o.id_ordine}</p>
-                <button class="btn-delete order__button__report reportButton">
+                <button class="btn-delete order__button__report openReportDialog" data-id="${o.id_ordine}" >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
                       <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
                       <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
@@ -62,7 +79,27 @@
             <p><time datetime="${o.data_consegna}"> <b>Arriva il:</b> ${arrriveDate}</time></p>
         `
         orderContainer.appendChild(orderElement)
+    });
+
+    // Attaches the right ID to the button
+    document.addEventListener("click", (e) => {
+        if (e.target.closest(".openReportDialog")) {
+            toggleDialog('reportDialog')
+            const btn = e.target.closest('.openReportDialog')
+            const orderId = btn.dataset.id
+            const reportButton = document.getElementById('sendReport')
+            reportButton.dataset.id = orderId;
+        }
     })
+
+
+    document.getElementById('sendReport').addEventListener('click', async () => {
+        const token = localStorage.getItem('userToken');
+        const reportContent = document.getElementById('reportContent').value;
+        const orderId = document.getElementById('sendReport').dataset.id
+        await sendReport(token, reportContent, orderId)
+    })
+
 </script>
 
 <style>
@@ -71,26 +108,31 @@
         flex-direction: column;
         justify-content: center;
     }
+
     .order__list {
         margin: 1rem 0;
         display: grid;
         gap: .5rem;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
+
     .order {
         padding: 1rem;
         display: grid;
         gap: .3rem;
     }
+
     .order__id {
         border-radius: 100vh;
         padding: .3rem;
     }
+
     .order__header {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
+
     .order__button__report {
         width: 28px;
         height: 28px;
