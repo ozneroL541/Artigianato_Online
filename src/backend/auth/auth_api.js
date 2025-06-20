@@ -1,5 +1,5 @@
-import { ArtisanRegistration, ClientRegistration, AdminRegistration } from './registration.js';
-import { ArtisanAuthentication, ClientAuthentication, AdminAuthentication } from './authentication.js';
+const { ArtisanRegistration, ClientRegistration, AdminRegistration } = require('./registration.js');
+const { ArtisanAuthentication, ClientAuthentication, AdminAuthentication } = require('./authentication.js');
 
 /**
  * Register an artisan in the system.
@@ -92,7 +92,7 @@ const loginAdmin = async (req, res) => {
     }
 };
 
-export {
+module.exports = {
     registerArtisan,
     registerClient,
     registerAdmin,

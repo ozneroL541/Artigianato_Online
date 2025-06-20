@@ -1,6 +1,6 @@
-import { pool } from '../db/connection.js';
-import { Product } from '../product/Product.js';
-import { User } from '../user/User.js';
+const { pool } = require('../db/connection.js');
+const { Product } = require('../product/Product.js');
+const { User } = require('../user/User.js');
 /**
  * Order class to represent an order in the system.
  * @class Order
@@ -75,4 +75,4 @@ class Order {
     }
 }
 
-export { Order };
+module.exports = { Order };

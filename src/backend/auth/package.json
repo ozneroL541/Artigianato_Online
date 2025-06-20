@@ -14,7 +14,7 @@
   ],
   "author": "Lorenzo Radice",
   "license": "GPL-3.0",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "argon2": "^0.43.0",
     "jsonwebtoken": "^9.0.2"

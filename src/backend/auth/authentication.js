@@ -1,7 +1,7 @@
-import {verifyPassword} from './hash.js';
-import {genArtisanJWT, genClientJWT, genAdminJWT} from './jwt.js';
-import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db/dbReferences.js';
-import { pool } from '../db/dbConnection.js';
+const {verifyPassword} = require('./hash.js');
+const {genArtisanJWT, genClientJWT, genAdminJWT} = require('./jwt.js');
+const { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } = require('../db/dbReferences.js');
+const { pool } = require('../db/dbConnection.js');
 
 /**
  * Represents a User authentication process.
@@ -195,7 +195,7 @@ class AuthenticationError extends Error {
     }
 }
 
-export {
+module.exports = {
     ArtisanAuthentication,
     ClientAuthentication,
     AdminAuthentication,

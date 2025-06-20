@@ -2,7 +2,7 @@
   "name": "profile",
   "version": "1.0.0",
   "description": "Module to manage user profiles",
-  "type": "module",
+  "type": "commonjs",
   "keywords": [
     "profile",
     "user",

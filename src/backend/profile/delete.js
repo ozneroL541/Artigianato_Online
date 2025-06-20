@@ -1,5 +1,5 @@
-import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db/dbReferences.js';
-import { pool } from '../db/dbConnection.js';
+const { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } = require('../db/dbReferences.js');
+const { pool } = require('../db/dbConnection.js');
 
 /**
  * Represents a Profile deleting process.
@@ -84,7 +84,7 @@ class DeleteAdmin extends DeleteProfile {
     }
 };
 
-export {
+module.exports = {
     DeleteClient,
     DeleteArtisan,
     DeleteAdmin

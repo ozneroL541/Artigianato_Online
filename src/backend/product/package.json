@@ -2,8 +2,15 @@
   "name": "product",
   "version": "1.0.0",
   "description": "Module to manage products in the catalog",
-  "type": "module",
-  "keywords": ["product", "products", "catalog"],
+  "scripts": {
+    "test": "jest"
+  },
+  "type": "commonjs",
+  "keywords": [
+    "product",
+    "products",
+    "catalog"
+  ],
   "author": "Lorenzo Radice",
   "license": "GPL-3.0"
 }

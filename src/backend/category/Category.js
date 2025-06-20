@@ -1,4 +1,4 @@
-import { pool } from '../db/dbConnection.js';
+const { pool } = require('../db/dbConnection.js');
 
 /**
  * Category class representing a product category in the artisan marketplace.
@@ -118,5 +118,4 @@ class CategoryError extends Error {
     }
 }
 
-
-export { Category, CategoryError };
+module.exports = { Category, CategoryError };

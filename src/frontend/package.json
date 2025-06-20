@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "keywords": [],
-  "author": "",
+  "author": "Leonardo Basso",
   "license": "GPL-3.0",
   "scripts": {
     "start": "node index.js"
