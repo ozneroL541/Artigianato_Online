@@ -10,7 +10,7 @@ import {backendUrl} from "../../utils.js";
  */
 export const registerArtisan = async (username, password, companyName, email, iban) => {
     try {
-        const response = await fetch(`{backendUrl}/api/auth/register/artisan`, {
+        const response = await fetch(`${backendUrl}/api/auth/register/artisan`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
