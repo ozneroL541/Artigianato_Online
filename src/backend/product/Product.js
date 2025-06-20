@@ -57,6 +57,7 @@ class Product {
                        prezzo = $3, 
                        disponibilita = $4 
                        WHERE id_prodotto = $5 AND username_artigiano = $6;`;
+
         if (! (await this.categoria.exists())) {
             throw new CategoryError("Category does not exist");
         }
@@ -66,8 +67,9 @@ class Product {
             this.prezzo,
             this.disponibilita,
             this.id_prodotto,
-            this.artisanUsername
-        ];
+            this.username_artigiano
+        ]
+
         try {
             await pool.query(query, params);
             return true;

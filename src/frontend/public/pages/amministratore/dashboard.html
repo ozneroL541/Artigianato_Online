@@ -161,15 +161,14 @@
                 </footer>
                 ${!r.risolta ? `<button class="reportButton btn-edit" data-id="${r.id_segnalazione}">Resolve</button>` : `<input type="button" value="Resolved" disabled>`}
     `;
-            reportsContainer.appendChild(HTMLReport); // Qui sta l'errore
+            reportsContainer.appendChild(HTMLReport);
         });
 
         document.querySelectorAll('.reportButton').forEach(button => {
             button.addEventListener('click', async function () {
                 const token = localStorage.getItem('userToken');
                 const idReport = this.getAttribute('data-id')
-                solveReport(token, idReport)
-                alert(`id = ${idReport}`)
+                await solveReport(token, idReport)
             })
         })
 
@@ -280,6 +279,7 @@
     }
 
     .admin__reports {
+        margin: 1rem 0;
         display: grid;
         gap: .5rem;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
