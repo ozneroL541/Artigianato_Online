@@ -2,9 +2,10 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const rateLimit = require('express-rate-limit');
-const port = 8000;
+
 const pagesPath = path.join(__dirname, './public/pages');
 const publicPath = path.join(__dirname, './public');
+const port = process.env.PORT || 8000;
 
 const options = {
     extensions: ['html', ''],
@@ -26,7 +27,7 @@ app.listen(port, () => {
     console.log(`Frontend running at http://localhost:${port}/`);
 });
 
-app.get('/backend/url', (req, res) => {
+app.get('/url/backend', (req, res) => {
     res.json({
         url: process.env.BACKEND_URL || 'http://localhost:8080'
     });

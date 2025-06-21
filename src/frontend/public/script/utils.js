@@ -7,13 +7,30 @@ import {getUserType} from "./jwt.js";
 export const frontendUrl = 'http://localhost:8000'
 
 /**
+ * Gets the backend URL from the frontend server.
+ * @returns {string} The backend URL
+ */
+const getBackendUrl = async() => {
+    try {
+        const response = await fetch(`${frontendUrl}/url/backend`);
+        console.log(`Fetching backend URL from: ${frontendUrl}/url/backend`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data =  await response.json();
+        return await data.url.toString();
+    } catch (error) {
+        console.error('Failed to fetch backend URL:', error);
+        return 'http://localhost:8080'; // Default fallback URL
+    }
+}
+
+/**
  * The backend's url
  * @type {string}
  */
-export const backendUrl = (await fetch(`${frontendUrl}/backend/url`)
-        .then(response => response.json())
-        .then(data => data.url)
-        .catch(() => 'http://localhost:8080')).toString();
+export const backendUrl = await getBackendUrl();
+console.log(`Backend URL: ${backendUrl}`);
 
 /**
  * This function toggles the visibility of the modal element.
