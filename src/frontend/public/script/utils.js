@@ -13,7 +13,6 @@ export const frontendUrl = 'http://localhost:8000'
 const getBackendUrl = async() => {
     try {
         const response = await fetch(`${frontendUrl}/url/backend`);
-        console.log(`Fetching backend URL from: ${frontendUrl}/url/backend`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -30,7 +29,6 @@ const getBackendUrl = async() => {
  * @type {string}
  */
 export const backendUrl = await getBackendUrl();
-console.log(`Backend URL: ${backendUrl}`);
 
 /**
  * This function toggles the visibility of the modal element.
