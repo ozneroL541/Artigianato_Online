@@ -28,7 +28,7 @@ class Segnala {
 
         try {
             await this.db.query(query, values);
-            return { message: 'Report inserted successfully' };
+            return {message: 'Report inserted successfully'};
         } catch (err) {
             console.error('Error while inserting report:', err);
             throw new Error('Failed to insert report into the database');
@@ -36,7 +36,9 @@ class Segnala {
     }
 
     static async getReports() {
-        const query = `SELECT * FROM ${Segnala.db3TableName}`;
+        const query = `SELECT *
+                       FROM ${Segnala.db3TableName}
+                       ORDER BY id_segnalazione DESC`;
         try {
             const result = await pool.query(query);
             return result.rows;
@@ -54,7 +56,7 @@ class Segnala {
         `;
         try {
             await pool.query(query, [idSignal]);
-            return { message: 'Report marked as solved successfully' };
+            return {message: 'Report marked as solved successfully'};
         } catch (err) {
             console.error('Error while solving report:', err);
             throw new Error('Failed to mark report as solved in the database');
@@ -62,4 +64,4 @@ class Segnala {
     }
 }
 
-export { Segnala };
+export {Segnala};

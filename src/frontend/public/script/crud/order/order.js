@@ -22,12 +22,12 @@ export const addOrder = async (token, cart) => {
                     const text = await response.text();
                     console.error("Risp:", response.status, text);
                     alert(`Errore: ${response.status} - ${text}`);
-                    return false;
                 } else {
                     return true
                 }
             }
         }
+        return false;
     } catch (e) {console.error(e)}
 }
 

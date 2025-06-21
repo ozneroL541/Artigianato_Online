@@ -11,12 +11,12 @@ import {backendUrl} from "../../utils.js";
  * })
  *
  * @param {string} token the cliente's token
- * @param {"admin"|"client"|"artisan"}type the cliente's type
+ * @param {"admin"|"client"|"artisan"} type the cliente's type
  * @author Leonardo Basso
  */
 export const deleteProfile = async (token, type) => {
     try{
-        const response = await fetch(`${backendUrl}api/profile/delete/${type}`, {
+        const response = await fetch(`${backendUrl}/api/profile/delete/${type}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
