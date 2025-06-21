@@ -60,7 +60,7 @@ class Warning {
                 throw new Error('Warning not found');
             }
 
-            return new Warning(result[0].id_segnalazione, result[0].id_ordine, result[0].timestamp_segnalazione, result[0].descrizione, result[0].risolta);
+            return new Warning(result.rows[0].id_segnalazione, result.rows[0].id_ordine, result.rows[0].timestamp_segnalazione, result.rows[0].descrizione, result.rows[0].risolta);
 
         }catch(error){
             throw new Error('Error updating warning: ' + error.message);
@@ -73,7 +73,23 @@ class Warning {
      * @throws {Error} If there is an error during the database operation.
      */
     static async getById(id_segnalazione) {
-        // TODO
+        const query = `SELECT * 
+                       FROM segnalazioni
+                       WHERE id_segnalazione = $1;`;
+
+        const params = [id_segnalazione];
+
+        try {
+            const result = await pool.query(query, params);
+            if (result.length === 0) {
+                throw new Error('Warning not found');
+            }
+
+            return new Warning(result.rows[0].id_segnalazione, result.rows[0].id_ordine, result.rows[0].timestamp_segnalazione, result.rows[0].descrizione, result.rows[0].risolta);
+            
+        } catch (error) {
+            throw new Error('Error fetching warning: ' + error.message);
+        }
     }
     /**
      * Retrieves all warnings associated with a specific order.
