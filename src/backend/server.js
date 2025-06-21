@@ -33,7 +33,7 @@ const limiter = reteLimit({
     windowMs: 30 * 1000, // 1/2 minute
     max: 120, // Limit each IP to 120 requests per windowMs
 });
-app.use(limiter);
+//app.use(limiter);
 
 /** Middleware to enable CORS */
 app.use(cors({
