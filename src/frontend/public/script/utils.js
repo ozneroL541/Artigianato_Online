@@ -1,6 +1,21 @@
 import {getUserType} from "./jwt.js";
 
 /**
+ * The frontend's url
+ * @type {string}
+ */
+export const frontendUrl = 'http://localhost:8000'
+
+/**
+ * The backend's url
+ * @type {string}
+ */
+export const backendUrl = (await fetch(`${frontendUrl}/backend/url`)
+        .then(response => response.json())
+        .then(data => data.url)
+        .catch(() => 'http://localhost:8080')).toString();
+
+/**
  * This function toggles the visibility of the modal element.
  * @author Leonardo Basso
  * */
@@ -19,8 +34,8 @@ export function toggleDialog(id) {
  * @author Leonardo Basso
  */
 export const getCategories = async() => {
-    const response = await fetch('http://localhost:8080/api/category/all')
-    return await response.json()
+    const response = await fetch(`${backendUrl}/api/category/all`);
+    return await response.json();
 }
 /**
  * This function redirects the user to the <i>/negated</i> page if he does not have the right permits
@@ -36,7 +51,7 @@ export const getCategories = async() => {
 export const canSeePage = (token, type) => {
     const userType = token ? getUserType(token) : "unregistered";
     if ( userType !== type ) {
-        window.location.href = "http://localhost:8000/negated";
+        window.location.href = `${frontendUrl}/negated`;
     }
 }
 /**
