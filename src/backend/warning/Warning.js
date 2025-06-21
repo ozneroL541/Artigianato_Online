@@ -107,7 +107,7 @@ class Warning {
         try {
             const result = await pool.query(query, params);
             if (result.length === 0) {
-                throw new Error('Warning not found');
+                throw new Error('Warnings not found');
             }
                                  
             return result.rows.map(row => new Warning(row.id_segnalazione, row.id_ordine, row.timestamp_segnalazione, row.descrizione, row.risolta));
@@ -130,7 +130,20 @@ class Warning {
      * @throws {Error} If there is an error during the database operation.
      */
     static async getAll() {
-        // TODO
+        const query = `SELECT * 
+                       FROM segnalazioni;`;
+
+        try {
+            const result = await pool.query(query);
+            if (result.length === 0) {
+                throw new Error('Warnings not found');
+            }
+                                 
+            return result.rows.map(row => new Warning(row.id_segnalazione, row.id_ordine, row.timestamp_segnalazione, row.descrizione, row.risolta));
+            
+        } catch (error) {
+            throw new Error('Error fetching all warnings: ' + error.message);
+        }
     }
 }
 
