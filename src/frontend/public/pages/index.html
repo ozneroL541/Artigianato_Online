@@ -32,9 +32,9 @@
 <script type="module">
     import {searchProduct} from "../script/crud/products/search.js";
     import {getCategories, frontendUrl, backendUrl} from "../script/utils.js";
-
-
+    console.log("Viene eseguito");
     document.addEventListener("DOMContentLoaded", async () => {
+        console.err("Non viene eseguito");
         // Show 4 random products
         const paramsForRandomProducts = new URLSearchParams(new URL(frontendUrl).search);
         paramsForRandomProducts.append("limit", "12");
@@ -60,11 +60,9 @@
             `;
             randomProductContainer.appendChild(randomProduct);
         });
-
+        console.log("non viene eseguito");
         const cats = await getCategories();
         const selectedCategories = [cats.categories[0], cats.categories[1], cats.categories[2], cats.categories[3]];
-        // TODO
-        console.log("Selected categories:", selectedCategories);
 
         const categoryContainer = document.getElementById('categoryContainer');
         for (let c of selectedCategories) {
