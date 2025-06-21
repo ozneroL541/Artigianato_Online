@@ -74,7 +74,7 @@ class Order {
                 throw new Error('Order not found');
             }
 
-            return new Order(result[0].id_ordine, result[0].id_prodotto, result[0].username_cliente, result[0].data_ordine, result[0].quantita, result[0].data_consegna);
+            return new Order(result.rows[0].id_ordine, result.rows[0].id_prodotto, result.rows[0].username_cliente, result.rows[0].data_ordine, result.rows[0].quantita, result.rows[0].data_consegna);
 
         }catch(error){
             throw new Error('Error updating order: ' + error.message);
@@ -99,7 +99,7 @@ class Order {
                 throw new Error('Order not found');
             }
 
-            return new Order(result[0].id_ordine, result[0].id_prodotto, result[0].username_cliente, result[0].data_ordine, result[0].quantita, result[0].data_consegna);
+            return new Order(result.rows[0].id_ordine, result.rows[0].id_prodotto, result.rows[0].username_cliente, result.rows[0].data_ordine, result.rows[0].quantita, result.rows[0].data_consegna);
 
         } catch (error) {
             throw new Error('Error fetching order: ' + error.message);
