@@ -63,6 +63,8 @@
 
         const cats = await getCategories();
         const selectedCategories = [cats.categories[0], cats.categories[1], cats.categories[2], cats.categories[3]];
+        // TODO
+        console.log("Selected categories:", selectedCategories);
 
         const categoryContainer = document.getElementById('categoryContainer');
         for (let c of selectedCategories) {

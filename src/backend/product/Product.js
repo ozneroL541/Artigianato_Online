@@ -194,30 +194,37 @@ class Product {
      * @returns {Promise<Product[]>} A promise that resolves to an array of Product instances matching the search criteria.
      */
     static async search(username_artigiano=null, nome_prodotto=null, categoria=null, prezzo_min=null, prezzo_max=null, disponibilita=null, limit=null, random=false) {
-        let query = 'SELECT * FROM prodotti WHERE 1=1';
+        let query = 'SELECT * FROM prodotti';
+        let whereClause = false;
         const params = [];
         if (username_artigiano !== undefined && username_artigiano !== null) {
-            query += ' AND username_artigiano = $' + (params.length + 1);
+            query += whereClause ? ' AND' : ' WHERE';
+            query += ' username_artigiano = $' + (params.length + 1);
             params.push(username_artigiano);
         }
         if (nome_prodotto !== undefined && nome_prodotto !== null) {
-            query += ' AND nome_prodotto ILIKE $' + (params.length + 1);
+            query += whereClause ? ' AND' : ' WHERE';
+            query += ' nome_prodotto LIKE $' + (params.length + 1);
             params.push(`%${nome_prodotto}%`);
         }
         if (categoria !== undefined && categoria !== null) {
-            query += ' AND categoria = $' + (params.length + 1);
-            params.push(categoria);
+            query += whereClause ? ' AND' : ' WHERE';
+            query += ' categoria = $' + (params.length + 1);
+            params.push((new Category(categoria)).categoria);
         }
         if (prezzo_min !== undefined && prezzo_min !== null) {
-            query += ' AND prezzo >= $' + (params.length + 1);
+            query += whereClause ? ' AND' : ' WHERE';
+            query += ' prezzo >= $' + (params.length + 1);
             params.push(prezzo_min);
         }
         if (prezzo_max !== undefined && prezzo_max !== null) {
-            query += ' AND prezzo <= $' + (params.length + 1);
+            query += whereClause ? ' AND' : ' WHERE';
+            query += ' prezzo <= $' + (params.length + 1);
             params.push(prezzo_max);
         }
         if (disponibilita !== undefined && disponibilita !== null) {
-            query += ' AND disponibilita >= $' + (params.length + 1);
+            query += whereClause ? ' AND' : ' WHERE';
+            query += ' disponibilita >= $' + (params.length + 1);
             params.push(disponibilita);
         }
         if (random) {
