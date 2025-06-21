@@ -48,7 +48,23 @@ class Warning {
      * @throws {Error} If there is an error during the database operation.
      */
     async resolve() {
-        // TODO
+        const query = `UPDATE segnalazioni SET
+                       risolta = TRUE
+                       WHERE id_segnalazione = $1;`;
+
+        const params = [this.id_segnalazione];
+
+        try{
+            const result = await pool.query(query, params);
+            if(result.length === 0){
+                throw new Error('Warning not found');
+            }
+
+            return new Warning(result[0].id_segnalazione, result[0].id_ordine, result[0].timestamp_segnalazione, result[0].descrizione, result[0].risolta);
+
+        }catch(error){
+            throw new Error('Error updating warning: ' + error.message);
+        }
     }
     /**
      * Retrieves a warning by its ID.
