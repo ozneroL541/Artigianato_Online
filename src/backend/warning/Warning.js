@@ -113,7 +113,7 @@ class Warning {
             return result.rows.map(row => new Warning(row.id_segnalazione, row.id_ordine, row.timestamp_segnalazione, row.descrizione, row.risolta));
             
         } catch (error) {
-            throw new Error('Error fetching warnings by order: ' + error.message);
+            throw new Error('Error fetching warnings associated with order ' + id_ordine + ': ' + error.message);
         }
     }
     /**
