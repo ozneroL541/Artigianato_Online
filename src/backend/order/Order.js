@@ -64,7 +64,7 @@ class Order {
     async recived() {
         const query = `UPDATE ordini SET
                        data_consegna = $1
-                       WHERE id_ordine = $2`;
+                       WHERE id_ordine = $2;`;
 
         const params = [this.data_consegna, this.id_ordine];
 
@@ -75,7 +75,7 @@ class Order {
             }
 
             return new Order(result[0].id_ordine, result[0].id_prodotto, result[0].username_cliente, result[0].data_ordine, result[0].quantita, result[0].data_consegna);
-            
+
         }catch(error){
             throw new Error('Error updating order: ' + error.message);
         }
@@ -87,7 +87,23 @@ class Order {
      * @throws {Error} If there is an error during the database operation.
      */
     static async getById(id_ordine) {
-        // TODO
+        const query = `SELECT * 
+                       FROM ordini
+                       WHERE id_ordine = $1;`;
+        
+        const params = [id_ordine];
+
+        try {
+            const result = await pool.query(query, params);
+            if (result.length === 0) {
+                throw new Error('Order not found');
+            }
+
+            return new Order(result[0].id_ordine, result[0].id_prodotto, result[0].username_cliente, result[0].data_ordine, result[0].quantita, result[0].data_consegna);
+
+        } catch (error) {
+            throw new Error('Error fetching order: ' + error.message);
+        }
     }
 }
 
