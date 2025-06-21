@@ -57,6 +57,7 @@
             })
         } else {
             alert('Non ci son prodotti')
+            window.location = '/'
         }
 
         // Adds a new element to the cart
@@ -91,14 +92,18 @@
     });
     document.getElementById('clearCart').addEventListener('click', () => {
         sessionStorage.removeItem('productCart');
-        window.location.href = '/'
+        window.location = '/'
     })
     // At clock adding orders
     document.getElementById('buyProducts').addEventListener('click', async () => {
         const cart = JSON.parse(sessionStorage.getItem('productCart') || '[]');
         const token = localStorage.getItem('userToken');
-        await addOrder(token, cart)
-
+        const success = await addOrder(token, cart)
+        if (success === true) {
+            alert("Ordine aggiunto con successo")
+            sessionStorage.removeItem("productCart")
+            window.location = '/'
+        }
     });
 
     document.addEventListener('DOMContentLoaded', async () => {

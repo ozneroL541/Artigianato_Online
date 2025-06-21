@@ -8,8 +8,7 @@ function getRandomDeliveryDate() {
     const daysToAdd = Math.floor(Math.random() * 3) + 5; // Numero tra 5 e 7
     today.setDate(today.getDate() + daysToAdd);
 
-    // Converto in formato ISO string (adatto a JSON o SQL)
-    return today.toISOString().split('T')[0]; // formato YYYY-MM-DD
+    return today.toISOString().split('T')[0];
 }
 
 /**

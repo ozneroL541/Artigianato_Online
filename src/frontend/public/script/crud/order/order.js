@@ -9,7 +9,6 @@ import { backendUrl } from "../../utils.js";
 export const addOrder = async (token, cart) => {
     try {
         for (const p of cart) {
-            console.log(p)
             if (p.quantity > 0) {
                 const response = await fetch(`${backendUrl}/api/order/buy`, {
                     method: "POST", headers: {
@@ -19,12 +18,13 @@ export const addOrder = async (token, cart) => {
                         quantita: p.quantity,
                     })
                 })
-                if (response.ok) {
-                    console.log("Ordine aggiunto con successo!")
-                } else {
+                if (!response.ok) {
                     const text = await response.text();
                     console.error("Risp:", response.status, text);
                     alert(`Errore: ${response.status} - ${text}`);
+                    return false;
+                } else {
+                    return true
                 }
             }
         }
