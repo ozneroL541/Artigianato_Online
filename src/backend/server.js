@@ -1700,7 +1700,7 @@ app.get('/api/ricerca/dashboard/:id', researchProductById);
  */
 app.post('/api/order/buy', checkClient, createOrder);
 app.get('/api/order/get/client', checkClient, getOrdersByCustomer);
-app.get('/api/order/get/artisan', checkClient, getOrdersByArtisan);
+app.get('/api/order/get/artisan', checkArtisan, getOrdersByArtisan);
 app.get('/api/product/get/id', getNameByProductId);
 
 

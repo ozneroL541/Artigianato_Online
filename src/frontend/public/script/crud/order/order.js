@@ -61,3 +61,33 @@ export const getOrdersByClient = async (token) => {
         alert('Errore di rete o server.');
     }
 }
+/**
+ * This function returns all the orders given a cliente token
+ * @param {string} token The cliente's token
+ * @returns {Promise<Object>} The list of orders done by a specific cliente
+ * @author Leonardo Basso
+ */
+export const getOrdersByArtisan = async (token) => {
+    try {
+        const res = await fetch(`${backendUrl}/api/order/get/artisan`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            console.error('Error:', data.message);
+            alert(`Errore: ${data.message}`);
+            return;
+        }
+        return data;
+
+    } catch (err) {
+        console.error('Errore durante la fetch:', err);
+        alert('Errore di rete o server.');
+    }
+}

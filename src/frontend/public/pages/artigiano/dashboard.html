@@ -10,7 +10,8 @@
 
 <body>
 <page-layout page-title="Dashboard artigiano">
-    <toggle-tabs tabs='["Articoli", "Profilo"]' class="dashboard">
+    <button class="btn-delete" id="deleteProfileButton">Elimina il tuo profilo</button>
+    <toggle-tabs tabs='["Articoli", "Vendite"]' class="dashboard">
         <section id="Articoli" data-type="tab">
             <dialog class="dashboard__add" id="addProduct">
                 <header class="modal-top">
@@ -65,28 +66,8 @@
                 </dialog>
             </section>
         </section>
-        <section id="Profilo" data-type="tab" class="dashboard__profile">
-            <h3>Le tue informazioni</h3>
-            <header class="dashboard__profile__header">
-                <p>Ciao, <span id="userId"></span>!</p>
-                <button class="btn-delete" id="deleteProfileButton">Elimina il tuo profilo</button>
-            </header>
-            <label class="modal-inputs">
-                <input type="text" placeholder="Nome impresa">
-                <input type="text" placeholder="IBAN">
-                <input type="password" placeholder="Password">
-                <button onclick="toggleDialog('confirmPassword')">Modifica</button>
-            </label>
-            <dialog class="dashboard__add" id="confirmPassword">
-                <header class="modal-top">
-                    <h3>Conferma</h3>
-                    <span class="btn-close" onclick="toggleDialog('confirmPassword')"></span>
-                </header>
-                <label class="modal-inputs">
-                    <input type="password" placeholder="Password">
-                    <button>Pubblica</button>
-                </label>
-            </dialog>
+        <section id="Vendite" data-type="tab" class="dashboard__products">
+            <section class="dashboard__products__sold" id="soldProductsList"></section>
         </section>
     </toggle-tabs>
 </page-layout>
@@ -107,25 +88,21 @@
     }
 </script>
 <script type="module">
-    import {getUsername} from "../../script/jwt.js";
-    import {
-        getArtisanProducts,
-        addProduct,
-        deleteProduct,
-        updateProduct
-    } from "../../script/crud/artisan/dashboard/products.js";
-    import {getCategories, canSeePage, populateSelectMenu} from "../../script/utils.js";
+    import { getArtisanProducts, addProduct, deleteProduct, updateProduct } from "../../script/crud/artisan/dashboard/products.js";
+    import {backendUrl, formatDate, getCategories, canSeePage, populateSelectMenu} from "../../script/utils.js";
     import {deleteProfile} from "../../script/crud/auth/delete.js";
+    import {getOrdersByArtisan} from "../../script/crud/order/order.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         const token = window.localStorage.getItem("userToken")
-        const userIdElement = document.getElementById('userId');
-        userIdElement.textContent = getUsername(token);
         const products = await getArtisanProducts(token);
         const container = document.getElementById("dashboard__articles");
         const categories = await getCategories();
         const selectCategoryAdd = document.getElementById('addProductCategory');
         const selectCategoryModify = document.getElementById('modifyCategory');
+        canSeePage(token, "artigiano")
+
+        // Permission
         canSeePage(token, "artigiano")
 
         // Populates the select category menu for adding a new product
@@ -170,62 +147,82 @@
             });
         });
 
-        // Permission
-        canSeePage(token, "artigiano")
-    });
-
-    // Populates the dialog with the correct data from a product
-    document.addEventListener('click', (event) => {
-        if (event.target.closest('.editProduct')) {
-            const btn = event.target.closest('.editProduct');
-            const id = btn.dataset.id;
-            const name = btn.dataset.name;
-            const category = btn.dataset.category;
-            const price = btn.dataset.price;
-            const stock = btn.dataset.stock;
-
-            toggleDialog('modifyProduct');
-            document.getElementById('modifyName').value = name;
-            document.getElementById('modifyCategory').value = category;
-            document.getElementById('modifyPrice').value = price;
-            document.getElementById('modifyStock').value = stock;
-
-            const dialog = document.getElementById('modifyProduct');
-            dialog.dataset.productId = id;
+        //Show orders
+        const orderContainer = document.getElementById('soldProductsList')
+        const orders = await getOrdersByArtisan(token)
+        for (let o of orders) {
+            const orderDate = formatDate(o.data_ordine);
+            const arrriveDate = formatDate(o.data_consegna);
+            const response = await fetch(`${backendUrl}/api/product/get/id?id_prodotto=${o.id_prodotto}`);
+            const productName = await response.json();
+            const orderElement = document.createElement("article");
+            orderElement.className = "dashboard__product__order standard-box";
+            orderElement.innerHTML = `
+                <header class="dashboard__product__order__header">
+                    <p class="standard-box text-small standard-box-hover dashboard__product__order__id">#${o.id_ordine}</p>
+                    <p class="text-small">Quantita: ${o.quantita}</p>
+                </header>
+                <h1>${productName}</h1>
+                <p>Cliente: ${o.username_cliente}</p>
+                <p><time datetime="${o.data_ordine}"> <b>Fatto il:</b> ${orderDate}</time></p>
+                <p><time datetime="${o.data_consegna}"> <b>Arriva il:</b> ${arrriveDate}</time></p>
+            `
+            orderContainer.appendChild(orderElement);
         }
-    });
 
-    // Adds a product to the list
-    document.getElementById('addProductButton').addEventListener('click', async () => {
-        const name = document.getElementById('addProductName').value.trim();
-        const category = document.getElementById('addProductCategory').value.trim();
-        const price = parseFloat(document.getElementById('addProductPrice').value);
-        const stock = parseInt(document.getElementById('addProductStock').value);
-        const token = localStorage.getItem('userToken');
-        await addProduct(token, name, category, price, stock)
-    });
+        // Populates the dialog with the correct data from a product
+        document.addEventListener('click', (event) => {
+            if (event.target.closest('.editProduct')) {
+                const btn = event.target.closest('.editProduct');
+                const id = btn.dataset.id;
+                const name = btn.dataset.name;
+                const category = btn.dataset.category;
+                const price = btn.dataset.price;
+                const stock = btn.dataset.stock;
 
-    // Updates the product
-    document.getElementById('modifyProductButton').addEventListener('click', async () => {
-        const dialog = document.getElementById('modifyProduct');
-        const id = dialog.dataset.productId;
-        const name = document.getElementById('modifyName').value.trim();
-        const category = document.getElementById('modifyCategory').value.trim();
-        const price = parseFloat(document.getElementById('modifyPrice').value);
-        const stock = parseInt(document.getElementById('modifyStock').value);
-        const token = localStorage.getItem('userToken');
-        await updateProduct(token, id, name, category, price, stock)
-    });
+                toggleDialog('modifyProduct');
+                document.getElementById('modifyName').value = name;
+                document.getElementById('modifyCategory').value = category;
+                document.getElementById('modifyPrice').value = price;
+                document.getElementById('modifyStock').value = stock;
 
-    // Delete the artisan's profile
-    document.getElementById('deleteProfileButton').addEventListener('click', async () => {
-        const token = localStorage.getItem('userToken')
-        await deleteProfile(token, "artisan")
+                const dialog = document.getElementById('modifyProduct');
+                dialog.dataset.productId = id;
+            }
+        });
+
+        // Adds a product to the list
+        document.getElementById('addProductButton').addEventListener('click', async () => {
+            const name = document.getElementById('addProductName').value.trim();
+            const category = document.getElementById('addProductCategory').value.trim();
+            const price = parseFloat(document.getElementById('addProductPrice').value);
+            const stock = parseInt(document.getElementById('addProductStock').value);
+            const token = localStorage.getItem('userToken');
+            await addProduct(token, name, category, price, stock)
+        });
+
+        // Updates the product
+        document.getElementById('modifyProductButton').addEventListener('click', async () => {
+            const dialog = document.getElementById('modifyProduct');
+            const id = dialog.dataset.productId;
+            const name = document.getElementById('modifyName').value.trim();
+            const category = document.getElementById('modifyCategory').value.trim();
+            const price = parseFloat(document.getElementById('modifyPrice').value);
+            const stock = parseInt(document.getElementById('modifyStock').value);
+            const token = localStorage.getItem('userToken');
+            await updateProduct(token, id, name, category, price, stock)
+        });
+
+        // Delete the artisan's profile
+        document.getElementById('deleteProfileButton').addEventListener('click', async () => {
+            const token = localStorage.getItem('userToken')
+            await deleteProfile(token, "artisan")
+        })
     })
-
 </script>
 <style>
     .dashboard {
+        margin-top: 1rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -294,7 +291,27 @@
     .dashborad__article__iconbutton svg {
         transform: scale(.9);
     }
-
+    .dashboard__products__sold {
+        width: 90vw;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: .5rem;
+        margin-top: 1rem;
+    }
+    .dashboard__product__order {
+        display: grid;
+        padding: .5rem;
+        gap: .5rem;
+    }
+    .dashboard__product__order__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .dashboard__product__order__id {
+        padding: .3rem;
+        border-radius: 100vh;
+    }
     @media screen and (max-width: 600px) {
         .dashboard__add {
             width: 90vw !important;
