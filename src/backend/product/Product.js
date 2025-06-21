@@ -176,7 +176,23 @@ class Product {
      * @param {string} username_artigiano - The username of the artisan.
      * @returns {Promise<Product[]>} A promise that resolves to an array of Product instances.
      */
-
+    static async getByArtisan(username_artigiano) {
+        const query = 'SELECT * FROM prodotti WHERE username_artigiano = $1;';
+        try {
+            const result = await pool.query(query, [username_artigiano]);
+            return result.rows.map(row => new Product(
+                row.id_prodotto,
+                row.username_artigiano,
+                row.nome_prodotto,
+                row.categoria,
+                row.prezzo,
+                row.disponibilita
+            ));
+        }
+        catch (error) {
+            throw new Error('Error fetching products by artisan: ' + error.message);
+        }
+    }
     /**
      * Searches for products based on various criteria.
      * @param {string} username_artigiano - The username of the artisan. If null, it will not filter by artisan.
@@ -240,6 +256,6 @@ class Product {
             throw new Error('Error searching products: ' + error.message);
         }
     }
-};
+}
 
 export { Product };
