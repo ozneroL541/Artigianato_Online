@@ -15,10 +15,10 @@ const options = {
 
 /** Rate limiting middleware to prevente abuse */
 const limiter = rateLimit({
-    windowMs: 15 * 1000,
+    windowMs: 15 * 1000, // 15 seconds
     max: 15*100, // Limit each IP to max requests per windowMs
 });
-app.use(limiter);
+//app.use(limiter);
 
 app.use(express.static(pagesPath, options));
 app.use(express.static(publicPath, {immutable: true, index: false}));
