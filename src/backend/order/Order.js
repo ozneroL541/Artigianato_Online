@@ -43,12 +43,12 @@ class Order {
                        VALUE (((SELECT MAX(id_ordine)+1) AS next_id FROM ordini), $1, $2, CURRENT_TIMESTAMP(), $3, $4) 
                        RETURNING id_ordine, data_ordine;`;
 
-        const params = [this.id_prodotto, this.username_cliente, this.data_ordine, this.quantita, this.data_consegna];
+        const params = [this.id_prodotto, this.username_cliente, this.quantita, this.data_consegna];
 
         try{
-            const id_ordine = await pool.query(query, params);
-            this.id_ordine = id_ordine.rows[0].id_ordine; // Set the order ID from the query result
-            this.data_ordine = id_ordine.rows[0].data_ordine; // Set the order date from the query result
+            const result = await pool.query(query, params);
+            this.id_ordine = result.rows[0].id_ordine; // Set the order ID from the query result
+            this.data_ordine = result.rows[0].data_ordine; // Set the order date from the query result
             return this.id_ordine; // Return the ID of the inserted order
         }catch(error){
             throw new Error('Order already inserted')
