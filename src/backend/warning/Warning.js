@@ -27,7 +27,19 @@ class Warning {
      * @throws {Error} If there is an error during the database operation.
      */
     async create() {
-        // TODO
+        const query = `INSERT INTO segnalazioni (id_segnalazione, id_ordine, timestamp_segnalazione, descrizione, risolta)
+                       VALUE (((SELECT MAX(id_segnalazione)+1) AS next_id FROM segnalazioni), $1, CURRENT_TIMESTAMP(), $2, $3) 
+                       RETURNING id_ordine, data_ordine;`;
+        
+        const params = [this.id_ordine, this.descrizione, this.risolta];
+        
+        try{
+            const result = await pool.query(query, params);
+            this.id_segnalazione = result.rows[0].id_segnalazione; // Set the warning ID from the query result
+            return this.id_segnalazione; // Return the ID of the inserted warning
+        }catch(error){
+            throw new Error('Warning already inserted')
+        } 
     }
     /**
      * Marks the warning as resolved.
