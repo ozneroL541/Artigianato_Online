@@ -62,7 +62,23 @@ class Order {
      * @throws {Error} If there is an error during the database operation.
      */
     async recived() {
-        // TODO
+        const query = `UPDATE ordini SET
+                       data_consegna = $1
+                       WHERE id_ordine = $2`;
+
+        const params = [this.data_consegna, this.id_ordine];
+
+        try{
+            const result = await pool.query(query, params);
+            if(result.length === 0){
+                throw new Error('Order not found');
+            }
+
+            return new Order(result[0].id_ordine, result[0].id_prodotto, result[0].username_cliente, result[0].data_ordine, result[0].quantita, result[0].data_consegna);
+            
+        }catch(error){
+            throw new Error('Error updating order: ' + error.message);
+        }
     }
     /**
      * Retrieves an order by its ID.
