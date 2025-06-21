@@ -23,30 +23,50 @@ class Order {
      * @returns {Promise<number>} ID dell'ordine inserito
      */
     async save() {
-        const query = `
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
+
+            const checkQuery = ` SELECT disponibilita FROM prodotti WHERE id_prodotto = $1 FOR UPDATE `; //Check if there are enough products
+            const checkResult = await client.query(checkQuery, [this.id_prodotto]);
+            if (checkResult.rows.length === 0) { throw new Error('Prodotto non trovato.'); }
+
+            const disponibile = checkResult.rows[0].disponibilita;
+            if (disponibile < this.quantita) { throw new Error('Disponibilità insufficiente per questo prodotto.'); }
+
+            const updateQuery = ` UPDATE prodotti SET disponibilita = disponibilita - $1 WHERE id_prodotto = $2 `; // remove products
+            await client.query(updateQuery, [this.quantita, this.id_prodotto]);
+
+            const insertQuery = ` 
             INSERT INTO ordini (id_prodotto, username_cliente, quantita, data_consegna)
             VALUES ($1, $2, $3, $4)
-            RETURNING id_ordine, data_ordine;
-        `;
-        const params = [
-            this.id_prodotto,
-            this.username_cliente,
-            this.quantita,
-            this.data_consegna || null
-        ];
+            RETURNING id_ordine, data_ordine
+        `; //creates a new order
+            const insertParams = [
+                this.id_prodotto,
+                this.username_cliente,
+                this.quantita,
+                this.data_consegna || null
+            ];
+            const result = await client.query(insertQuery, insertParams);
 
-        try {
-            const result = await pool.query(query, params);
+            await client.query('COMMIT');
+
             this.id_ordine = result.rows[0].id_ordine;
             this.data_ordine = result.rows[0].data_ordine;
+
             return this.id_ordine;
         } catch (err) {
-            if (err.code === '23505') { // Unique violation
+            await client.query('ROLLBACK');
+            if (err.code === '23505') {
                 throw new Error('Ordine già effettuato per questo prodotto e data.');
             }
             throw new Error(`Errore nel salvataggio ordine: ${err.message}`);
+        } finally {
+            client.release();
         }
     }
+
 
     /**
      * Recupera tutti gli ordini effettuati da un cliente

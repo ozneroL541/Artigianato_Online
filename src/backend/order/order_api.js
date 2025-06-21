@@ -1,6 +1,8 @@
 import Order from './Order.js';
 
-// Calcola una data tra 5 e 7 giorni da oggi
+/**
+ * @returns {string} a date between 5 amd 7 days from now
+ */
 function getRandomDeliveryDate() {
     const today = new Date();
     const daysToAdd = Math.floor(Math.random() * 3) + 5; // Numero tra 5 e 7
