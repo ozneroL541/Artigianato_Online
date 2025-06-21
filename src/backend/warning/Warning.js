@@ -1,4 +1,5 @@
 const { Order } = require("../order/Order.js");
+const { pool } = require('../db/connection.js');
 
 /**
  * Warning class represents a warning associated with an order.
