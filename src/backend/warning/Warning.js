@@ -98,7 +98,23 @@ class Warning {
      * @throws {Error} If there is an error during the database operation.
      */
     static async getByOrderId(id_ordine) {
-        // TODO
+        const query = `SELECT * 
+                       FROM segnalazioni
+                       WHERE id_ordine = $1;`;
+
+        const params = [id_ordine];
+
+        try {
+            const result = await pool.query(query, params);
+            if (result.length === 0) {
+                throw new Error('Warning not found');
+            }
+                                 
+            return result.rows.map(row => new Warning(row.id_segnalazione, row.id_ordine, row.timestamp_segnalazione, row.descrizione, row.risolta));
+            
+        } catch (error) {
+            throw new Error('Error fetching warnings by order: ' + error.message);
+        }
     }
     /**
      * Retrieves all unresolved warnings.
