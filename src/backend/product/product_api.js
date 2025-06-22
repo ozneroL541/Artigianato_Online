@@ -141,7 +141,7 @@ const getProducts = async (req, res) => {
             res.status(200).json(products);
         }
     } catch (error) {
-        res.status(400).json({message: 'Bad request'});
+        res.status(400).json({message: 'Bad request', error: error.message});
     }
 }
 
