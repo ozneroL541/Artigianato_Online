@@ -20,7 +20,7 @@ const adminType = 'amministratore';
  * Generates a JSON Web Token (JWT) for a given username and type.
  *
  * @param {string} username - The username for which the token is generated.
- * @param {string} type - The type of user.
+ * @param {string} type - The type of cliente.
  * @returns {string} The generated JWT.
  */
 async function genJWT (username, type) {
@@ -47,7 +47,7 @@ async function checkAuth(req, res, type) {
             token = token.split(" ")[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             if (decoded.type !== type) {
-                res.status(403).json({ message: "Forbidden", detail: "this user is not authorized for this" });
+                res.status(403).json({ message: "Forbidden", detail: "this cliente is not authorized for this" });
             }
             req.username = decoded.username;
         } catch (error) {
@@ -59,7 +59,7 @@ async function checkAuth(req, res, type) {
 };
 
 /**
- * Generates a JSON Web Token (JWT) for an artisan user.
+ * Generates a JSON Web Token (JWT) for an artisan cliente.
  * @param {string} username artisan username
  * @returns JWT
  */
@@ -67,7 +67,7 @@ async function genArtisanJWT(username) {
     return genJWT(username, artisanType);    
 }
 /**
- * Generates a JSON Web Token (JWT) for a client user.
+ * Generates a JSON Web Token (JWT) for a client cliente.
  * @param {string} username client username
  * @returns JWT
  */
@@ -75,7 +75,7 @@ async function genClientJWT(username) {
     return genJWT(username, clientType);    
 }
 /**
- * Generates a JSON Web Token (JWT) for an admin user.
+ * Generates a JSON Web Token (JWT) for an admin cliente.
  * @param {string} username admin username
  * @returns JWT
  */
@@ -85,7 +85,7 @@ async function genAdminJWT(username) {
 
 
 /**
- * Middleware to check if the user is authenticated as an artisan.
+ * Middleware to check if the cliente is authenticated as an artisan.
  * @param {string} req - The HTTP request object.
  * @param {string} res - The HTTP response object.
  * @param {function} next - The next middleware function.
@@ -100,7 +100,7 @@ const checkArtisan = async (req, res, next) => {
 };
 
 /**
- * Middleware to check if the user is authenticated as a client.
+ * Middleware to check if the cliente is authenticated as a client.
  * @param {string} req - The HTTP request object.
  * @param {string} res - The HTTP response object.
  * @param {function} next - The next middleware function.
@@ -115,7 +115,7 @@ const checkClient = async (req, res, next) => {
 };
 
 /**
- * Middleware to check if the user is authenticated as an admin.
+ * Middleware to check if the cliente is authenticated as an admin.
  * @param {string} req - The HTTP request object.
  * @param {string} res - The HTTP response object.
  * @param {function} next - The next middleware function.

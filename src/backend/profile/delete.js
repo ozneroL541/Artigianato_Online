@@ -30,7 +30,7 @@ class DeleteProfile {
         this.username = username;
     }
     /**
-     * Deletes the user from the database.
+     * Deletes the cliente from the database.
      */
     async delete() {
         const query = `DELETE FROM ${this.dbRef.dbTableName}

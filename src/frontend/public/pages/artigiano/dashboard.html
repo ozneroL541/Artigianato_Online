@@ -10,7 +10,8 @@
 
 <body>
 <page-layout page-title="Dashboard artigiano">
-    <toggle-tabs tabs='["Articoli", "Profilo"]' class="dashboard">
+    <button class="btn-delete" id="deleteProfileButton">Elimina il tuo profilo</button>
+    <toggle-tabs tabs='["Articoli", "Vendite"]' class="dashboard">
         <section id="Articoli" data-type="tab">
             <dialog class="dashboard__add" id="addProduct">
                 <header class="modal-top">
@@ -30,7 +31,7 @@
             <section class="dashboard__articles standard-box" id="dashboard__articles">
 
                 <div class="dashboard__articles__buttons">
-                    <button onclick="window.location.reload();" class="dashborad__article__iconbutton">
+                    <button onclick="window.location.reload();" class="dashborad__article__iconbutton" title="Reload">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                              class="bi bi-plus" viewBox="0 0 16 16">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -41,7 +42,7 @@
                             </svg>
                         </svg>
                     </button>
-                    <button onclick="toggleDialog('addProduct')" class="btn-edit dashborad__article__iconbutton">
+                    <button onclick="toggleDialog('addProduct')" class="btn-edit dashborad__article__iconbutton"  title="Aggiungi un prodotto">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                              class="bi bi-plus-lg" viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
@@ -65,28 +66,8 @@
                 </dialog>
             </section>
         </section>
-        <section id="Profilo" data-type="tab" class="dashboard__profile">
-            <h3>Le tue informazioni</h3>
-            <header class="dashboard__profile__header">
-                <p>Ciao, <span id="userId"></span>!</p>
-                <button class="btn-delete" id="deleteProfileButton">Elimina il tuo profilo</button>
-            </header>
-            <label class="modal-inputs">
-                <input type="text" placeholder="Nome impresa">
-                <input type="text" placeholder="IBAN">
-                <input type="password" placeholder="Password">
-                <button onclick="toggleDialog('confirmPassword')">Modifica</button>
-            </label>
-            <dialog class="dashboard__add" id="confirmPassword">
-                <header class="modal-top">
-                    <h3>Conferma</h3>
-                    <span class="btn-close" onclick="toggleDialog('confirmPassword')"></span>
-                </header>
-                <label class="modal-inputs">
-                    <input type="password" placeholder="Password">
-                    <button>Pubblica</button>
-                </label>
-            </dialog>
+        <section id="Vendite" data-type="tab" class="dashboard__products">
+            <section class="dashboard__products__sold" id="soldProductsList"></section>
         </section>
     </toggle-tabs>
 </page-layout>
@@ -107,20 +88,21 @@
     }
 </script>
 <script type="module">
-    import {getUsername} from "../../script/jwt.js";
-    import {getArtisanProducts, addProduct, deleteProduct, updateProduct} from "../../script/crud/artisan/dashboard/products.js";
-    import {getCategories, canSeePage, populateSelectMenu} from "../../script/utils.js";
+    import { getArtisanProducts, addProduct, deleteProduct, updateProduct } from "../../script/crud/artisan/dashboard/products.js";
+    import {backendUrl, formatDate, getCategories, canSeePage, populateSelectMenu} from "../../script/utils.js";
     import {deleteProfile} from "../../script/crud/auth/delete.js";
+    import {getOrdersByArtisan} from "../../script/crud/order/order.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         const token = window.localStorage.getItem("userToken")
-        const userIdElement = document.getElementById('userId');
-        userIdElement.textContent = getUsername(token);
         const products = await getArtisanProducts(token);
         const container = document.getElementById("dashboard__articles");
         const categories = await getCategories();
         const selectCategoryAdd = document.getElementById('addProductCategory');
         const selectCategoryModify = document.getElementById('modifyCategory');
+
+        // Permission
+        canSeePage(token, "artigiano")
 
         // Populates the select category menu for adding a new product
         populateSelectMenu(categories.categories, selectCategoryAdd)
@@ -133,7 +115,7 @@
             card.innerHTML = `
             <h3 class="dashboard__article__title collapsed-text">${p.nome_prodotto}</h3>
                     <div class="dashboard__article__buttons">
-                        <button class="btn-edit dashborad__article__iconbutton editProduct"
+                        <button class="btn-edit dashborad__article__iconbutton editProduct"  title="Modifica il prodotto"
                             data-id="${p.id_prodotto}"
                             data-name="${p.nome_prodotto}"
                             data-category="${p.categoria.categoria}"
@@ -144,7 +126,7 @@
                                 <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
                             </svg>
                         </button>
-                        <button class="btn-delete dashborad__article__iconbutton deleteProductButton" data-id="${p.id_prodotto}">
+                        <button class="btn-delete dashborad__article__iconbutton deleteProductButton" data-id="${p.id_prodotto}"  title="Rimuovi il prodotto">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-trash3-fill" viewBox="0 0 16 16">
                                 <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
@@ -164,62 +146,83 @@
             });
         });
 
-        // Permission
-        canSeePage(token, "artigiano")
-    });
-
-    // Populates the dialog with the correct data from a product
-    document.addEventListener('click', (event) => {
-        if (event.target.closest('.editProduct')) {
-            const btn = event.target.closest('.editProduct');
-            const id = btn.dataset.id;
-            const name = btn.dataset.name;
-            const category = btn.dataset.category;
-            const price = btn.dataset.price;
-            const stock = btn.dataset.stock;
-
-            toggleDialog('modifyProduct');
-            document.getElementById('modifyName').value = name;
-            document.getElementById('modifyCategory').value = category;
-            document.getElementById('modifyPrice').value = price;
-            document.getElementById('modifyStock').value = stock;
-
-            const dialog = document.getElementById('modifyProduct');
-            dialog.dataset.productId = id;
+        //Show orders
+        const orderContainer = document.getElementById('soldProductsList')
+        const orders = await getOrdersByArtisan(token)
+        console.log(orders)
+        for (let o of orders) {
+            const orderDate = formatDate(o.data_ordine);
+            const arrriveDate = formatDate(o.data_consegna);
+            const response = await fetch(`${backendUrl}/api/product/get/id?id_prodotto=${o.id_prodotto}`);
+            const productName = await response.json();
+            const orderElement = document.createElement("article");
+            orderElement.className = "dashboard__product__order standard-box";
+            orderElement.innerHTML = `
+                <header class="dashboard__product__order__header">
+                    <p class="standard-box text-small standard-box-hover dashboard__product__order__id">#${o.id_ordine}</p>
+                    <p class="text-small">Quantita: ${o.quantita}</p>
+                </header>
+                <h1>${productName}</h1>
+                <p>Cliente: ${o.username_cliente}</p>
+                <p><time datetime="${o.data_ordine}"> <b>Fatto il:</b> ${orderDate}</time></p>
+                <p><time datetime="${o.data_consegna}"> <b>Arriva il:</b> ${arrriveDate}</time></p>
+            `
+            orderContainer.appendChild(orderElement);
         }
-    });
 
-    // Adds a product to the list
-    document.getElementById('addProductButton').addEventListener('click', async () => {
-        const name = document.getElementById('addProductName').value.trim();
-        const category = document.getElementById('addProductCategory').value.trim();
-        const price = parseFloat(document.getElementById('addProductPrice').value);
-        const stock = parseInt(document.getElementById('addProductStock').value);
-        const token = localStorage.getItem('userToken');
-        await addProduct(token, name, category, price, stock)
-    });
+        // Populates the dialog with the correct data from a product
+        document.addEventListener('click', (event) => {
+            if (event.target.closest('.editProduct')) {
+                const btn = event.target.closest('.editProduct');
+                const id = btn.dataset.id;
+                const name = btn.dataset.name;
+                const category = btn.dataset.category;
+                const price = btn.dataset.price;
+                const stock = btn.dataset.stock;
 
-    // Updates the product
-    document.getElementById('modifyProductButton').addEventListener('click', async () => {
-        const dialog = document.getElementById('modifyProduct');
-        const id = dialog.dataset.productId;
-        const name = document.getElementById('modifyName').value.trim();
-        const category = document.getElementById('modifyCategory').value.trim();
-        const price = parseFloat(document.getElementById('modifyPrice').value);
-        const stock = parseInt(document.getElementById('modifyStock').value);
-        const token = localStorage.getItem('userToken');
-        await updateProduct(token, id, name, category, price, stock)
-    });
+                toggleDialog('modifyProduct');
+                document.getElementById('modifyName').value = name;
+                document.getElementById('modifyCategory').value = category;
+                document.getElementById('modifyPrice').value = price;
+                document.getElementById('modifyStock').value = stock;
 
-    // Delete the artisan's profile
-    document.getElementById('deleteProfileButton').addEventListener('click', async () => {
-        const token = localStorage.getItem('userToken')
-        await deleteProfile(token, "artisan")
+                const dialog = document.getElementById('modifyProduct');
+                dialog.dataset.productId = id;
+            }
+        });
+
+        // Adds a product to the list
+        document.getElementById('addProductButton').addEventListener('click', async () => {
+            const name = document.getElementById('addProductName').value.trim();
+            const category = document.getElementById('addProductCategory').value.trim();
+            const price = parseFloat(document.getElementById('addProductPrice').value);
+            const stock = parseInt(document.getElementById('addProductStock').value);
+            const token = localStorage.getItem('userToken');
+            await addProduct(token, name, category, price, stock)
+        });
+
+        // Updates the product
+        document.getElementById('modifyProductButton').addEventListener('click', async () => {
+            const dialog = document.getElementById('modifyProduct');
+            const id = dialog.dataset.productId;
+            const name = document.getElementById('modifyName').value.trim();
+            const category = document.getElementById('modifyCategory').value.trim();
+            const price = parseFloat(document.getElementById('modifyPrice').value);
+            const stock = parseInt(document.getElementById('modifyStock').value);
+            const token = localStorage.getItem('userToken');
+            await updateProduct(token, id, name, category, price, stock)
+        });
+
+        // Delete the artisan's profile
+        document.getElementById('deleteProfileButton').addEventListener('click', async () => {
+            const token = localStorage.getItem('userToken')
+            await deleteProfile(token, "artisan")
+        })
     })
-
 </script>
 <style>
     .dashboard {
+        margin-top: 1rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -288,7 +291,27 @@
     .dashborad__article__iconbutton svg {
         transform: scale(.9);
     }
-
+    .dashboard__products__sold {
+        width: 90vw;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: .5rem;
+        margin-top: 1rem;
+    }
+    .dashboard__product__order {
+        display: grid;
+        padding: .5rem;
+        gap: .5rem;
+    }
+    .dashboard__product__order__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .dashboard__product__order__id {
+        padding: .3rem;
+        border-radius: 100vh;
+    }
     @media screen and (max-width: 600px) {
         .dashboard__add {
             width: 90vw !important;

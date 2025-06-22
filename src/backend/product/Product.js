@@ -59,6 +59,7 @@ class Product {
                        prezzo = $3, 
                        disponibilita = $4 
                        WHERE id_prodotto = $5 AND username_artigiano = $6;`;
+
         if (! (await this.categoria.exists())) {
             throw new CategoryError("Category does not exist");
         }
@@ -68,8 +69,9 @@ class Product {
             this.prezzo,
             this.disponibilita,
             this.id_prodotto,
-            this.artisanUsername
-        ];
+            this.username_artigiano
+        ]
+
         try {
             await pool.query(query, params);
             return true;
@@ -158,6 +160,18 @@ class Product {
         } catch (error) {
             throw new Error('Error fetching all products: ' + error.message);
         }
+    }
+    /**
+     * Gets the name of a product by the product's id
+     * @param {string} id_prodotto - The product's id
+     * @returns {Promise<Product[]>} A promise that resolves to an array of Product instances.
+     */
+    static async getNameByProductId(id_prodotto) {
+        const query = 'SELECT nome_prodotto FROM prodotti WHERE id_prodotto = $1 LIMIT 1;';
+        try {
+            const result = await pool.query(query, [id_prodotto])
+            return result.rows[0].nome_prodotto;
+        } catch (e) {throw new Error('Error getting product:' + e.message)}
     }
     /**
      * Retrieves all products by a specific artisan from the database.

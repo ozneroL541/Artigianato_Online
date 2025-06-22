@@ -1,6 +1,6 @@
 /**
- * This function saves the jwt token of a user in the localStorage
- * @param {string} jwt  The user Token
+ * This function saves the jwt token of a cliente in the localStorage
+ * @param {string} jwt  The cliente Token
  * @author Leonardo Basso
  * */
 export function setUserInfo(jwt) {
@@ -38,7 +38,7 @@ export function decodeJWT(token) {
 
 /**
  * This function is used to get the username from a given token
- * @param {string} token The user token
+ * @param {string} token The cliente token
  * @return {string} The username
  * @author Leonardo Basso
  * */
@@ -51,7 +51,7 @@ export function getUsername(token) {
 }
 
 /**
- * This function is used to get the type of user from a given token
+ * This function is used to get the type of cliente from a given token
  * @example
  * // Permission system where only admin can access a specific page
  * const token = window.localStorage.getItem("userToken");
@@ -60,8 +60,8 @@ export function getUsername(token) {
  *      window.location.href = "http://localhost:8000/negated";
  *  }
  *
- * @param {string} token The user token
- * @return {string} The user type, which can be `artigiano`, `cliente`, `admin`
+ * @param {string} token The cliente token
+ * @return {"artigiano" | "cliente" | "amministratore"} The cliente type, which can be `artigiano`, `cliente`, `amministratore`
  * @default returns "unregistered"
  * @author Leonardo Basso
  * */

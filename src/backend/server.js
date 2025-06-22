@@ -17,8 +17,33 @@ const {
     loginClient,
     loginAdmin
 } = require('./auth/auth_api.js');
-const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts } = require('./product/product_api.js');
-const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
+const {
+    uploadProduct,
+    updateProduct,
+    deleteProduct,
+    getAllProducts,
+    getProductsByArtisan,
+    getProducts,
+    getNameByProductId,
+} = require('./product/product_api.js');
+const {uploadCategory, deleteCategory, updateCategory, getAllCategories} = require('./category/category_api.js');
+const {researchAllProducts, researchProductById} = require('./profileClient/recuperoProdotti.js');
+const {
+    getReports,
+    resetPassword,
+    resetMail,
+    Report,
+    GetBuyproduct,
+    solveReport
+} = require('./profileClient/gestioneprofilo.js');
+const {
+    createOrder,
+    getOrdersByArtisan,
+    getOrdersByCustomer
+} = require('./order/order_api.js');
+
+/** Port for the frontend server */
+const frontendPort = 8000;
 /** Port for the backend server */
 const port = process.env.PORT || 8080;
 /** IP address */
@@ -285,7 +310,7 @@ app.post('/api/auth/register/admin', registerAdmin);
  * /api/auth/login/artisan:
  *   post:
  *     summary: Login artisan
- *     description: Authenticate an artisan user and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
+ *     description: Authenticate an artisan cliente and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
  *     tags:
  *       - Authentication
  *       - Artisan
@@ -344,7 +369,7 @@ app.post('/api/auth/login/artisan', loginArtisan);
  * /api/auth/login/client:
  *   post:
  *     summary: Login client
- *     description: Authenticate a client user and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
+ *     description: Authenticate a client cliente and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
  *     tags:
  *       - Authentication
  *       - Client
@@ -663,7 +688,7 @@ app.post('/api/product/upload', checkArtisan, uploadProduct);
  *            message:
  *             type: string
  *             example: "Product not found"
- */ 
+ */
 app.put('/api/product/update', checkArtisan, updateProduct);
 /**
  * @swagger
@@ -1166,6 +1191,106 @@ app.delete('/api/category/delete', checkAdmin, deleteCategory);
  *                                  example: "Internal server error"
  */
 app.get('/api/category/all', getAllCategories);
+
+// TODO: doc e spostare funzione asincrona in altro file
+app.get('/api/artigiano/dashboard', checkArtisan, async (req, res) => {
+    try {
+        const artisan_name = req.username;
+        const d = new Dashboard(artisan_name);
+        
+        //TODO 
+        //metodo per prendere tutti i prodotti
+
+        res.status(200).json({ message: 'Dashboard data', data: "TODO" });
+
+    } catch (error){
+        console.error(error);
+        res.status(400).json({message: 'Bad request', error: error.message})
+
+    }
+});
+
+// TODO: Utilizzare JWT per autenticazione e ottenere username
+// TODO: doc e spostare funzione asincrona in altro file
+app.get('/api/client/Profile', async (req, res) => {
+    try {
+        const profile = new ProfileClient(req.query.username); // esempio con username passato da query
+        const products = await profile.getBuyProducts();
+        res.status(200).json(products);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
+// TODO: Utilizzare JWT per autenticazione e ottenere username
+// TODO: doc e spostare funzione asincrona in altro file
+app.put('/api/client/password', async (req, res) => {
+    const { username, newPassword } = req.body;
+    try {
+        const profile = new ProfileClient(username);
+        const result = await profile.resetPassword(newPassword);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
+// TODO: Utilizzare JWT per autenticazione e ottenere username
+// TODO: doc e spostare funzione asincrona in altro file
+app.put('/api/client/email', async (req, res) => {
+    const { username, newEmail } = req.body;
+    try {
+        const profile = new ProfileClient(username);
+        const result = await profile.ResetMail(newEmail);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
+// TODO: Utilizzare JWT per autenticazione
+// TODO: doc e spostare funzione asincrona in altro file
+app.post('/api/client/report', async (req, res) => {
+    const { idSignal, orderId, description, resolved } = req.body;
+    try {
+        const profile = new ProfileClient(); // non servono parametri per segnalazione
+        const result = await profile.newSignal(idSignal, orderId, description, resolved);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
+// All products
+// TODO: doc e spostare funzione asincrona in altro file
+app.get('/api/ricerca/dashboard', async (req, res) => {
+    try {
+        //const research = new ProductResearch();
+        //const products = await research.getAllProducts();
+        //res.status(200).json(products);
+        res.status(200).json({ message: 'Not implemented' });
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
+
+// products by id
+// TODO: doc e spostare funzione asincrona in altro file
+app.get('/api/ricerca/dashboard/:id', async (req, res) => {
+    try {
+        const research = new ProductResearch(req.params.id);
+        const product = await research.getProductById();
+        res.status(200).json(product);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Bad request', error: error.message });
+    }
+});
 
 /**
  * Start the server
