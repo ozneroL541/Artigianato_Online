@@ -4,7 +4,8 @@
   "description": "Il cliente è una startup che vuole vendere online prodotti artigianali realizzati da creativi locali. La piattaforma consente agli artigiani di creare un profilo, caricare i propri prodotti, gestire l’inventario e gli ordini, mentre i clienti possono sfogliare il catalogo, fare acquisti e gestire il proprio profilo.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -35,5 +36,8 @@
     "express-rate-limit": "^7.5.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "jest": "^30.0.2"
   }
 }
