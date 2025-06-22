@@ -1,7 +1,5 @@
- // Segnala.test.js
 const { Segnala } = require('./Report.js');
 const { pool }=require('../db/dbConnection.js');
-
 
 jest.mock('../db/dbConnection.js', () => ({
   pool: {
@@ -18,7 +16,7 @@ describe('Segnala class', () => {
     it('should insert a new report and return success message', async () => {
       pool.query.mockResolvedValueOnce({});
 
-      const report = new Segnala(null, 1, null, 'Segnalazione test', false);
+      const report = new Report(null, 1, null, 'Segnalazione test', false);
       const result = await report.newReport();
 
       expect(pool.query).toHaveBeenCalledTimes(1);
@@ -28,7 +26,7 @@ describe('Segnala class', () => {
     it('should throw an error if insert fails', async () => {
       pool.query.mockRejectedValueOnce(new Error('DB error'));
 
-      const report = new Segnala(null, 1, null, 'Errore DB', false);
+      const report = new Report(null, 1, null, 'Errore DB', false);
 
       await expect(report.newReport()).rejects.toThrow('Failed to insert report into the database');
     });
@@ -39,7 +37,7 @@ describe('Segnala class', () => {
       const mockRows = [{ id_segnalazione: 1, descrizione: 'Test' }];
       pool.query.mockResolvedValueOnce({ rows: mockRows });
 
-      const result = await Segnala.getReports();
+      const result = await Report.getReports();
 
       expect(pool.query).toHaveBeenCalledWith(expect.stringContaining('SELECT *'), undefined);
       expect(result).toEqual(mockRows);
@@ -48,7 +46,7 @@ describe('Segnala class', () => {
     it('should throw an error if query fails', async () => {
       pool.query.mockRejectedValueOnce(new Error('Query error'));
 
-      await expect(Segnala.getReports()).rejects.toThrow('Failed to fetch reports from the database');
+      await expect(Report.getReports()).rejects.toThrow('Failed to fetch reports from the database');
     });
   });
 
@@ -56,7 +54,7 @@ describe('Segnala class', () => {
     it('should update a report as solved', async () => {
       pool.query.mockResolvedValueOnce({});
 
-      const result = await Segnala.solveReport(123);
+      const result = await Report.solveReport(123);
 
       expect(pool.query).toHaveBeenCalledWith(expect.stringContaining('UPDATE'), [123]);
       expect(result).toEqual({ message: 'Report marked as solved successfully' });
