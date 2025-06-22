@@ -1,5 +1,5 @@
-import {ProfileClient, PassWord, Email} from './ProfileClient.js';
-import {Segnala} from './Report.js';
+const {ProfileClient, PassWord, Email} = require('./ProfileClient.js');
+const {Segnala} = require('./Report.js');
 
 /**
  * Reset the password for a given cliente.
@@ -102,7 +102,7 @@ const solveReport = async (req, res) => {
         res.status(400).json({message: 'Bad request', error: error.message});
     }
 };
-export {
+module.exports =  {
     GetBuyproduct,
     Report,
     resetMail,

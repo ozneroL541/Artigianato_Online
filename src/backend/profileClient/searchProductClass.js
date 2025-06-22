@@ -1,4 +1,4 @@
-import{pool} from'../db/dbConnection.js';
+const {pool} = require('../db/dbConnection.js');
 /**
  * Represents a Product Research process.
  * This class is intended to be used as a base class.
@@ -85,6 +85,6 @@ class SearchAllProduct{
 
 
 
-export{ 
+module.exports = { 
     SearchProductById, 
     SearchAllProduct};

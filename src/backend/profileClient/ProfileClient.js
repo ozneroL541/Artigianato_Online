@@ -1,4 +1,4 @@
-import { pool } from "../db/dbConnection.js";
+const { pool } = require("../db/dbConnection.js");
 
 class ProfileClient{
 
@@ -97,4 +97,4 @@ class Email{
 
    }
 
-export {ProfileClient,PassWord,Email};
+module.exports = {ProfileClient,PassWord,Email};

@@ -36,11 +36,6 @@ const {
     GetBuyproduct,
     solveReport
 } = require('./profileClient/gestioneprofilo.js');
-const {
-    createOrder,
-    getOrdersByArtisan,
-    getOrdersByCustomer
-} = require('./order/order_api.js');
 
 /** Port for the frontend server */
 const frontendPort = 8000;

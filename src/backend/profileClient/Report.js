@@ -1,4 +1,4 @@
-import {pool} from "../db/dbConnection.js";
+const {pool} = require("../db/dbConnection.js");
 
 class Segnala {
     static db3TableName = 'segnalazioni';
@@ -64,4 +64,4 @@ class Segnala {
     }
 }
 
-export {Segnala};
+module.exports = {Segnala};

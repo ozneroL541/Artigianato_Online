@@ -1,4 +1,4 @@
-import { SearchProductById, SearchAllProduct } from'./searchProductClass.js';
+const { SearchProductById, SearchAllProduct } = require('./searchProductClass.js');
 
 /**
  * Research of a product by ID.
@@ -34,7 +34,7 @@ const researchAllProducts = async (req, res) => {
     }
 };
 
-export{
+module.exports = {
     researchAllProducts,
     researchProductById
 };

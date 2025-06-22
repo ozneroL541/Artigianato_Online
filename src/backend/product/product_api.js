@@ -145,4 +145,4 @@ const getProducts = async (req, res) => {
     }
 }
 
-export { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts };
+module.exports = { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts };

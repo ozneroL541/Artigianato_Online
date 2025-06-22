@@ -2,9 +2,9 @@
   "name": "profileclient",
   "version": "1.0.0",
   "main": "gestioneprofilo.js",
-  "type": "module",
+  "type": "commonjs",
   "keywords": ["profile", "client", "user", "product", "catalog", "management"],
   "author": "Ballerini Stefano",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "description": "in this part we controll the product of client"
 }
