@@ -14,9 +14,10 @@
 
 body {
     background-color: var(--background-color);
+    overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6, p, a, span, li, input, textarea, select, button {
+h1, h2, h3, h4, h5, h6, p, a, span, li, input, textarea, select, button, time {
     color: var(--lite-color);
 }
 
@@ -28,7 +29,7 @@ a {
     text-decoration: none;
 }
 
-input, button, dialog, select, option {
+input, button, dialog, select, option, textarea {
     border: 1px solid rgba(238, 238, 238, 0.03);
     padding: .5rem 1rem;
     background-color: rgba(238, 238, 238, 0.05);
@@ -42,15 +43,32 @@ option {
 button {
     cursor: pointer
 }
+button:hover {
+    transition: ease-in-out .3s;
+    background-color: rgba(238, 238, 238, 0.08);
+}
+
+input:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
 
 dialog {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 200px 2000px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 200px 2000px rgba(0, 0, 0, 0.65);
     background-color: var(--lite-background);
     border-radius: 10px;
     padding: 1rem 2rem;
+}
+
+dialog::backdrop {
+    backdrop-filter: blur(2px);
+}
+
+summary::marker {
+    color: var(--lite-color);
 }
 
 /* General styles and classes */
@@ -59,6 +77,11 @@ dialog {
     border: 1px solid rgba(238, 238, 238, 0.03);
     background-color: rgba(238, 238, 238, 0.05);
     border-radius: 10px;
+}
+
+.standard-box-hover:hover {
+    transition: ease-in-out .3s;
+    background-color: rgba(238, 238, 238, 0.08);
 }
 
 .text-center {
@@ -80,26 +103,97 @@ dialog {
     cursor: pointer;
     margin-right: -1.5rem;
     margin-top: -1.9rem;
-
 }
+
 .collapsed-text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 80%;
 }
+
 .btn-delete {
     border: 1px solid rgba(255, 59, 48, 0.2);
     background-color: rgba(255, 59, 48, 0.2);
 }
-
+.btn-delete:hover {
+    transition: ease-in-out .3s;
+    background-color: rgba(255, 59, 48, 0.4);
+}
 .btn-edit {
     border: 1px solid rgba(48, 255, 76, 0.2);
     background-color: rgba(48, 255, 76, 0.2);
 }
+.btn-edit:hover {
+    transition: ease-in-out .3s;
+    background-color: rgba(48, 255, 76, 0.4);
+}
 
 .btn-close:hover {
     background-color: #e6352b;
+}
+
+.modal-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: .5rem;
+}
+
+.modal-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    margin-bottom: .5rem;
+}
+
+.text-small {
+    font-size: .8rem;
+}
+
+.cards-container {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+}
+
+.cards {
+    width: 90vw;
+}
+
+.hide {
+    display: none;
+    opacity: 0;
+}
+
+@media screen and (min-width: 823px) {
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 250px);
+        justify-content: center;
+        gap: 1rem;
+    }
+}
+
+@media screen and (min-width: 1330px) {
+    .cards {
+        max-width: 70vw;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .cards {
+        grid-template-columns: repeat(auto-fill, 300px);
+
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .searchpage__sidebar {
+        width: 200px;
+        display: block;
+    }
 }
 
 /* Styling webkit */

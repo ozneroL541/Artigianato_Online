@@ -1,3 +1,4 @@
+import {backendUrl} from "../../utils.js";
 /**
  * This function implements the API for the artisan registration
  * @param {string} username the username of the artisan
@@ -9,7 +10,7 @@
  */
 export const registerArtisan = async (username, password, companyName, email, iban) => {
     try {
-        const response = await fetch('http://localhost:8080/api/auth/register/artisan', {
+        const response = await fetch(`${backendUrl}/api/auth/register/artisan`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +34,7 @@ export const registerArtisan = async (username, password, companyName, email, ib
 /**
  * This function implements the API for the client registration
  * @param {string} username the username of the client
- * @param {string} password The user password
+ * @param {string} password The cliente password
  * @param {string} name The client name
  * @param {string} surname The client surname
  * @param {string} email The client email
@@ -41,7 +42,7 @@ export const registerArtisan = async (username, password, companyName, email, ib
  */
 export const registerClient = async (username, password, name, surname, email) => {
     try {
-        const response = await fetch('http://localhost:8080/api/auth/register/client', {
+        const response = await fetch(`${backendUrl}/api/auth/register/client`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

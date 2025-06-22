@@ -1,74 +1,353 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Artigiani Online - Home Page</title>
+    <link rel="icon" href="../assets/favicon.png">
+    <link rel="manifest" href="../manifest.json">
+    <script defer type="module" src="../script/utils.js"></script>
     <script defer type="module" src="../components/layout/PageLayout.js"></script>
-    <script defer type="module" src="../components/general/UserMessage.js"></script>
+    <script defer type="module" src="../components/general/SearchBar.js"></script>
     <link rel="stylesheet" href="../assets/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <meta charset="UTF-8">
-
 </head>
 <body>
-<page-layout page-title="Home Page">
-    <h1>Homepage</h1>
-    <p>This is the home page content.</p>
-    <p>Go to dashboard: <a href="/artigiano/dashboard">here</a></p>
-    <user-message
-            msg-title="Il tavolo non è bello"
-            msg-desc = "lorem ipsum dolor sit amen altro testo di prova aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-            msg-prod="Tavolo"
-            msg-date="23/08/2024"
-    ></user-message>
+    <page-layout page-title="Home Page">
+        <h1 class="text-center">Artigiani Online</h1>
+        <search-bar></search-bar>
+        <h2 class="text-center" id="randomProductsSection">Scopri i nostri prodotti:</h2>
+        <section class="standard__cards__container">
+            <div class="standard__cards random__cards" id="randomProductContainer"></div>
+        </section>
+        <p class="text-small text-center discover__more"><a id="randomDiscoverMore"> Scopri di piu</a></p>
 
-    <h2>Categoria</h2>
-    <section class="products">
-        <div class="product">
-            <h3 class="name">Nome</h3>
-            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
-        </div>
-        <div class="product">
-            <h3 class="name">Nome</h3>
-            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
-        </div>        <div class="product">
-        <h3 class="name">Nome</h3>
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
-    </div>        <div class="product">
-        <h3 class="name">Nome</h3>
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi asperiores at autem beatae consectetur et explicabo, illo laboriosam minus molestiae, nesciunt nihil optio quibusdam quo reprehenderit rerum vitae, voluptas.</p>
+        <h2 class="text-center" id="categoriesProductsSection">Tutti di diverse categorie!</h2>
+        <section class="standard__cards__container">
+            <div class="standard__cards category__cards" id="categoryContainer"></div>
+        </section>
+        <p class="text-small text-center discover__more"><a id="categoryDiscoverMore"> Scopri di piu</a></p>
 
-    </div>
-    </section>
-</page-layout>
+    </page-layout>
 </body>
-<style>
+<script type="module">
+    import {searchProduct} from "../script/crud/products/search.js";
+    import {getCategories, frontendUrl, backendUrl} from "../script/utils.js";
 
-    .products {
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        // Show 4 random products
+        const paramsForRandomProducts = new URLSearchParams(new URL(frontendUrl).search);
+        paramsForRandomProducts.append("limit", "12");
+        paramsForRandomProducts.append("random", "true");
+        const randomProducts = await searchProduct(paramsForRandomProducts);
+        const randomProductContainer = document.getElementById('randomProductContainer');
+        randomProducts.forEach(p => {
+            const randomProduct = document.createElement('article');
+            randomProduct.className = "random__product";
+            randomProduct.innerHTML = `
+            <article class="standard__card standard-box">
+                <div class="standard__card__top text-small">
+                    <p class="standard__category standard-box-hover"><a href="${frontendUrl}/products/category?categoria=${p.categoria.categoria}">${p.categoria.categoria}</a></p>
+                    <p class="standard__stock">${p.disponibilita} rimasti</p>
+                </div>
+                <h2 class="standard__card__name collapsed-text">${p.nome_prodotto}</h2>
+                <div class="standard__card__top">
+                    <p class="product__artisan text-small"><a href="${frontendUrl}/products/artisan?username_artigiano=${p.username_artigiano}">${p.username_artigiano}</a></p>
+                </div>
+                <p class="product__price">${p.prezzo}€</p>
+                <button class="btn-edit buyButton" data-id="${p.id_prodotto}" data-prodname="${p.nome_prodotto}">Compra!</button>
+            </article>
+            `;
+            randomProductContainer.appendChild(randomProduct);
+        });
+
+        const cats = await getCategories();
+        const selectedCategories = [cats.categories[0], cats.categories[1], cats.categories[2], cats.categories[3]];
+
+        const categoryContainer = document.getElementById('categoryContainer');
+        for (let c of selectedCategories) {
+            const categoryCard = document.createElement("div");
+            categoryCard.className = "category";
+            const title = document.createElement("h3");
+            title.innerHTML = `<a class="category__text" href="${frontendUrl}/products/category?categoria=${c}">${c}</a>`;
+
+            title.className = "text-center ";
+            categoryCard.appendChild(title);
+
+            const params = new URLSearchParams();
+            params.append("limit", "4");
+            params.append("random", "true");
+            params.append("categoria", c);
+
+            const products = await searchProduct(params);
+
+            products.forEach(p => {
+                const article = document.createElement('article');
+                article.innerHTML = `
+                    <article class="standard__card standard-box">
+                        <header class="standard__card__top">
+                            <p class="text-small">${p.disponibilita} rimasti</p>
+                            <p class="text-small"><a href="${frontendUrl}/artigiano?username_artigiano=${c}">${p.username_artigiano}</a></p>
+                        </header>
+                        <h2 class="standard__card__name collapsed-text">${p.nome_prodotto}</h2>
+                        <p>${p.prezzo}€</p>
+                        <button class="buyButton" data-id="${p.id_prodotto}" data-prodname="${p.nome_prodotto}">Compra</button>
+                    </article>
+                `;
+                categoryCard.appendChild(article);
+            });
+            categoryContainer.appendChild(categoryCard);
+
+            const discoverMoreText = document.createElement("p");
+            discoverMoreText.className = "text-center ";
+            discoverMoreText.innerHTML = `<a class="category__discover__more" href="${frontendUrl}/products/category?categoria=${c}">...</a>`;
+            categoryCard.appendChild(discoverMoreText);
+        }
+        // Adds a product to the
+        document.querySelectorAll('.buyButton').forEach(button => {
+            button.addEventListener('click', () => {
+                const productId = button.dataset.id;
+                const productName = button.dataset.prodname;
+                addToCart(productId, productName);
+            });
+        });
+    });
+    document.getElementById('randomDiscoverMore').addEventListener('click', () => {window.location.href = `${frontendUrl}/products/search?`})
+    document.getElementById('categoryDiscoverMore').addEventListener('click', () => {window.location.href = `${frontendUrl}/categories`})
+
+</script>
+<style>
+    .standard__cards__container {
+        justify-content: center;
         display: flex;
     }
 
-    .product {
-        display: inline-block;
-        border: 1px solid rgba(238, 238, 238, 0.03);
+    .standard__card__name {
+        font-size: 1.2rem;
+    }
+
+    .standard__cards {
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+        width: 80vw;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .standard__card {
+        height: 200px;
+        display: grid;
+        gap: .5rem;
+        padding: 1rem;
+    }
+
+    .standard__category {
         background-color: rgba(238, 238, 238, 0.05);
-        border-radius: .5rem;
-        padding: 10px;
-        margin-right: 10px;
-        width: 200px;
+        border: 1px solid rgba(238, 238, 238, 0.05);
+        padding: .35rem;
+        border-radius: 100vh;
     }
 
-    .product .name {
-        margin-top: 0;
-        font-size: 1.2em;
+    .standard__card__top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    .product .description {
-        font-size: 0.9em;
-        color: #eee;
+    .category__cards > .category:nth-child(1) .standard__card {
+        background-color: rgba(255, 86, 86, 0.05);
+        border: 1px solid rgba(255, 86, 86, 0.03);
+    }
+
+    .category__cards > .category:nth-child(2) .standard__card {
+        background-color: rgba(255, 234, 118, 0.05);
+        border: 1px solid rgba(255, 234, 118, 0.03);
+
+    }
+
+    .category__cards > .category:nth-child(3) .standard__card {
+        background-color: rgba(133, 255, 116, 0.05);
+        border: 1px solid rgba(133, 255, 116, 0.03);
+
+    }
+
+    .category__cards > .category:nth-child(4) .standard__card {
+        border: 1px solid rgba(255, 187, 255, 0.03);
+        background-color: rgba(255, 187, 255, 0.05);
+    }
+
+    .category {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-direction: column;
+    }
+    .category__text{
+        font-weight: 500;
+        padding: 1rem;
+        border-radius: 100vh;
+    }
+    .category__cards > .category:nth-child(1) .category__text {
+        color: rgba(255, 86, 86);
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 86, 86, 0.3);
+    }
+
+    .category__cards > .category:nth-child(2) .category__text {
+        color: rgba(255, 234, 118);
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 234, 118, 0.3);
+
+    }
+
+    .category__cards > .category:nth-child(3) .category__text {
+        color: rgba(133, 255, 116);
+        text-decoration: underline;
+        text-decoration-color: rgba(133, 255, 116, 0.3);
+
+    }
+
+    .category__cards > .category:nth-child(4) .category__text {
+        color: rgba(255, 187, 255);
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 187, 255, 0.3);
+    }
+
+    .discover__more {
         opacity: .5;
-        white-space: normal;
+        cursor: pointer;
+        margin-bottom: 3rem;
     }
 
+    .category__cards > .category:nth-child(1) .category__discover__more {
+        color: rgba(255, 86, 86, 0.5);
+    }
 
+    .category__cards > .category:nth-child(2) .category__discover__more {
+        color: rgba(255, 234, 118, 0.5);
+    }
+
+    .category__cards > .category:nth-child(3) .category__discover__more {
+        color: rgba(133, 255, 116, 0.5);
+
+    }
+
+    .category__cards > .category:nth-child(4) .category__discover__more {
+        color: rgba(255, 187, 255, 0.5);
+    }
+
+    @media screen and (max-width: 1500px) {
+        .standard__cards {
+            width: 90vw;
+        }
+    }
+
+    @media screen and (max-width: 1300px) {
+        .standard__cards.random__cards {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .standard__cards.category__cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        .standard__cards.random__cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media screen and (max-width: 630px) {
+        .standard__cards.random__cards {
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        .standard__cards.category__cards {
+            grid-template-columns: repeat(1, 1fr);
+        }
+    }
 </style>
+<script type="module">
+    import {searchProduct} from "../script/crud/products/search.js";
+    import {getCategories, frontendUrl, backendUrl} from "../script/utils.js";
+    try{
+        // Show 4 random products
+        const paramsForRandomProducts = new URLSearchParams(new URL(frontendUrl).search);
+        paramsForRandomProducts.append("limit", "12");
+        paramsForRandomProducts.append("random", "true");
+        const randomProducts = await searchProduct(paramsForRandomProducts);
+        const randomProductContainer = document.getElementById('randomProductContainer');
+        randomProducts.forEach(p => {
+            const randomProduct = document.createElement('article');
+            randomProduct.className = "random__product";
+            randomProduct.innerHTML = `
+            <article class="standard__card standard-box">
+                <div class="standard__card__top text-small">
+                    <p class="standard__category"><a href="${frontendUrl}/products/category?categoria=${p.categoria.categoria}">${p.categoria.categoria}</a></p>
+                    <p class="standard__stock">${p.disponibilita} rimasti</p>
+                </div>
+                <h2 class="standard__card__name collapsed-text">${p.nome_prodotto}</h2>
+                <div class="standard__card__top">
+                    <p class="product__artisan text-small"><a href="${frontendUrl}/products/artisan?username_artigiano=${p.username_artigiano}">${p.username_artigiano}</a></p>
+                </div>
+                <p class="product__price">${p.prezzo}€</p>
+                <button class="btn-edit">Compra!</button>
+            </article>
+            `;
+            randomProductContainer.appendChild(randomProduct);
+        });
+        const cats = await getCategories();
+        const selectedCategories = [cats.categories[0], cats.categories[1], cats.categories[2], cats.categories[3]];
+
+        const categoryContainer = document.getElementById('categoryContainer');
+        for (let c of selectedCategories) {
+            const categoryCard = document.createElement("div");
+            categoryCard.className = "category";
+            const title = document.createElement("h3");
+            title.innerHTML = `<a class="category__text" href="${frontendUrl}/products/category?categoria=${c}">${c}</a>`;
+
+            title.className = "text-center ";
+            categoryCard.appendChild(title);
+
+            const params = new URLSearchParams();
+            params.append("limit", "4");
+            params.append("random", "true");
+            params.append("categoria", c);
+
+            const products = await searchProduct(params);
+
+            products.forEach(p => {
+                const article = document.createElement('article');
+                article.innerHTML = `
+                    <article class="standard__card standard-box">
+                        <header class="standard__card__top">
+                            <p class="text-small">${p.disponibilita} rimasti</p>
+                            <p class="text-small"><a href="${frontendUrl}/artisan?username_artigiano=${c}">${p.username_artigiano}</a></p>
+                        </header>
+                        <h2 class="standard__card__name collapsed-text">${p.nome_prodotto}</h2>
+                        <p>${p.prezzo}€</p>
+                        <button class="">Compra</button>
+                    </article>
+                `;
+                categoryCard.appendChild(article);
+            });
+            categoryContainer.appendChild(categoryCard);
+
+            const discoverMoreText = document.createElement("p");
+            discoverMoreText.className = "text-center ";
+            discoverMoreText.innerHTML = `<a class="category__discover__more" href="${frontendUrl}/products/category?categoria=${c}">...</a>`;
+            categoryCard.appendChild(discoverMoreText);
+        }
+    } catch (e) {
+        console.error("Error fetching products or categories:", e);
+        const randomProductContainer = document.getElementById('randomProductContainer');
+        randomProductContainer.innerHTML = `<p class="text-center">Non ci sono prodotti da mostrare al momento.</p>`;
+    }
+    document.getElementById('randomDiscoverMore').addEventListener('click', () => {window.location.href = `${frontendUrl}/products/search?`})
+    document.getElementById('categoryDiscoverMore').addEventListener('click', () => {window.location.href = `${frontendUrl}/categories`})
+
+</script>
 </html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../../assets/style.css">
+    <script defer type="module" src="../../../components/layout/PageLayout.js"></script>
+</head>
+<body>
+<page-layout name="Admin Login">
+    <article class="login">
+        <div class="login__content">
+            <div id="artisanError" class="error-message" style="display: none; color: red;"></div>
+            <label>
+                <input type="text" id="username" placeholder="Username" aria-required="true">
+                <input type="password" id="password" placeholder="Password" aria-required="true">
+                <button id="loginBtn">Login!</button>
+            </label>
+        </div>
+        <p class="text-center">Non hai un account? Allora <a href="/auth/admin/register">registrati</a></p>
+    </article>
+
+</page-layout>
+
+</body>
+
+<script type="module">
+    import {login} from '../../../script/crud/auth/login.js';
+
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        login(username, password, "admin");
+    });
+</script>
+
+<style>
+    .login {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+    }
+
+    .login__content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 600px;
+        height: 220px;
+    }
+
+    .login__content label > * {
+        width: 100%;
+        margin-bottom: .5rem;
+    }
+
+    .tab__title {
+        text-align: center;
+        margin: 1rem 0;
+    }
+</style>
+</html>

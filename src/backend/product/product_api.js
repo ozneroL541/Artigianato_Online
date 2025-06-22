@@ -1,4 +1,5 @@
-import { Product } from './Product.js';
+const { Category } = require('../category/Category.js');
+const { Product } = require('./Product.js');
 
 /**
  * Uploads a new product to the database.
@@ -9,15 +10,15 @@ import { Product } from './Product.js';
 const uploadProduct = async (req, res) => {
     try {
         const username_artigiano = req.username;
-        const { nome_prodotto, categoria, prezzo, disponibilita } = req.body;
+        const {nome_prodotto, categoria, prezzo, disponibilita} = req.body;
         if (!nome_prodotto || !prezzo || !disponibilita) {
-            return res.status(400).json({ message: 'Missing required fields' });
+            return res.status(400).json({message: 'Missing required fields'});
         }
         const product = new Product(null, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita);
         const id = await product.save();
-        res.status(201).json({ message: 'Product uploaded successfully', product_id: id });
+        res.status(201).json({message: 'Product uploaded successfully', product_id: id});
     } catch (error) {
-        res.status(400).json({ message: 'Bad request', error: error.message });
+        res.status(400).json({message: 'Bad request', error: error.message});
     }
 }
 
@@ -30,20 +31,19 @@ const uploadProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         const username_artigiano = req.username;
-        const { id_prodotto, nome_prodotto, categoria, prezzo, disponibilita } = req.body;
+        const {id_prodotto, nome_prodotto, categoria, prezzo, disponibilita} = req.body;
         if (!id_prodotto || !nome_prodotto || !prezzo || !disponibilita) {
-            return res.status(400).json({ message: 'Missing required fields' });
+            return res.status(400).json({message: 'Missing required fields'});
         }
         const product = new Product(id_prodotto, username_artigiano, nome_prodotto, categoria, prezzo, disponibilita);
         const updated = await product.update();
         if (updated) {
-            res.status(200).json({ message: 'Product updated successfully' });
+            res.status(200).json({message: 'Product updated successfully'});
         } else {
-            res.status(404).json({ message: 'Product not updated' });
+            res.status(404).json({message: 'Product not updated'});
         }
-    }
-    catch (error) {
-        res.status(400).json({ message: 'Bad request', error: error.message });
+    } catch (error) {
+        res.status(400).json({message: 'Bad request', error: error.message});
     }
 }
 
@@ -56,19 +56,19 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
     try {
         const username_artigiano = req.username;
-        const { id_prodotto } = req.body;
+        const {id_prodotto} = req.body;
         if (!id_prodotto) {
-            return res.status(400).json({ message: 'Missing product ID' });
+            return res.status(400).json({message: 'Missing product ID'});
         }
         const product = new Product(id_prodotto, username_artigiano);
         const deleted = await product.delete();
         if (deleted) {
-            res.status(200).json({ message: 'Product deleted successfully' });
+            res.status(200).json({message: 'Product deleted successfully'});
         } else {
-            res.status(404).json({ message: 'Product not deleted' });
+            res.status(404).json({message: 'Product not deleted'});
         }
     } catch (error) {
-        res.status(400).json({ message: 'Bad request', error: error.message });
+        res.status(400).json({message: 'Bad request', error: error.message});
     }
 }
 /*
@@ -82,7 +82,7 @@ const getAllProducts = async (req, res) => {
         const products = await Product.getAll();
         res.status(200).json(products);
     } catch (error) {
-        res.status(500).json({ message: 'Internal server error', error: error.message });
+        res.status(500).json({message: 'Internal server error', error: error.message});
     }
 }
 /**
@@ -95,11 +95,27 @@ const getProductsByArtisan = async (req, res) => {
     try {
         const username_artigiano = req.username;
         const products = await Product.getByArtisan(username_artigiano);
-        res.status(200).json(products);
+        res.status(200).json({products});
+    } catch (error) {
+        res.status(500).json({message: 'Internal server error', error: error.message});
+    }
+}
+/**
+ * Retrieves all products by a specific artisan from the database.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object to send the result.
+ * @returns {Promise<void>} A promise that resolves when the products are retrieved.
+ */
+const getNameByProductId = async (req, res) => {
+    try {
+        const id_prodotto = req.query.id_prodotto; // <-- query param
+        const nome_prodotto = await Product.getNameByProductId(id_prodotto);
+        res.status(200).json(nome_prodotto);
     } catch (error) {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
-}
+};
+
 /**
  * Retrives all proucts which match the given parameters.
  * @param {Object} req - The request object containing search parameters.
@@ -108,16 +124,25 @@ const getProductsByArtisan = async (req, res) => {
  */
 const getProducts = async (req, res) => {
     try {
-        const { username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita } = req.query;
-        const products = await Product.search(username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita);
+        const {
+            username_artigiano,
+            nome_prodotto,
+            categoria,
+            prezzo_min,
+            prezzo_max,
+            disponibilita,
+            limit,
+            random
+        } = req.query;
+        const products = await Product.search(username_artigiano, nome_prodotto, categoria, prezzo_min, prezzo_max, disponibilita, limit, random);
         if (products.length === 0) {
             res.status(404).json({ message: 'No products found' });
         } else {
             res.status(200).json(products);
         }
     } catch (error) {
-        res.status(400).json({ message: 'Bad request' });
+        res.status(400).json({message: 'Bad request', error: error.message});
     }
 }
 
-export { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts };
+module.exports = { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts };

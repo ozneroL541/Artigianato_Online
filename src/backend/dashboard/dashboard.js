@@ -1,4 +1,4 @@
-import {pool} from '../db/dbConnection.js';
+const {pool} = require('../db/dbConnection.js');
 // TODO documentation
 class Dashboard{
 
@@ -23,4 +23,4 @@ class Dashboard{
     }
 }
 
-export {Dashboard};
+module.exports = {Dashboard};

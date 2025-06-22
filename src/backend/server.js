@@ -3,9 +3,10 @@ const express = require('express');
 const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
+const reteLimit = require('express-rate-limit');
+const dotenv = require('dotenv');
+dotenv.config();
 
-const { Dashboard } = require('./dashboard/dashboard.js');
-const { ProfileClient}= require('./dashboard/ProfileClient.js');
 const { checkArtisan, checkClient, checkAdmin } = require('./auth/jwt.js');
 const { delClient, delArtisan, delAdmin } = require('./profile/profile_api.js');
 const {
@@ -16,17 +17,50 @@ const {
     loginClient,
     loginAdmin
 } = require('./auth/auth_api.js');
-const { uploadProduct, updateProduct, deleteProduct, getAllProducts, getProductsByArtisan, getProducts } = require('./product/product_api.js');
-const { uploadCategory, deleteCategory, updateCategory, getAllCategories } = require('./category/category_api.js');
+const {
+    uploadProduct,
+    updateProduct,
+    deleteProduct,
+    getAllProducts,
+    getProductsByArtisan,
+    getProducts,
+    getNameByProductId,
+} = require('./product/product_api.js');
+const {uploadCategory, deleteCategory, updateCategory, getAllCategories} = require('./category/category_api.js');
+const {researchAllProducts, researchProductById} = require('./profileClient/recuperoProdotti.js');
+const {
+    getReports,
+    resetPassword,
+    resetMail,
+    Report,
+    GetBuyproduct,
+    solveReport
+} = require('./profileClient/gestioneprofilo.js');
+
 /** Port for the frontend server */
 const frontendPort = 8000;
 /** Port for the backend server */
-const port = 8080;
+const port = process.env.PORT || 8080;
+/** IP address */
+const ip = process.env.IP_ADDRESS || 'localhost';
+/** Protocol */
+const protocol = process.env.PROTOCOL || 'http';
+/** URL */
+const url = `${protocol}://${ip}:${port}`;
+
+/** Rate limiting middleware to prevent abuse */
+const limiter = reteLimit({
+    windowMs: 30 * 1000, // 1/2 minute
+    max: 120, // Limit each IP to 120 requests per windowMs
+});
+//app.use(limiter);
 
 /** Middleware to enable CORS */
 app.use(cors({
-    origin: `http://localhost:${frontendPort}`,
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    optionsSuccessStatus: 200
 }));
 
 /** Middleware to parse JSON request bodies */
@@ -48,7 +82,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: `http://localhost:${port}`,
+                url: url,
             },
         ],
         security: [
@@ -271,7 +305,7 @@ app.post('/api/auth/register/admin', registerAdmin);
  * /api/auth/login/artisan:
  *   post:
  *     summary: Login artisan
- *     description: Authenticate an artisan user and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
+ *     description: Authenticate an artisan cliente and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
  *     tags:
  *       - Authentication
  *       - Artisan
@@ -330,7 +364,7 @@ app.post('/api/auth/login/artisan', loginArtisan);
  * /api/auth/login/client:
  *   post:
  *     summary: Login client
- *     description: Authenticate a client user and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
+ *     description: Authenticate a client cliente and receive a JWT token for subsequent API calls. The returned token should be included in the Authorization header as Bearer token.
  *     tags:
  *       - Authentication
  *       - Client
@@ -649,7 +683,7 @@ app.post('/api/product/upload', checkArtisan, uploadProduct);
  *            message:
  *             type: string
  *             example: "Product not found"
- */ 
+ */
 app.put('/api/product/update', checkArtisan, updateProduct);
 /**
  * @swagger
@@ -862,6 +896,20 @@ app.get('/api/product/artisan', checkArtisan, getProductsByArtisan);
  *           type: number
  *         description: The availability of the product to filter by.
  *         example: 50
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         description: The maximum number of products to return.
+ *         example: 10
+ *       - in: query
+ *         name: random
+ *         required: false
+ *         schema:
+ *           type: boolean
+ *         description: If true, returns a random selection of products.
+ *         example: true
  *     responses:
  *       200:
  *         description: Successfully retrieved products
@@ -1244,6 +1292,6 @@ app.get('/api/ricerca/dashboard/:id', async (req, res) => {
  * @param {number} port - The port number to listen on.
  */
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
-    console.log(`API documentation available at http://localhost:${port}/api/docs`);
+    console.log(`Server running at ${url}`);
+    console.log(`API documentation available at ${url}/api/docs`);
 });

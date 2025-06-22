@@ -1,5 +1,5 @@
-import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db/dbReferences.js';
-import { pool } from '../db/dbConnection.js';
+const { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } = require('../db/dbReferences.js');
+const { pool } = require('../db/dbConnection.js');
 
 /**
  * Represents a Profile deleting process.
@@ -30,7 +30,7 @@ class DeleteProfile {
         this.username = username;
     }
     /**
-     * Deletes the user from the database.
+     * Deletes the cliente from the database.
      */
     async delete() {
         const query = `DELETE FROM ${this.dbRef.dbTableName}
@@ -84,7 +84,7 @@ class DeleteAdmin extends DeleteProfile {
     }
 };
 
-export {
+module.exports = {
     DeleteClient,
     DeleteArtisan,
     DeleteAdmin

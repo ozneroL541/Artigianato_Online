@@ -1,4 +1,4 @@
-import { pool } from '../db/dbConnection.js';
+const { pool } = require('../db/dbConnection.js');
 
 /**
  * Category class representing a product category in the artisan marketplace.
@@ -11,7 +11,7 @@ class Category {
      * @constructor
      */
     constructor(category_name=null) {
-        this.categoria = category_name.toUpperCase();        
+        this.categoria = category_name ? category_name.toUpperCase() : null;
     }
     /**
      * Save the category to the database.
@@ -40,6 +40,10 @@ class Category {
      * @returns {Promise<boolean>} A promise that resolves to true if the category was updated successfully, false otherwise.
      */
     async update(new_category_name) {
+        if (new_category_name == null) {
+            throw new CategoryError("New category name cannot be null");
+        }
+        new_category_name = new_category_name.toUpperCase();
         const query = 'UPDATE categorie SET categoria = $1 WHERE UPPER(categoria) = $2;';
         const params = [new_category_name, this.categoria];
         if (this.categoria == null || new_category_name == null) {
@@ -118,5 +122,4 @@ class CategoryError extends Error {
     }
 }
 
-
-export { Category, CategoryError };
+module.exports = { Category, CategoryError };

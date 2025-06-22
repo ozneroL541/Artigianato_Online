@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script defer type="module" src="../components/layout/PageLayout.js"></script>
+    <link rel="stylesheet" href="../assets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+</head>
+<body>
+<page-layout page-title="Categorie">
+    <h1 class="text-center">Categorie:</h1>
+    <section class="categories" id="categoryList"></section>
+</page-layout>
+</body>
+<script type="module">
+    import { getCategories, frontendUrl } from "../script/utils.js";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const categories = await getCategories();
+        const cat = categories.categories
+        cat.sort();
+
+        const groupedCategories = cat.reduce((acc, category) => {
+            const firstLetter = category[0].toUpperCase();
+            if (!acc[firstLetter]) {
+                acc[firstLetter] = [];
+            }
+            acc[firstLetter].push(category);
+            return acc;
+        }, {});
+
+        const categoryList = document.getElementById('categoryList');
+        for (const [letter, categories] of Object.entries(groupedCategories)) {
+            const letterElement = document.createElement('h2');
+            letterElement.textContent = letter;
+            letterElement.className = "category__initial";
+            categoryList.appendChild(letterElement);
+
+            const listElement = document.createElement('ul');
+            listElement.className = "category__list"
+            categories.forEach(c => {
+                const categoryElement = document.createElement('li');
+                categoryElement.className = "standard-box standard-box-hover category ";
+                categoryElement.innerHTML = `<a href="${frontendUrl}/products/category?categoria=${c}">${c}</a>`;
+                listElement.appendChild(categoryElement);
+            });
+            categoryList.appendChild(listElement);
+        }
+    });
+</script>
+<style>
+    .category {
+        display: inline-block;
+        padding: .5rem;
+        border-radius: .5rem;
+        margin: .3rem;
+    }
+    .category__initial {font-size: 2rem;}
+    .category__list {
+        margin: .3rem 0;
+    }
+
+</style>
+</html>

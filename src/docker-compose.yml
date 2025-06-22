@@ -6,7 +6,7 @@ services:
         ports:
             - "6543:5432"
         volumes:
-            - pgdata:/var/lib/postgresql/data
+            - pg_artigianato_online:/var/lib/postgresql/data
         environment:
             POSTGRES_USER: artigianato_online
             POSTGRES_HOST: localhost
@@ -30,6 +30,9 @@ services:
             POSTGRES_PORT: 5432
             JWT_SECRET: jwtsecret
             JWT_TTL: '1h'
+            IP_ADDRESS: localhost
+            PORT: '8080'
+            PROTOCOL: http
 
     frontend:
         build: ./frontend
@@ -38,7 +41,13 @@ services:
         ports:
             - "8000:8000"
         environment:
+            IP_ADDRESS: localhost
+            PORT: '8000'
             BACKEND_URL: http://localhost:8080
+            PROTOCOL: http
+        depends_on:
+            - backend
 
 volumes:
-    pgdata:
+    pg_artigianato_online:
+        driver: local

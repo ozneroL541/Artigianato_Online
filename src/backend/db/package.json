@@ -6,16 +6,20 @@
     "database",
     "db",
     "postgresql",
-    "pg", 
+    "pg",
     "references",
     "connections",
     "connection"
   ],
   "author": "Lorenzo Radice",
-  "type": "module",
+  "type": "commonjs",
   "license": "GPL-3.0",
   "dependencies": {
     "dotenv": "^16.5.0",
     "pg": "^8.16.0"
+  },
+  "main": "dbConnection.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

@@ -1,6 +1,6 @@
-import { hashPassword } from './hash.js';
-import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db/dbReferences.js';
-import { pool } from '../db/dbConnection.js';
+const { hashPassword } = require('./hash.js');
+const { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } = require('../db/dbReferences.js');
+const { pool } = require('../db/dbConnection.js');
 
 /**
  * Represents a User registration process.
@@ -38,7 +38,7 @@ class Registration {
     }
 
     /**
-     * Hashes the user's password using the Argon2 algorithm.
+     * Hashes the cliente's password using the Argon2 algorithm.
      * Waring: This method will take a long time to execute for security reasons.
      * @throws {RegistrationError} If hashing fails.
      * @returns {Promise<void>}
@@ -68,7 +68,7 @@ class Registration {
     }
     
     /**
-     * Performs all necessary checks and saves the user to the database.
+     * Performs all necessary checks and saves the cliente to the database.
      * @throws {RegistrationError} If any checks fail or saving fails.
      * @returns {Promise<void>}
      */
@@ -361,7 +361,7 @@ class RegistrationError extends Error {
     }
 }
 
-export { 
+module.exports = { 
     ArtisanRegistration,
     ClientRegistration, 
     AdminRegistration, 

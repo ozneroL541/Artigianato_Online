@@ -1,7 +1,7 @@
-import {verifyPassword} from './hash.js';
-import {genArtisanJWT, genClientJWT, genAdminJWT} from './jwt.js';
-import { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } from '../db/dbReferences.js';
-import { pool } from '../db/dbConnection.js';
+const {verifyPassword} = require('./hash.js');
+const {genArtisanJWT, genClientJWT, genAdminJWT} = require('./jwt.js');
+const { dbReferences, dbArtisanReferences, dbClientReferences, dbAdminReferences } = require('../db/dbReferences.js');
+const { pool } = require('../db/dbConnection.js');
 
 /**
  * Represents a User authentication process.
@@ -70,7 +70,7 @@ class Authentication {
     }
 
     /**
-     * Performs all necessary checks and saves the user to the database.
+     * Performs all necessary checks and saves the cliente to the database.
      * @throws {AuthenticationError} If any checks fail or saving fails.
      * @returns {Promise<void>}
      */
@@ -81,8 +81,8 @@ class Authentication {
 
     /**
      * Performs the login process by checking the username and password.
-     * If successful, generates a JWT for the user.
-     * @returns {Promise<string>} The generated JWT for the user.
+     * If successful, generates a JWT for the cliente.
+     * @returns {Promise<string>} The generated JWT for the cliente.
      * @throws {AuthenticationError} If any checks fail or saving fails.
      */
     async login() {
@@ -98,7 +98,7 @@ class Authentication {
  */
 class ArtisanAuthentication extends Authentication {
     /**
-     * The attribute name for the type of user who wants to log-in.
+     * The attribute name for the type of cliente who wants to log-in.
      * @type {string|null}
      */
     static type = 'artigiano';
@@ -111,8 +111,8 @@ class ArtisanAuthentication extends Authentication {
         super(new dbArtisanReferences(), username, password);
     }
     /**
-     * Generates a JWT for the artisan user.
-     * @returns {Promise<string>} The generated JWT for the artisan user.
+     * Generates a JWT for the artisan cliente.
+     * @returns {Promise<string>} The generated JWT for the artisan cliente.
      */
     async getJWT() {
         return genArtisanJWT(this.username);
@@ -128,7 +128,7 @@ class ArtisanAuthentication extends Authentication {
  */
 class ClientAuthentication extends Authentication {
     /**
-     * The attribute name for the type of user who wants to log-in.
+     * The attribute name for the type of cliente who wants to log-in.
      * @type {string|null}
      */
     static type = 'cliente';
@@ -141,8 +141,8 @@ class ClientAuthentication extends Authentication {
         super(new dbClientReferences(), username, password);
     }
     /**
-     * Generates a JWT for the client user.
-     * @returns {Promise<string>} The generated JWT for the client user.
+     * Generates a JWT for the client cliente.
+     * @returns {Promise<string>} The generated JWT for the client cliente.
      */
     async getJWT() {
         return genClientJWT(this.username);
@@ -158,7 +158,7 @@ class ClientAuthentication extends Authentication {
  */
 class AdminAuthentication extends Authentication {
     /**
-     * The attribute name for the type of user who wants to log-in.
+     * The attribute name for the type of cliente who wants to log-in.
      * @type {string|null}
      */
     static type = 'amministratore';
@@ -171,8 +171,8 @@ class AdminAuthentication extends Authentication {
         super(new dbAdminReferences(), username, password);
     }
     /**
-     * Generates a JWT for the admin user.
-     * @returns {Promise<string>} The generated JWT for the admin user.
+     * Generates a JWT for the admin cliente.
+     * @returns {Promise<string>} The generated JWT for the admin cliente.
      */
     async getJWT() {
         return genAdminJWT(this.username);
@@ -195,7 +195,7 @@ class AuthenticationError extends Error {
     }
 }
 
-export {
+module.exports = {
     ArtisanAuthentication,
     ClientAuthentication,
     AdminAuthentication,

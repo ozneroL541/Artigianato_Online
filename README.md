@@ -2,6 +2,9 @@
 Il cliente è una startup che vuole vendere online prodotti artigianali realizzati da creativi locali. La piattaforma consente agli artigiani di creare un profilo, caricare i propri prodotti, gestire l’inventario e gli ordini, mentre i clienti possono sfogliare il catalogo, fare acquisti e gestire il proprio profilo.
 
 ## Run the project
+> [!important]  
+> You need to have [docker](https://www.docker.com/) installed to run the project.
+
 To run the project build it with the `docker-compose.yml` file in *src*.
 ```sh
     sudo docker compose up --build --remove-orphans -d
