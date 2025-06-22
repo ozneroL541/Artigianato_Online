@@ -1,9 +1,9 @@
 import {setUserInfo} from '../../jwt.js';
 import {backendUrl} from "../../utils.js";
 /**
- * This function implements the API for logging in a user.
+ * This function implements the API for logging in a cliente.
  *
- * The user can be a `client`, an `artisan` or an `admin`
+ * The cliente can be a `client`, an `artisan` or an `admin`
  * @example
  * // Logging in an admin
  * document.getElementById('loginBtn').addEventListener('click', () => {
@@ -12,9 +12,9 @@ import {backendUrl} from "../../utils.js";
  *      login(username, password, "admin");
  * }
  *
- * @param {string} username the username of the user
- * @param {string} password The user password
- * @param {"admin"| "artisan" | "client"} type If the user is an artisan or a client
+ * @param {string} username the username of the cliente
+ * @param {string} password The cliente password
+ * @param {"admin"| "artisan" | "client"} type If the cliente is an artisan or a client
  * @author Leonardo Basso
  */
 export const login = async (username, password, type) => {

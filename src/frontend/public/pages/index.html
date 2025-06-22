@@ -29,6 +29,93 @@
 
     </page-layout>
 </body>
+<script type="module">
+    import {searchProduct} from "../script/crud/products/search.js";
+    import {getCategories, frontendUrl, backendUrl} from "../script/utils.js";
+
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        // Show 4 random products
+        const paramsForRandomProducts = new URLSearchParams(new URL(frontendUrl).search);
+        paramsForRandomProducts.append("limit", "12");
+        paramsForRandomProducts.append("random", "true");
+        const randomProducts = await searchProduct(paramsForRandomProducts);
+        const randomProductContainer = document.getElementById('randomProductContainer');
+        randomProducts.forEach(p => {
+            const randomProduct = document.createElement('article');
+            randomProduct.className = "random__product";
+            randomProduct.innerHTML = `
+            <article class="standard__card standard-box">
+                <div class="standard__card__top text-small">
+                    <p class="standard__category standard-box-hover"><a href="${frontendUrl}/products/category?categoria=${p.categoria.categoria}">${p.categoria.categoria}</a></p>
+                    <p class="standard__stock">${p.disponibilita} rimasti</p>
+                </div>
+                <h2 class="standard__card__name collapsed-text">${p.nome_prodotto}</h2>
+                <div class="standard__card__top">
+                    <p class="product__artisan text-small"><a href="${frontendUrl}/products/artisan?username_artigiano=${p.username_artigiano}">${p.username_artigiano}</a></p>
+                </div>
+                <p class="product__price">${p.prezzo}€</p>
+                <button class="btn-edit buyButton" data-id="${p.id_prodotto}" data-prodname="${p.nome_prodotto}">Compra!</button>
+            </article>
+            `;
+            randomProductContainer.appendChild(randomProduct);
+        });
+
+        const cats = await getCategories();
+        const selectedCategories = [cats.categories[0], cats.categories[1], cats.categories[2], cats.categories[3]];
+
+        const categoryContainer = document.getElementById('categoryContainer');
+        for (let c of selectedCategories) {
+            const categoryCard = document.createElement("div");
+            categoryCard.className = "category";
+            const title = document.createElement("h3");
+            title.innerHTML = `<a class="category__text" href="${frontendUrl}/products/category?categoria=${c}">${c}</a>`;
+
+            title.className = "text-center ";
+            categoryCard.appendChild(title);
+
+            const params = new URLSearchParams();
+            params.append("limit", "4");
+            params.append("random", "true");
+            params.append("categoria", c);
+
+            const products = await searchProduct(params);
+
+            products.forEach(p => {
+                const article = document.createElement('article');
+                article.innerHTML = `
+                    <article class="standard__card standard-box">
+                        <header class="standard__card__top">
+                            <p class="text-small">${p.disponibilita} rimasti</p>
+                            <p class="text-small"><a href="${frontendUrl}/artigiano?username_artigiano=${c}">${p.username_artigiano}</a></p>
+                        </header>
+                        <h2 class="standard__card__name collapsed-text">${p.nome_prodotto}</h2>
+                        <p>${p.prezzo}€</p>
+                        <button class="buyButton" data-id="${p.id_prodotto}" data-prodname="${p.nome_prodotto}">Compra</button>
+                    </article>
+                `;
+                categoryCard.appendChild(article);
+            });
+            categoryContainer.appendChild(categoryCard);
+
+            const discoverMoreText = document.createElement("p");
+            discoverMoreText.className = "text-center ";
+            discoverMoreText.innerHTML = `<a class="category__discover__more" href="${frontendUrl}/products/category?categoria=${c}">...</a>`;
+            categoryCard.appendChild(discoverMoreText);
+        }
+        // Adds a product to the
+        document.querySelectorAll('.buyButton').forEach(button => {
+            button.addEventListener('click', () => {
+                const productId = button.dataset.id;
+                const productName = button.dataset.prodname;
+                addToCart(productId, productName);
+            });
+        });
+    });
+    document.getElementById('randomDiscoverMore').addEventListener('click', () => {window.location.href = `${frontendUrl}/products/search?`})
+    document.getElementById('categoryDiscoverMore').addEventListener('click', () => {window.location.href = `${frontendUrl}/categories`})
+
+</script>
 <style>
     .standard__cards__container {
         justify-content: center;

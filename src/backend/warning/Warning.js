@@ -1,4 +1,5 @@
 const { Order } = require("../order/Order.js");
+const { pool } = require('../db/connection.js');
 
 /**
  * Warning class represents a warning associated with an order.
@@ -27,7 +28,19 @@ class Warning {
      * @throws {Error} If there is an error during the database operation.
      */
     async create() {
-        // TODO
+        const query = `INSERT INTO segnalazioni (id_segnalazione, id_ordine, timestamp_segnalazione, descrizione, risolta)
+                       VALUE (((SELECT MAX(id_segnalazione)+1) AS next_id FROM segnalazioni), $1, CURRENT_TIMESTAMP(), $2, $3) 
+                       RETURNING id_ordine, data_ordine;`;
+        
+        const params = [this.id_ordine, this.descrizione, this.risolta];
+        
+        try{
+            const result = await pool.query(query, params);
+            this.id_segnalazione = result.rows[0].id_segnalazione; // Set the warning ID from the query result
+            return this.id_segnalazione; // Return the ID of the inserted warning
+        }catch(error){
+            throw new Error('Warning already inserted')
+        } 
     }
     /**
      * Marks the warning as resolved.
@@ -36,7 +49,23 @@ class Warning {
      * @throws {Error} If there is an error during the database operation.
      */
     async resolve() {
-        // TODO
+        const query = `UPDATE segnalazioni SET
+                       risolta = TRUE
+                       WHERE id_segnalazione = $1;`;
+
+        const params = [this.id_segnalazione];
+
+        try{
+            const result = await pool.query(query, params);
+            if(result.length === 0){
+                throw new Error('Warning not found');
+            }
+
+            return new Warning(result.rows[0].id_segnalazione, result.rows[0].id_ordine, result.rows[0].timestamp_segnalazione, result.rows[0].descrizione, result.rows[0].risolta);
+
+        }catch(error){
+            throw new Error('Error updating warning: ' + error.message);
+        }
     }
     /**
      * Retrieves a warning by its ID.
@@ -45,7 +74,23 @@ class Warning {
      * @throws {Error} If there is an error during the database operation.
      */
     static async getById(id_segnalazione) {
-        // TODO
+        const query = `SELECT * 
+                       FROM segnalazioni
+                       WHERE id_segnalazione = $1;`;
+
+        const params = [id_segnalazione];
+
+        try {
+            const result = await pool.query(query, params);
+            if (result.length === 0) {
+                throw new Error('Warning not found');
+            }
+
+            return new Warning(result.rows[0].id_segnalazione, result.rows[0].id_ordine, result.rows[0].timestamp_segnalazione, result.rows[0].descrizione, result.rows[0].risolta);
+            
+        } catch (error) {
+            throw new Error('Error fetching warning: ' + error.message);
+        }
     }
     /**
      * Retrieves all warnings associated with a specific order.
@@ -54,7 +99,23 @@ class Warning {
      * @throws {Error} If there is an error during the database operation.
      */
     static async getByOrderId(id_ordine) {
-        // TODO
+        const query = `SELECT * 
+                       FROM segnalazioni
+                       WHERE id_ordine = $1;`;
+
+        const params = [id_ordine];
+
+        try {
+            const result = await pool.query(query, params);
+            if (result.length === 0) {
+                throw new Error('Warnings not found');
+            }
+                                 
+            return result.rows.map(row => new Warning(row.id_segnalazione, row.id_ordine, row.timestamp_segnalazione, row.descrizione, row.risolta));
+            
+        } catch (error) {
+            throw new Error('Error fetching warnings associated with order ' + id_ordine + ': ' + error.message);
+        }
     }
     /**
      * Retrieves all unresolved warnings.
@@ -62,7 +123,21 @@ class Warning {
      * @throws {Error} If there is an error during the database operation.
      */
     static async getUnresolved() {
-        // TODO
+        const query = `SELECT * 
+                       FROM segnalazioni
+                       WHERE risolta = FALSE;`;
+
+        try {
+            const result = await pool.query(query);
+            if (result.length === 0) {
+                throw new Error('Warnings not found');
+            }
+                                 
+            return result.rows.map(row => new Warning(row.id_segnalazione, row.id_ordine, row.timestamp_segnalazione, row.descrizione, row.risolta));
+            
+        } catch (error) {
+            throw new Error('Error fetching unresolved warnings: ' + error.message);
+        }
     }
     /**
      * Retrieves all warnings.
@@ -70,7 +145,20 @@ class Warning {
      * @throws {Error} If there is an error during the database operation.
      */
     static async getAll() {
-        // TODO
+        const query = `SELECT * 
+                       FROM segnalazioni;`;
+
+        try {
+            const result = await pool.query(query);
+            if (result.length === 0) {
+                throw new Error('Warnings not found');
+            }
+                                 
+            return result.rows.map(row => new Warning(row.id_segnalazione, row.id_ordine, row.timestamp_segnalazione, row.descrizione, row.risolta));
+            
+        } catch (error) {
+            throw new Error('Error fetching all warnings: ' + error.message);
+        }
     }
 }
 

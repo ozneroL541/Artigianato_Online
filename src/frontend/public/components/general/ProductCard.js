@@ -1,3 +1,5 @@
+import {addToCart} from "../../script/crud/user/cart.js";
+
 /**
  * This component generates a card for a product with dynamic parameters
  * @param {string} name The name of the product
@@ -13,6 +15,7 @@ class ProductCard extends HTMLElement {
     }
 
     connectedCallback() {
+        const id = this.getAttribute('id');
         const name = this.getAttribute('name');
         const category = this.getAttribute('category');
         const artisan = this.getAttribute('artisan')
@@ -30,14 +33,22 @@ class ProductCard extends HTMLElement {
                     <p class="product__artisan text-small"><a href="http://localhost:8000/products/artisan?username_artigiano=${artisan}">${artisan}</a></p>
                 </div>
                 <p class="product__price">${price}€</p>
-                <button class="btn-edit">Compra!</button>
+                <button class="btn-edit buyButton" data-id="${id}" data-prodname="${name}">Compra!</button>
             </article>
             
             <style>
+                h1, h2, h3, h4, h5, h6, p, a, span, li, input, textarea, select, button, time {
+                    color: var(--lite-color);
+                }
+                
                 .standard-box {
                     border: 1px solid rgba(238, 238, 238, 0.03);
                     background-color: rgba(238, 238, 238, 0.05);
                     border-radius: 10px;
+                }
+                .product__category:hover {
+                    transition: ease-in-out .3s;
+                    background-color: rgba(238, 238, 238, 0.08);
                 }
                 .collapsed-text {
                     overflow: hidden;
@@ -77,7 +88,10 @@ class ProductCard extends HTMLElement {
                     border: 1px solid rgba(48, 255, 76, 0.2);
                     background-color: rgba(48, 255, 76, 0.2);
                 }
-                
+                .btn-edit:hover {
+                    transition: ease-in-out .3s;
+                    background-color: rgba(48, 255, 76, 0.4);
+                }
                 * {
                     margin: 0;
                     padding: 0;
@@ -112,6 +126,17 @@ class ProductCard extends HTMLElement {
 
             </style>
         `;
+
+        this.shadowRoot.querySelectorAll('.buyButton').forEach(button => {
+            button.addEventListener('click', () => {
+                console.log('click')
+                const productId = button.dataset.id;
+                const productName = button.dataset.prodname;
+                addToCart(productId, productName);
+            });
+        });
+
+
     }
 }
 
