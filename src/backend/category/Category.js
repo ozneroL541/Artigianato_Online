@@ -40,6 +40,7 @@ class Category {
      * @returns {Promise<boolean>} A promise that resolves to true if the category was updated successfully, false otherwise.
      */
     async update(new_category_name) {
+        new_category_name = new_category_name.toUpperCase();
         const query = 'UPDATE categorie SET categoria = $1 WHERE UPPER(categoria) = $2;';
         const params = [new_category_name, this.categoria];
         if (this.categoria == null || new_category_name == null) {
