@@ -213,31 +213,37 @@ class Product {
         const params = [];
         if (username_artigiano !== undefined && username_artigiano !== null) {
             query += whereClause ? ' AND' : ' WHERE';
+            whereClause = true; // Set whereClause to true after the first condition
             query += ' username_artigiano = $' + (params.length + 1);
             params.push(username_artigiano);
         }
         if (nome_prodotto !== undefined && nome_prodotto !== null) {
             query += whereClause ? ' AND' : ' WHERE';
+            whereClause = true; // Set whereClause to true after the first condition
             query += ' nome_prodotto LIKE $' + (params.length + 1);
             params.push(`%${nome_prodotto}%`);
         }
         if (categoria !== undefined && categoria !== null) {
             query += whereClause ? ' AND' : ' WHERE';
+            whereClause = true; // Set whereClause to true after the first condition
             query += ' categoria = $' + (params.length + 1);
             params.push((new Category(categoria)).categoria);
         }
         if (prezzo_min !== undefined && prezzo_min !== null) {
             query += whereClause ? ' AND' : ' WHERE';
+            whereClause = true; // Set whereClause to true after the first condition
             query += ' prezzo >= $' + (params.length + 1);
             params.push(prezzo_min);
         }
         if (prezzo_max !== undefined && prezzo_max !== null) {
             query += whereClause ? ' AND' : ' WHERE';
+            whereClause = true; // Set whereClause to true after the first condition
             query += ' prezzo <= $' + (params.length + 1);
             params.push(prezzo_max);
         }
         if (disponibilita !== undefined && disponibilita !== null) {
             query += whereClause ? ' AND' : ' WHERE';
+            whereClause = true; // Set whereClause to true after the first condition
             query += ' disponibilita >= $' + (params.length + 1);
             params.push(disponibilita);
         }
