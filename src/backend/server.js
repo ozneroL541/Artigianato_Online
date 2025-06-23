@@ -1476,9 +1476,110 @@ app.get('/api/ricerca/dashboard/:id', async (req, res) => {
         res.status(400).json({ message: 'Bad request', error: error.message });
     }
 });
+/**
+ * @swagger
+ * info:
+ *   description: "Submits a new order adding it in the database"
+ *   version: "1.0.0"
+ *   title: "Order API"
+ * schemes:
+ *   - "http"
+ * paths:
+ *   /order/buy:
+ *     post:
+ *       tags:
+ *         - "Order"
+ *         - "Product"
+ *       summary: "Create a new order"
+ *       description: "This endpoint allows a client to create a new order."
+ *       parameters:
+ *         - in: "body"
+ *           name: "body"
+ *           description: "Order details"
+ *           required: true
+ *           schema:
+ *             type: "object"
+ *             properties:
+ *               id_prodotto:
+ *                 type: "integer"
+ *                 description: "ID of the product to order"
+ *               quantita:
+ *                 type: "integer"
+ *                 description: "Quantity of the product, the quantity has to be minor or equal of the one in stock"
+ *       responses:
+ *         200:
+ *           description: "Order created successfully"
+ *         400:
+ *           description: "Bad request"
+ *         401:
+ *           description: "Unauthorized"
+ *       security:
+ *         - bearerAuth: []
+ */
 app.post('/api/order/buy', checkClient, createOrder);
+
+/**
+ * @swagger
+ *   /order/get/client:
+ *     get:
+ *       tags:
+ *         - "Order"
+ *         - "Client"
+ *       summary: "Get orders by customer id"
+ *       description: "Retrieve all orders made by a specific customer using their id"
+ *       responses:
+ *         200:
+ *           description: "A list of all the orders by bought by a specific client"
+ *           schema:
+ *             type: "array"
+ *         400:
+ *           description: "Bad request"
+ *         401:
+ *           description: "Unauthorized"
+ *       security:
+ *         - bearerAuth: []
+ */
 app.get('/api/order/get/client', checkClient, getOrdersByCustomer);
+/**
+ * @swagger
+ *   /order/get/artisan:
+ *     get:
+ *       tags:
+ *         - "Order"
+ *         - "Artisan"
+ *       summary: "Get orders by artisan id"
+ *       description: "Retrieve all orders made by a specific artisan using their id"
+ *       responses:
+ *         200:
+ *           description: "A list of all the orders made from a specific artisan"
+ *           schema:
+ *             type: "array"
+ *         400:
+ *           description: "Bad request"
+ *         401:
+ *           description: "Unauthorized"
+ *       security:
+ *         - bearerAuth: []
+ */
 app.get('/api/order/get/artisan', checkArtisan, getOrdersByArtisan);
+/**
+ * @swagger
+ *   /api/product/get/id:
+ *     get:
+ *       tags:
+ *         - "Product"
+ *       summary: "Get a product name by its id"
+ *       description: "Retrieve the name of a product using its product_id"
+ *       parameters:
+ *          id_prodotto: product's id
+ *       responses:
+ *         200:
+ *           description: "The name of the product"
+ *           schema:
+ *             type: "array"
+ *          400:
+ *           description: "Bad request"
+ */
 app.get('/api/product/get/id', getNameByProductId);
 
 

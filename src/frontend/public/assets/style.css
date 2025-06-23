@@ -36,7 +36,7 @@ input, button, dialog, select, option, textarea {
     border-radius: .5rem;
 }
 
-option {
+select option {
     background-color: #232529;
 }
 

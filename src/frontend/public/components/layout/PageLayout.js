@@ -47,7 +47,6 @@ class PageLayout extends HTMLElement {
             document.head.appendChild(link);
         }
 
-
         // Create Navbar
         const token = window.localStorage.getItem("userToken");
         const payload = getUserType(token);

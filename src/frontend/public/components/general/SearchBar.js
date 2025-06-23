@@ -52,7 +52,11 @@ class SearchBar extends HTMLElement {
                     border-radius: .5rem;
                     color: #eee;
                 }
-                button {cursor: pointer}
+                option {
+                    background-color: #232529;
+                }
+                
+                button, option, select {cursor: pointer}
                 
                 button:hover {
                     transition: ease-in-out .3s;
@@ -90,7 +94,31 @@ class SearchBar extends HTMLElement {
                     opacity: 1;
                     transform: translateY(0);
                 }
-
+                ::-webkit-scrollbar {
+                    height: 4px;
+                }
+                
+                ::-webkit-scrollbar-track {
+                    background: rgba(238, 238, 238, 0.05);
+                    border-radius: 5px;
+                }
+                
+                ::-webkit-scrollbar-thumb {
+                    background: none;
+                    background: rgba(238, 238, 238, 0.05);
+                    border-radius: 5px;
+                }
+                
+                ::-webkit-scrollbar-thumb:hover {
+                    height: 8px;
+                    background: #555;
+                }
+                
+                input::-webkit-outer-spin-button,
+                input::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
             </style>
         `;
 
