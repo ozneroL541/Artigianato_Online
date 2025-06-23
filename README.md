@@ -1,3 +1,5 @@
+<a href="https://github.com/ozneroL541/Artigianato_Online/blob/master/LICENSE.md"><img src="https://img.shields.io/github/license/ozneroL541/Artigianato_Online?color=2b9348" alt="License"/></a>
+
 # Artigianato_Online
 Il cliente è una startup che vuole vendere online prodotti artigianali realizzati da creativi locali. La piattaforma consente agli artigiani di creare un profilo, caricare i propri prodotti, gestire l’inventario e gli ordini, mentre i clienti possono sfogliare il catalogo, fare acquisti e gestire il proprio profilo.
 
