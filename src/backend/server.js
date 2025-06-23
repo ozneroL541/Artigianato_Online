@@ -7,6 +7,7 @@ const reteLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
 dotenv.config();
 
+const {createOrder, getOrdersByCustomer, getOrdersByArtisan} = require ('./order/order_api.js')
 const { checkArtisan, checkClient, checkAdmin } = require('./auth/jwt.js');
 const { delClient, delArtisan, delAdmin } = require('./profile/profile_api.js');
 const {
@@ -1286,6 +1287,11 @@ app.get('/api/ricerca/dashboard/:id', async (req, res) => {
         res.status(400).json({ message: 'Bad request', error: error.message });
     }
 });
+app.post('/api/order/buy', checkClient, createOrder);
+app.get('/api/order/get/client', checkClient, getOrdersByCustomer);
+app.get('/api/order/get/artisan', checkArtisan, getOrdersByArtisan);
+app.get('/api/product/get/id', getNameByProductId);
+
 
 /**
  * Start the server
