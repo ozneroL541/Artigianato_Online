@@ -1,5 +1,3 @@
-import {backendUrl} from "../../../utils.js";
-
 /**
  * This function returns all the reports
  * @param token The admin's token

@@ -1,5 +1,3 @@
-import { backendUrl } from "../../utils.js";
-
 /**
  * This function, given a cart (which is a list of orders) publishes all the orders
  * @param {string} token The cliente's token

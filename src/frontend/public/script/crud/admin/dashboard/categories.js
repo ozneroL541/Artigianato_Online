@@ -1,4 +1,3 @@
-import {backendUrl} from "../../../utils.js";
 /**
  * This function adds a category to the db
  * @param {string} token The admin token

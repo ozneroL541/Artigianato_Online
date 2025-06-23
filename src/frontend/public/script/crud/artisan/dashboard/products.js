@@ -1,4 +1,3 @@
-import {backendUrl} from "../../../utils.js";
 /**
  * This function, given an artisan, adds a new product in the db
  * @param {string} token Artisan's token

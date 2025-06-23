@@ -1,5 +1,3 @@
-import {backendUrl} from "../../../utils.js";
-
 export const sendReport = async (token, message, orderId) =>  {
     try {
         const response = await fetch(`/api/client/report`, {
