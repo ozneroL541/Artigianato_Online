@@ -20,12 +20,11 @@ export const addOrder = async (token, cart) => {
                     const text = await response.text();
                     console.error("Risp:", response.status, text);
                     alert(`Errore: ${response.status} - ${text}`);
-                } else {
-                    return true
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     } catch (e) {console.error(e)}
 }
 
