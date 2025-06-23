@@ -89,7 +89,7 @@
 </script>
 <script type="module">
     import { getArtisanProducts, addProduct, deleteProduct, updateProduct } from "../../script/crud/artisan/dashboard/products.js";
-    import {backendUrl, formatDate, getCategories, canSeePage, populateSelectMenu} from "../../script/utils.js";
+    import { formatDate, getCategories, canSeePage, populateSelectMenu} from "../../script/utils.js";
     import {deleteProfile} from "../../script/crud/auth/delete.js";
     import {getOrdersByArtisan} from "../../script/crud/order/order.js";
 
@@ -153,7 +153,7 @@
         for (let o of orders) {
             const orderDate = formatDate(o.data_ordine);
             const arrriveDate = formatDate(o.data_consegna);
-            const response = await fetch(`${backendUrl}/api/product/get/id?id_prodotto=${o.id_prodotto}`);
+            const response = await fetch(`/api/product/get/id?id_prodotto=${o.id_prodotto}`);
             const productName = await response.json();
             const orderElement = document.createElement("article");
             orderElement.className = "dashboard__product__order standard-box";

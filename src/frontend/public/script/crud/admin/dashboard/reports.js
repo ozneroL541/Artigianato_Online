@@ -7,7 +7,7 @@ import {backendUrl} from "../../../utils.js";
  */
 export const getReports = async (token) => {
     try {
-        const response = await fetch(`${backendUrl}/api/admin/get/reports`, {
+        const response = await fetch(`/api/admin/get/reports`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export const getReports = async (token) => {
  */
 export const solveReport = async (token, idSignal) => {
     try {
-        const response = await fetch(`${backendUrl}/api/admin/solve/report`, {
+        const response = await fetch(`/api/admin/solve/report`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

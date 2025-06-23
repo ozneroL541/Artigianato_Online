@@ -59,7 +59,7 @@
     orders.forEach(async o => {
         const orderDate = formatDate(o.data_ordine);
         const arrriveDate = formatDate(o.data_consegna);
-        const response = await fetch(`${backendUrl}/api/product/get/id?id_prodotto=${o.id_prodotto}`);
+        const response = await fetch(`/api/product/get/id?id_prodotto=${o.id_prodotto}`);
         const productName = await response.json();
 
         const orderElement = document.createElement('article');

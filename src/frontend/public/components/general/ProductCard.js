@@ -25,12 +25,12 @@ class ProductCard extends HTMLElement {
 
             <article class="product standard-box">
                 <div class="product__info text-small">
-                    <p class="product__category"><a href="http://localhost:8000/products/category?categoria=${category}">${category}</a></p>
+                    <p class="product__category"><a href="/products/category?categoria=${category}">${category}</a></p>
                     <p class="product__stock">${stock} rimasti</p>
                 </div>
                 <h2 class="product__name collapsed-text">${name}</h2>
                 <div class="product__info">
-                    <p class="product__artisan text-small"><a href="http://localhost:8000/products/artisan?username_artigiano=${artisan}">${artisan}</a></p>
+                    <p class="product__artisan text-small"><a href="/products/artisan?username_artigiano=${artisan}">${artisan}</a></p>
                 </div>
                 <p class="product__price">${price}€</p>
                 <button class="btn-edit buyButton" data-id="${id}" data-prodname="${name}">Compra!</button>

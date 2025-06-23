@@ -57,7 +57,7 @@ export function getUsername(token) {
  * const token = window.localStorage.getItem("userToken");
  * const userType = getUserType(token);
  * if ( userType !== admin ) {
- *      window.location.href = "http://localhost:8000/negated";
+ *      window.location.href = "/negated";
  *  }
  *
  * @param {string} token The cliente token
