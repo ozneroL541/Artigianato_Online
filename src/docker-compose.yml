@@ -43,7 +43,7 @@ services:
         environment:
             IP_ADDRESS: localhost
             PORT: '8000'
-            BACKEND_URL: http://localhost:8080
+            BACKEND_URL: http://backend:8080
             PROTOCOL: http
         depends_on:
             - backend

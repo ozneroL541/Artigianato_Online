@@ -13,7 +13,7 @@ export const frontendUrl = 'http://localhost:8000'
  * const response = await fetch(`${backendUrl}/api/category/all`)
  * @type {string}
  */
-export const backendUrl = 'http://localhost:8080'; //frontendUrl;
+export const backendUrl = frontendUrl;
 
 /**
  * This function toggles the visibility of the modal element.
