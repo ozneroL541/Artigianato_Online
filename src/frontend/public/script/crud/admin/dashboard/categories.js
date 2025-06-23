@@ -1,4 +1,3 @@
-import {backendUrl} from "../../../utils.js";
 /**
  * This function adds a category to the db
  * @param {string} token The admin token
@@ -7,7 +6,7 @@ import {backendUrl} from "../../../utils.js";
  */
 export const addCategory = async (token, name) => {
     try {
-        const response = await fetch(`${backendUrl}/api/category/upload`, {
+        const response = await fetch(`/api/category/upload`, {
             method: 'POST', headers: {
                 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`
             }, body: JSON.stringify({
@@ -36,7 +35,7 @@ export const addCategory = async (token, name) => {
  */
 export const deleteCategory = async (token, name) => {
     try {
-        const response = await fetch(`${backendUrl}/api/category/delete`, {
+        const response = await fetch(`/api/category/delete`, {
             method: 'DELETE', headers: {
                 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` // Ensure the key matches
             }, body: JSON.stringify({
@@ -71,7 +70,7 @@ export const updateCategory = async (token, name, newName) => {
             return
         }
 
-        const response = await fetch(`${backendUrl}/api/category/update`, {
+        const response = await fetch(`/api/category/update`, {
             method: 'PUT', headers: {
                 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`
             }, body: JSON.stringify({

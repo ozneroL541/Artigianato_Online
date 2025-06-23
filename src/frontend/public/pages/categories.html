@@ -13,7 +13,7 @@
 </page-layout>
 </body>
 <script type="module">
-    import { getCategories, frontendUrl } from "../script/utils.js";
+    import { getCategories } from "../script/utils.js";
 
     document.addEventListener("DOMContentLoaded", async () => {
         const categories = await getCategories();
@@ -41,7 +41,7 @@
             categories.forEach(c => {
                 const categoryElement = document.createElement('li');
                 categoryElement.className = "standard-box standard-box-hover category ";
-                categoryElement.innerHTML = `<a href="${frontendUrl}/products/category?categoria=${c}">${c}</a>`;
+                categoryElement.innerHTML = `<a href="/products/category?categoria=${c}">${c}</a>`;
                 listElement.appendChild(categoryElement);
             });
             categoryList.appendChild(listElement);

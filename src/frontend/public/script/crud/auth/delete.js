@@ -1,4 +1,4 @@
-import {backendUrl} from "../../utils.js";
+
 /**
  * This function deletes a profile from the db
  *
@@ -16,7 +16,7 @@ import {backendUrl} from "../../utils.js";
  */
 export const deleteProfile = async (token, type) => {
     try{
-        const response = await fetch(`${backendUrl}/api/profile/delete/${type}`, {
+        const response = await fetch(`/api/profile/delete/${type}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

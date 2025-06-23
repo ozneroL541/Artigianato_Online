@@ -1,5 +1,3 @@
-import { backendUrl } from "../../utils.js";
-
 /**
  * This function, given a cart (which is a list of orders) publishes all the orders
  * @param {string} token The cliente's token
@@ -10,7 +8,7 @@ export const addOrder = async (token, cart) => {
     try {
         for (const p of cart) {
             if (p.quantity > 0) {
-                const response = await fetch(`${backendUrl}/api/order/buy`, {
+                const response = await fetch(`/api/order/buy`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`
                     }, body: JSON.stringify({
@@ -39,7 +37,7 @@ export const addOrder = async (token, cart) => {
  */
 export const getOrdersByClient = async (token) => {
     try {
-        const res = await fetch(`${backendUrl}/api/order/get/client`, {
+        const res = await fetch(`/api/order/get/client`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -69,7 +67,7 @@ export const getOrdersByClient = async (token) => {
  */
 export const getOrdersByArtisan = async (token) => {
     try {
-        const res = await fetch(`${backendUrl}/api/order/get/artisan`, {
+        const res = await fetch(`/api/order/get/artisan`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

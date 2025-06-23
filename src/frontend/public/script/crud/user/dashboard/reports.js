@@ -1,8 +1,6 @@
-import {backendUrl} from "../../../utils.js";
-
 export const sendReport = async (token, message, orderId) =>  {
     try {
-        const response = await fetch(`${backendUrl}/api/client/report`, {
+        const response = await fetch(`/api/client/report`, {
             method: "POST", headers: {
                 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`
             }, body: JSON.stringify({

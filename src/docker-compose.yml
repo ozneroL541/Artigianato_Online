@@ -39,11 +39,11 @@ services:
         container_name: frontend-artigianato_online
         restart: always
         ports:
-            - "8000:8000"
+            - "127.0.0.1:8000:8000"
         environment:
             IP_ADDRESS: localhost
             PORT: '8000'
-            BACKEND_URL: http://localhost:8080
+            BACKEND_URL: http://backend:8080
             PROTOCOL: http
         depends_on:
             - backend

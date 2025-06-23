@@ -1,21 +1,6 @@
 import {getUserType} from "./jwt.js";
 
 /**
- * The frontend's url
- * @type {string}
- */
-export const frontendUrl = 'http://localhost:8000'
-
-/**
- * The backend's url
- * @example
- * // Get some data from an API
- * const response = await fetch(`${backendUrl}/api/category/all`)
- * @type {string}
- */
-export const backendUrl = 'http://localhost:8080'; //frontendUrl;
-
-/**
  * This function toggles the visibility of the modal element.
  * @author Leonardo Basso
  * */
@@ -34,7 +19,7 @@ export function toggleDialog(id) {
  * @author Leonardo Basso
  */
 export const getCategories = async() => {
-    const response = await fetch(`${backendUrl}/api/category/all`);
+    const response = await fetch(`/api/category/all`);
     return await response.json();
 }
 /**
@@ -51,7 +36,7 @@ export const getCategories = async() => {
 export const canSeePage = (token, type) => {
     const userType = token ? getUserType(token) : "unregistered";
     if (userType !== type) {
-        window.location.href = `${frontendUrl}/negated`;
+        window.location.href = `/negated`;
     }
 }
 /**
