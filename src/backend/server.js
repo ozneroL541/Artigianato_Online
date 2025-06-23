@@ -37,6 +37,7 @@ const {
     GetBuyproduct,
     solveReport
 } = require('./profileClient/gestioneprofilo.js');
+const {ProfileClient} = require("./dashboard/ProfileClient");
 
 /** Port for the frontend server */
 const frontendPort = 8000;
@@ -1249,17 +1250,205 @@ app.put('/api/client/email', async (req, res) => {
 
 // TODO: Utilizzare JWT per autenticazione
 // TODO: doc e spostare funzione asincrona in altro file
-app.post('/api/client/report', async (req, res) => {
-    const { idSignal, orderId, description, resolved } = req.body;
-    try {
-        const profile = new ProfileClient(); // non servono parametri per segnalazione
-        const result = await profile.newSignal(idSignal, orderId, description, resolved);
-        res.status(200).json(result);
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ message: 'Bad request', error: error.message });
-    }
-});
+// app.post('/api/client/report', async (req, res) => {
+//     const { idSignal, orderId, description, resolved } = req.body;
+//     try {
+//         const profile = new ProfileClient(); // non servono parametri per segnalazione
+//         const result = await profile.newSignal(idSignal, orderId, description, resolved);
+//         res.status(200).json(result);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(400).json({ message: 'Bad request', error: error.message });
+//     }
+// });
+/**
+ * @swagger
+ * /api/client/report:
+ *   post:
+ *     summary: Submit a client report (signal)
+ *     description: Allows a client to report a problem or issue related to an order.
+ *     tags:
+ *       - Client
+ *       - Report
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idSignal
+ *               - orderId
+ *               - description
+ *               - resolved
+ *             properties:
+ *               idSignal:
+ *                 type: string
+ *                 description: Unique identifier of the signal
+ *               orderId:
+ *                 type: string
+ *                 description: The ID of the order related to the report
+ *               description:
+ *                 type: string
+ *                 description: Detailed description of the issue
+ *               resolved:
+ *                 type: boolean
+ *                 description: Whether the issue is already resolved
+ *     responses:
+ *       200:
+ *         description: Report submitted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: Bad request, check the input fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
+app.post('/api/client/report', Report, checkClient);
+/**
+ * @swagger
+ * /api/admin/get/reports:
+ *   get:
+ *     summary: Gets a list of all the reports
+ *     description: Gets a list of all the reports
+ *     tags:
+ *      - Admin
+ *      - Report
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List successfully accessed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id_segnalazione:
+ *                     type: integer
+ *                     description: Report's id
+ *                   id_ordine:
+ *                     type: integer
+ *                     description: Associated order's id
+ *                   timestamp:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Report's timestamp
+ *                   descrizione:
+ *                     type: string
+ *                     description: Report's description
+ *                   risolta:
+ *                     type: boolean
+ *                     description: The state of the report (solved or not)
+ *       400:
+ *         description: Invalid request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Bad request
+ *                 error:
+ *                   type: string
+ *                   example: Error's description
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ *                 error:
+ *                   type: string
+ *                   example: Error's description
+ */
+
+app.get('/api/admin/get/reports', checkAdmin, getReports);
+/**
+ * @swagger
+ * /api/admin/solve/report:
+ *   put:
+ *     summary: Sets a report as solved
+ *     description: Sets a report as solved
+ *     tags:
+ *      - Admin
+ *      - Report
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idSignal
+ *             properties:
+ *               idSignal:
+ *                 type: integer
+ *                 description: Report's id
+ *     responses:
+ *       200:
+ *         description: Report marked as solved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Report marked as solved successfully
+ *       400:
+ *         description: Invalid request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Bad request
+ *                 error:
+ *                   type: string
+ *                   example: Error's description
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error;
+ *                 error:
+ *                   type: string
+ *                   example: Error's description
+ */
+app.put('/api/admin/solve/report', checkAdmin, solveReport);
 
 // All products
 // TODO: doc e spostare funzione asincrona in altro file
