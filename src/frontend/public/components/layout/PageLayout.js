@@ -38,6 +38,15 @@ class PageLayout extends HTMLElement {
         } else {
             metaOgTitle.content = `${title} - Artigiani Online`;
         }
+        // Favicon
+        if (!document.querySelector("link[rel='icon']")) {
+            const faviconUrl = new URL("../../assets/favicon.ico", import.meta.url).href;
+            const link = document.createElement("link");
+            link.rel = "icon";
+            link.href = faviconUrl;
+            document.head.appendChild(link);
+        }
+
 
         // Create Navbar
         const token = window.localStorage.getItem("userToken");
