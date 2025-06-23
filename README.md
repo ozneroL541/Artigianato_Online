@@ -4,6 +4,7 @@ Il cliente è una startup che vuole vendere online prodotti artigianali realizza
 ## Run the project
 > [!important]  
 > You need to have [docker](https://www.docker.com/) installed to run the project.
+> The docker engine must be running
 
 To run the project build it with the `docker-compose.yml` file in *src*.
 ```sh
@@ -20,7 +21,7 @@ To stop the project run:
 
 ## Documentation
 ### API Doc
-RESTful API Documentation is avaiable at <http://localhost:8080/api/docs/> after the backend server has started.
+RESTful API Documentation is avaiable at [/api/docs/](http://localhost:8000:/api/docs/) after the backend server has started.
 
 ## Authors
 - @Sballerini3    Ballerini Stefano
