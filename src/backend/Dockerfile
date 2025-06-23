@@ -12,4 +12,4 @@ for dir in $dirs; do \
     fi; \
 done
 EXPOSE 8000
-CMD ["npm", "run", "test"]
+CMD ["npm", "run", "start"]
