@@ -39,7 +39,7 @@ services:
         container_name: frontend-artigianato_online
         restart: always
         ports:
-            - "8000:8000"
+            - "127.0.0.1:8000:8000"
         environment:
             IP_ADDRESS: localhost
             PORT: '8000'
